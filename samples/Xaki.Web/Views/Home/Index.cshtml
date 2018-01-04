@@ -1,0 +1,22 @@
+﻿@model IReadOnlyCollection<Planet>
+@{
+    ViewData["Title"] = "Planets";
+}
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var planet in Model)
+    {
+        <tr>
+            <td>@planet.PlanetId</td>
+            <td>@planet.Name</td>
+        </tr>
+    }
+    </tbody>
+</table>

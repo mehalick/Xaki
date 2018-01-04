@@ -50,6 +50,7 @@ namespace Xaki
             try
             {
                 localizedContent = Deserialize(serializedContents);
+
                 return true;
             }
             catch (Exception ex) when (ex is JsonReaderException || ex is JsonSerializationException)
@@ -115,10 +116,10 @@ namespace Xaki
 
             var localizedContent = localizedContents.SingleOrDefault(i => i.Key.Equals(languageCode, StringComparison.OrdinalIgnoreCase) && !string.IsNullOrWhiteSpace(i.Value)).Value;
 
-            return localizedContent ?? GetContentForDefaultLanguageOrFirst(localizedContents);
+            return localizedContent ?? GetContentForFirstLanguage(localizedContents);
         }
 
-        private string GetContentForDefaultLanguageOrFirst(IDictionary<string, string> localizedContents)
+        private string GetContentForFirstLanguage(IDictionary<string, string> localizedContents)
         {
             return localizedContents.SingleOrDefault(i => i.Key.Equals(_languageCodes.First())).Value ??
                    localizedContents.First().Value;
@@ -126,7 +127,7 @@ namespace Xaki
 
         public IEnumerable<T> Localize<T>(IEnumerable<T> items, string languageCode) where T : class, ILocalizable
         {
-            throw new NotImplementedException();
+            return items.Select(item => Localize(item, languageCode));
         }
     }
 }
