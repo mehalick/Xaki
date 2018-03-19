@@ -11,13 +11,13 @@ install:
 before_build:
   # ...
 build_script:
-  - cmd: dotnet build ./src/Xaki/Xaki.csproj --verbosity n
+  - cmd: dotnet build ./src/Xaki/Xaki.csproj --verbosity m
 after_build:
   # ...
 artifacts:
   # ...
 test_script:
-  - cmd: dotnet test ./tests/Xaki.Tests/Xaki.Tests.csproj --verbosity n
+  - cmd: dotnet test ./tests/Xaki.Tests/Xaki.Tests.csproj --verbosity m
 on_finish:
   # ...
 deploy: off
