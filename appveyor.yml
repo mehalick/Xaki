@@ -1,0 +1,23 @@
+version: 0.0.{build}
+image: Visual Studio 2017
+branches:
+  only:
+  - master
+clone_depth: 1
+init:
+  - cmd: git config --global core.autocrlf true
+install:
+  # ...
+before_build:
+  # ...
+build_script:
+  - cmd: dotnet build ./src/Xaki/Xaki.csproj --verbosity n
+after_build:
+  # ...
+artifacts:
+  # ...
+test_script:
+  - cmd: dotnet test ./tests/Xaki.Tests/Xaki.Tests.csproj --verbosity n
+on_finish:
+  # ...
+deploy: off

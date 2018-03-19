@@ -1,3 +1,3 @@
 # Xaki Localization
 
-[![Visual Studio Team services](https://bilbayt.visualstudio.com/_apis/public/build/definitions/a519b862-b049-4c41-9f10-77ea043eb8cc/15/badge)]()
+[![Build status](https://ci.appveyor.com/api/projects/status/d217t6s3py0ce6nn?svg=true)](https://ci.appveyor.com/project/AndyMehalick/xaki)
