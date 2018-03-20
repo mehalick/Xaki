@@ -1,4 +1,4 @@
-﻿namespace Xaki.Tests
+﻿namespace Xaki.Tests.Common
 {
     public class TestClass : ILocalizable
     {

@@ -18,7 +18,7 @@ namespace Xaki.Sample.Controllers
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {
-            var model = await _planetService.GetPlanets("en");
+            var model = await _planetService.GetPlanets();
 
             return View(model);
         }

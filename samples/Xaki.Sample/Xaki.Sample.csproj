@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Xaki.Web\Xaki.Web.csproj" />
     <ProjectReference Include="..\..\src\Xaki\Xaki.csproj" />
   </ItemGroup>
 

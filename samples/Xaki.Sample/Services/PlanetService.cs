@@ -17,11 +17,11 @@ namespace Xaki.Sample.Services
             _localizationService = localizationService;
         }
 
-        public async Task<IReadOnlyCollection<Planet>> GetPlanets(string languageCode)
+        public async Task<IReadOnlyCollection<Planet>> GetPlanets()
         {
             var planets = await _dataContext.Planets.ToListAsync();
 
-            return _localizationService.Localize<Planet>(planets, languageCode).ToList();
+            return _localizationService.Localize<Planet>(planets).ToList();
         }
     }
 }

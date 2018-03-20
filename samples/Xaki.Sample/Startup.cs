@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Xaki.LanguageResolvers;
 using Xaki.Sample.Models;
+using Xaki.Web.LanguageResolvers;
 
 namespace Xaki.Sample
 {
@@ -19,9 +24,16 @@ namespace Xaki.Sample
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddScoped<ILocalizationService>(_ => new LocalizationService
             {
-                LanguageCodes = new[] { "en", "xx" }
+                RequiredLanguages = new[] { "en", "xx" },
+                LanguageResolvers = new List<ILanguageResolver>
+                {
+                    new CookieLanguageResolver(_.GetService<IHttpContextAccessor>()),
+                    new StaticLanguageResolver("en")
+                }
             });
 
             services.AddDbContext<DataContext>(GetDbContext());

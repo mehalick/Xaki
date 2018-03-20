@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Xaki.Tests.Common;
 using Xunit;
 
 namespace Xaki.Tests
@@ -10,7 +11,7 @@ namespace Xaki.Tests
     {
         private readonly ILocalizationService _localizationService = new LocalizationService
         {
-            LanguageCodes = new[] { Constants.LanguageCode1, Constants.LanguageCode2 }
+            RequiredLanguages = new[] { Constants.LanguageCode1, Constants.LanguageCode2 }
         };
 
         [Fact]
