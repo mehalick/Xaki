@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Xunit;
 
 namespace Xaki.Tests
@@ -7,26 +8,23 @@ namespace Xaki.Tests
     [SuppressMessage("ReSharper", "ExpressionIsAlwaysNull")]
     public class LocalizationServiceTests
     {
-        private const string LanguageCode1 = "en";
-        private const string LanguageCode2 = "xx";
-        private const string LanguageCode3 = "zz";
-        private const string AnyString1 = "ABC123";
-        private const string AnyString2 = "XYZ789";
-
-        private readonly ILocalizationService _localizationService = new LocalizationService(LanguageCode1, LanguageCode2);
+        private readonly ILocalizationService _localizationService = new LocalizationService
+        {
+            LanguageCodes = new[] { Constants.LanguageCode1, Constants.LanguageCode2 }
+        };
 
         [Fact]
         public void Serialize_ContentIsValid_ReturnsString()
         {
             var contents = new Dictionary<string, string>
             {
-                { LanguageCode1, AnyString1 },
-                { LanguageCode2, AnyString2 }
+                {Constants.LanguageCode1, Constants.AnyString1 },
+                {Constants.LanguageCode2, Constants.AnyString2 }
             };
 
             var actual = _localizationService.Serialize(contents);
 
-            var expected = $"{{\"{LanguageCode1}\":\"{AnyString1}\",\"{LanguageCode2}\":\"{AnyString2}\"}}";
+            var expected = $"{{\"{Constants.LanguageCode1}\":\"{Constants.AnyString1}\",\"{Constants.LanguageCode2}\":\"{Constants.AnyString2}\"}}";
 
             Assert.Equal(expected, actual);
         }
@@ -36,13 +34,13 @@ namespace Xaki.Tests
         {
             var contents = new Dictionary<string, string>
             {
-                { LanguageCode2, AnyString2 },
-                { LanguageCode1, AnyString1 }
+                {Constants.LanguageCode2, Constants.AnyString2 },
+                {Constants.LanguageCode1, Constants.AnyString1 }
             };
 
             var actual = _localizationService.Serialize(contents);
 
-            var expected = $"{{\"{LanguageCode1}\":\"{AnyString1}\",\"{LanguageCode2}\":\"{AnyString2}\"}}";
+            var expected = $"{{\"{Constants.LanguageCode1}\":\"{Constants.AnyString1}\",\"{Constants.LanguageCode2}\":\"{Constants.AnyString2}\"}}";
 
             Assert.Equal(expected, actual);
         }
@@ -52,14 +50,14 @@ namespace Xaki.Tests
         {
             var contents = new Dictionary<string, string>
             {
-                { LanguageCode1, AnyString1 },
-                { LanguageCode2, AnyString2 },
-                { LanguageCode3, AnyString2 }
+                {Constants.LanguageCode1, Constants.AnyString1 },
+                {Constants.LanguageCode2, Constants.AnyString2 },
+                {Constants.LanguageCode3, Constants.AnyString2 }
             };
 
             var actual = _localizationService.Serialize(contents);
 
-            var expected = $"{{\"{LanguageCode1}\":\"{AnyString1}\",\"{LanguageCode2}\":\"{AnyString2}\"}}";
+            var expected = $"{{\"{Constants.LanguageCode1}\":\"{Constants.AnyString1}\",\"{Constants.LanguageCode2}\":\"{Constants.AnyString2}\"}}";
 
             Assert.Equal(expected, actual);
         }
@@ -67,18 +65,18 @@ namespace Xaki.Tests
         [Fact]
         public void Deserialize_ValidJsonString_ReturnsValidContent()
         {
-            var json = $"{{\"{LanguageCode1}\":\"{AnyString1}\",\"{LanguageCode2}\":\"{AnyString2}\"}}";
+            var json = $"{{\"{Constants.LanguageCode1}\":\"{Constants.AnyString1}\",\"{Constants.LanguageCode2}\":\"{Constants.AnyString2}\"}}";
 
             var result = _localizationService.Deserialize(json);
 
             Assert.Collection(result,
-                item => Assert.Equal(LanguageCode1, item.Key),
-                item => Assert.Equal(LanguageCode2, item.Key)
+                item => Assert.Equal(Constants.LanguageCode1, item.Key),
+                item => Assert.Equal(Constants.LanguageCode2, item.Key)
             );
 
             Assert.Collection(result,
-                item => Assert.Equal(AnyString1, item.Value),
-                item => Assert.Equal(AnyString2, item.Value)
+                item => Assert.Equal(Constants.AnyString1, item.Value),
+                item => Assert.Equal(Constants.AnyString2, item.Value)
             );
         }
 
@@ -93,15 +91,35 @@ namespace Xaki.Tests
         }
 
         [Fact]
-        public void LocalizeItem_LanguageCodeIsNull_ReturnsItem()
+        public void LocalizeItem_LanguageCodeIsNull_ReturnsFirstLocalization()
         {
-            const string name = "{\"en\":\"SOME TEXT\"}";
+            var name = _localizationService.Serialize(new Dictionary<string, string>
+            {
+                { Constants.LanguageCode1, Constants.AnyString1 },
+                { Constants.LanguageCode2, Constants.AnyString2 }
+            });
 
             var testClass = new TestClass(name);
 
             var result = _localizationService.Localize(testClass, null);
 
-            Assert.Equal(name, result.Name);
+            Assert.Equal(Constants.AnyString1, result.Name);
+        }
+
+        [Fact]
+        public void LocalizeItem_LanguageCodeIsNotSupported_ReturnsFirstLocalization()
+        {
+            var name = _localizationService.Serialize(new Dictionary<string, string>
+            {
+                { Constants.LanguageCode1, Constants.AnyString1 },
+                { Constants.LanguageCode2, Constants.AnyString2 }
+            });
+
+            var testClass = new TestClass(name);
+
+            var result = _localizationService.Localize(testClass, Constants.LanguageCode3);
+
+            Assert.Equal(Constants.AnyString1, result.Name);
         }
 
         [Fact]
@@ -109,14 +127,51 @@ namespace Xaki.Tests
         {
             var name = _localizationService.Serialize(new Dictionary<string, string>
             {
-                { LanguageCode1, AnyString1 }
+                { Constants.LanguageCode1, Constants.AnyString1 }
             });
 
             var testClass = new TestClass(name);
 
-            var result = _localizationService.Localize(testClass, LanguageCode1);
+            var result = _localizationService.Localize(testClass, Constants.LanguageCode1);
 
-            Assert.Equal(AnyString1, result.Name);
+            Assert.Equal(Constants.AnyString1, result.Name);
+        }
+
+        [Fact]
+        public void LocalizeItem_ItemHasMultipleLanguages_ReturnsCorrectLocalization()
+        {
+            var name = _localizationService.Serialize(new Dictionary<string, string>
+            {
+                { Constants.LanguageCode1, Constants.AnyString1 },
+                { Constants.LanguageCode2, Constants.AnyString2 }
+            });
+
+            var testClass = new TestClass(name);
+
+            var result = _localizationService.Localize(testClass, Constants.LanguageCode2);
+
+            Assert.Equal(Constants.AnyString2, result.Name);
+        }
+
+        [Fact]
+        public void LocalizeCollection_ItemsHaveMultipleLanguages_ReturnsCorrectLocalizations()
+        {
+            var name = _localizationService.Serialize(new Dictionary<string, string>
+            {
+                { Constants.LanguageCode1, Constants.AnyString1 },
+                { Constants.LanguageCode2, Constants.AnyString2 }
+            });
+
+            var testClasses = new[]
+            {
+                new TestClass(name),
+                new TestClass(name)
+            };
+
+            var results = _localizationService.Localize<TestClass>(testClasses, Constants.LanguageCode1).ToList();
+
+            Assert.Equal(Constants.AnyString1, results.ElementAt(0).Name);
+            Assert.Equal(Constants.AnyString1, results.ElementAt(1).Name);
         }
     }
 }

@@ -4,6 +4,8 @@ branches:
   only:
   - master
 clone_depth: 1
+pull_requests:
+  do_not_increment_build_number: true
 init:
   - cmd: git config --global core.autocrlf true
 install:

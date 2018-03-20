@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,12 +19,21 @@ namespace Xaki.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<ILocalizationService>(_ => new LocalizationService
+            {
+                LanguageCodes = new[] { "en", "xx" }
+            });
+
+            services.AddDbContext<DataContext>(GetDbContext());
+
             services.AddMvc();
+        }
 
+        private static Action<DbContextOptionsBuilder> GetDbContext()
+        {
             const string connection = @"Server=(localdb)\mssqllocaldb;Database=Xaki;Trusted_Connection=True;ConnectRetryCount=0";
-            services.AddDbContext<DataContext>(options => options.UseSqlServer(connection));
 
-            services.AddSingleton<ILocalizationService>(new LocalizationService("en", "xx"));
+            return options => options.UseSqlServer(connection);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

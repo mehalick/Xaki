@@ -4,25 +4,27 @@ using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Xaki.LanguageResolvers;
 
 namespace Xaki
 {
     public class LocalizationService : ILocalizationService
     {
-        private readonly IEnumerable<string> _languageCodes;
+        public const string FallbackLanguageCode = "en";
 
-        public LocalizationService(params string[] languageCodes)
-        {
-            _languageCodes = languageCodes;
-        }
+        public IEnumerable<string> LanguageCodes { get; set; } = new[] { FallbackLanguageCode };
+        public ILanguageResolver LanguageResolver { get; set; } = new StaticLanguageResolver(FallbackLanguageCode);
 
-        public string Serialize(IDictionary<string, string> contents)
+        /// <summary>
+        /// Serializes a localized content <see cref="IDictionary{TKey,TValue}"/> to JSON.
+        /// </summary>
+        public string Serialize(IDictionary<string, string> content)
         {
             var item = new JObject();
 
-            foreach (var languageCode in _languageCodes)
+            foreach (var languageCode in LanguageCodes)
             {
-                if (contents.TryGetValue(languageCode, out var value))
+                if (content.TryGetValue(languageCode, out var value))
                 {
                     item[languageCode.ToLowerInvariant()] = value;
                 }
@@ -31,11 +33,14 @@ namespace Xaki
             return item.ToString(Formatting.None);
         }
 
+        /// <summary>
+        /// Deserializes JSON localized content to <see cref="IDictionary{TKey,TValue}"/>.
+        /// </summary>
         public IDictionary<string, string> Deserialize(string json)
         {
             var item = JObject.Parse(json);
 
-            return _languageCodes
+            return LanguageCodes
                 .Where(i => item[i] != null)
                 .ToDictionary(i => i, i => (string)item[i]);
         }
@@ -43,13 +48,13 @@ namespace Xaki
         /// <summary>
         /// Deserializes a serialized collection of <see cref="IDictionary{TKey,TValue}"/> items, returns a new collection with default languageCode if JSON reader exception occurs.
         /// </summary>
-        /// <param name="serializedContents">A JSON serialized localized <see cref="string"/>.</param>
-        /// <param name="localizedContent">The output deserialized collection of <see cref="IDictionary{TKey,TValue}"/>.</param>
-        public bool TryDeserialize(string serializedContents, out IDictionary<string, string> localizedContent)
+        /// <param name="json">JSON serialized localized content.</param>
+        /// <param name="localizedContent">A <see cref="IDictionary{TKey,TValue}"/> of localized content.</param>
+        public bool TryDeserialize(string json, out IDictionary<string, string> localizedContent)
         {
             try
             {
-                localizedContent = Deserialize(serializedContents);
+                localizedContent = Deserialize(json);
 
                 return true;
             }
@@ -57,13 +62,26 @@ namespace Xaki
             {
                 localizedContent = new Dictionary<string, string>
                 {
-                    { _languageCodes.First(), "" }
+                    { LanguageCodes.First(), "" }
                 };
 
                 return false;
             }
         }
 
+        /// <summary>
+        /// Localizes all properties on an <see cref="ILocalizable"/> item with the language code provided by <see cref="ILanguageResolver"/>.
+        /// </summary>
+        public T Localize<T>(T item) where T : class, ILocalizable
+        {
+            var languageCode = LanguageResolver.GetLanguageCode();
+
+            return Localize(item, languageCode);
+        }
+
+        /// <summary>
+        /// Localizes all properties on an <see cref="ILocalizable"/> item with the specified language code.
+        /// </summary>
         public T Localize<T>(T item, string languageCode) where T : class, ILocalizable
         {
             if (item == null)
@@ -71,14 +89,32 @@ namespace Xaki
                 return null;
             }
 
-            if (string.IsNullOrWhiteSpace(languageCode))
+            if (!LanguageCodes.Contains(languageCode))
             {
-                return item;
+                languageCode = LanguageCodes.First();
             }
 
             LocalizeProperties(item, languageCode);
 
             return item;
+        }
+
+        /// <summary>
+        /// Localizes all properties on each <see cref="ILocalizable"/> item in a collection with the language code provided by <see cref="ILanguageResolver"/>.
+        /// </summary>
+        public IEnumerable<T> Localize<T>(IEnumerable<T> items) where T : class, ILocalizable
+        {
+            var languageCode = LanguageResolver.GetLanguageCode();
+
+            return items.Select(item => Localize(item, languageCode));
+        }
+
+        /// <summary>
+        /// Localizes all properties on each <see cref="ILocalizable"/> item in a collection with the specified language code.
+        /// </summary>
+        public IEnumerable<T> Localize<T>(IEnumerable<T> items, string languageCode) where T : class, ILocalizable
+        {
+            return items.Select(item => Localize(item, languageCode));
         }
 
         private void LocalizeProperties<T>(T item, string languageCode) where T : class, ILocalizable
@@ -121,13 +157,8 @@ namespace Xaki
 
         private string GetContentForFirstLanguage(IDictionary<string, string> localizedContents)
         {
-            return localizedContents.SingleOrDefault(i => i.Key.Equals(_languageCodes.First())).Value ??
+            return localizedContents.SingleOrDefault(i => i.Key.Equals(LanguageCodes.First())).Value ??
                    localizedContents.First().Value;
-        }
-
-        public IEnumerable<T> Localize<T>(IEnumerable<T> items, string languageCode) where T : class, ILocalizable
-        {
-            return items.Select(item => Localize(item, languageCode));
         }
     }
 }
