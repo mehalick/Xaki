@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xaki.Tests", "tests\Xaki.Te
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{CD7E8D92-2CC1-4495-A44E-02ABA41CD783}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xaki.Web", "samples\Xaki.Web\Xaki.Web.csproj", "{74853213-31B3-43CB-95D7-C2B72A00424A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xaki.Sample", "samples\Xaki.Sample\Xaki.Sample.csproj", "{74853213-31B3-43CB-95D7-C2B72A00424A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0061D7B2-50D7-4C11-85D4-A592A2703CB9}"
 EndProject

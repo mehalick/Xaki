@@ -11,11 +11,12 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
+      "launchUrl": "planets",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Xaki.Web": {
+    "Xaki.Sample": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

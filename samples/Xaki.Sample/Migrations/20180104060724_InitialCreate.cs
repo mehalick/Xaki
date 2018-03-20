@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Xaki.Web.Migrations
+namespace Xaki.Sample.Migrations
 {
     public partial class InitialCreate : Migration
     {

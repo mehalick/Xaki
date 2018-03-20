@@ -1,15 +1,16 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Xaki.Web.Models;
-using Xaki.Web.Services;
+using Xaki.Sample.Models;
+using Xaki.Sample.Services;
 
-namespace Xaki.Web.Controllers
+namespace Xaki.Sample.Controllers
 {
-    public class HomeController : Controller
+    [Route("planets")]
+    public class PlanetsController : Controller
     {
         private readonly PlanetService _planetService;
 
-        public HomeController(DataContext dataContext, ILocalizationService localizationService)
+        public PlanetsController(DataContext dataContext, ILocalizationService localizationService)
         {
             _planetService = new PlanetService(dataContext, localizationService);
         }

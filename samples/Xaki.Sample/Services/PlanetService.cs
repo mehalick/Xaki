@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Xaki.Web.Models;
+using Xaki.Sample.Models;
 
-namespace Xaki.Web.Services
+namespace Xaki.Sample.Services
 {
     public class PlanetService
     {

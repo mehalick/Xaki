@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Xaki.Web.Models
+namespace Xaki.Sample.Models
 {
     public class DataContext : DbContext
     {

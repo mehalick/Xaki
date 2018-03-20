@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Xaki.Web.Models;
+using Xaki.Sample.Models;
 
-namespace Xaki.Web
+namespace Xaki.Sample
 {
     public class Startup
     {
