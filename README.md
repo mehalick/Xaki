@@ -4,10 +4,9 @@
 [![AppVeyor](https://img.shields.io/appveyor/ci/mehalick/xaki/master.svg)](https://ci.appveyor.com/project/mehalick/xaki)
 [![AppVeyor](https://img.shields.io/appveyor/tests/mehalick/xaki/master.svg)](https://ci.appveyor.com/project/mehalick/xaki/build/tests)
 
-Xaki is a .NET library to add multi-language support to POCO classes. It includes a lightweight service to serialize multi-language properties 
-for database storage and to localize them back to specified languages.
+Xaki is a .NET library for adding multi-language support to POCO classes. It includes a lightweight service for persisting and retrieving data to and from databases using any ORM.
 
-Xaki works well with all versions of Entity Framework and includes ASP.NET Core support to seemlessly access language codes provided by routes, querystrings, cookies, and HTTP headers. 
+Xaki works well with all versions of Entity Framework and includes ASP.NET Core support for automatic localization to language codes provided by routes, querystrings, cookies, and HTTP headers. 
 
 ## Introduction
 
@@ -35,7 +34,7 @@ To localize a list, say pulled from a database with Entity Framework, you can us
 public async Task<IActionResult> GetPlanets()
 {
     var planets = await _db.Planets.ToListAsync();
-    var results = planets.Localize<Planets>();
+    var results = planets.Localize<Planet>();
     
     return View(results);
 }
