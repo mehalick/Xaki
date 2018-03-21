@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xaki.Sample", "samples\Xaki
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0061D7B2-50D7-4C11-85D4-A592A2703CB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xaki.Web", "src\Xaki.Web\Xaki.Web.csproj", "{9A5CCFFB-4485-463F-A69B-DA75D583BF77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xaki.Web", "src\Xaki.Web\Xaki.Web.csproj", "{9A5CCFFB-4485-463F-A69B-DA75D583BF77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

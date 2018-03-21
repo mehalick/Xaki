@@ -13,11 +13,9 @@ namespace Xaki
         public const string FallbackLanguageCode = "en";
 
         public IEnumerable<ILanguageResolver> LanguageResolvers { get; set; } = new[] { new DefaultLanguageResolver(FallbackLanguageCode) };
-
         public IEnumerable<string> RequiredLanguages { get; set; } = new[] { FallbackLanguageCode };
-        public IEnumerable<string> OptionalLanguages { get; set; }
-
-        public IEnumerable<string> AllLanguages => RequiredLanguages.Union(OptionalLanguages);
+        public IEnumerable<string> OptionalLanguages { get; set; } = Enumerable.Empty<string>();
+        public IEnumerable<string> SupportedLanguages => RequiredLanguages.Union(OptionalLanguages);
 
         /// <summary>
         /// Serializes a localized content <see cref="IDictionary{TKey,TValue}"/> to JSON.
@@ -26,7 +24,7 @@ namespace Xaki
         {
             var item = new JObject();
 
-            foreach (var languageCode in AllLanguages)
+            foreach (var languageCode in SupportedLanguages)
             {
                 if (content.TryGetValue(languageCode, out var value))
                 {
@@ -44,7 +42,7 @@ namespace Xaki
         {
             var item = JObject.Parse(json);
 
-            return AllLanguages
+            return SupportedLanguages
                 .Where(i => item[i] != null)
                 .ToDictionary(i => i, i => (string)item[i]);
         }
@@ -66,7 +64,7 @@ namespace Xaki
             {
                 localizedContent = new Dictionary<string, string>
                 {
-                    { AllLanguages.First(), "" }
+                    { SupportedLanguages.First(), "" }
                 };
 
                 return false;
@@ -93,9 +91,9 @@ namespace Xaki
                 return null;
             }
 
-            if (!AllLanguages.Contains(languageCode))
+            if (!SupportedLanguages.Contains(languageCode))
             {
-                languageCode = AllLanguages.First();
+                languageCode = SupportedLanguages.First();
             }
 
             LocalizeProperties(item, languageCode);
@@ -175,7 +173,7 @@ namespace Xaki
 
         private string GetContentForFirstLanguage(IDictionary<string, string> localizedContents)
         {
-            return localizedContents.SingleOrDefault(i => i.Key.Equals(AllLanguages.First())).Value ??
+            return localizedContents.SingleOrDefault(i => i.Key.Equals(SupportedLanguages.First())).Value ??
                    localizedContents.First().Value;
         }
     }
