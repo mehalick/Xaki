@@ -10,7 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Threading.Thread">
+      <HintPath>..\..\..\..\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.Thread.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

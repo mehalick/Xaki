@@ -12,7 +12,7 @@ namespace Xaki.Tests
         {
             var localizationService = new LocalizationService
             {
-                LanguageResolvers = new[] { new StaticLanguageResolver(Constants.LanguageCode1) },
+                LanguageResolvers = new[] { new DefaultLanguageResolver(Constants.LanguageCode1) },
                 RequiredLanguages = new[] { Constants.LanguageCode1, Constants.LanguageCode2 }
             };
 
@@ -37,7 +37,7 @@ namespace Xaki.Tests
                 LanguageResolvers = new List<ILanguageResolver>
                 {
                     new NullLanguageResolver(),
-                    new StaticLanguageResolver(Constants.LanguageCode1)
+                    new DefaultLanguageResolver(Constants.LanguageCode1)
                 },
                 RequiredLanguages = new[] { Constants.LanguageCode1, Constants.LanguageCode2 }
             };

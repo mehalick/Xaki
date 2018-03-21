@@ -1,10 +1,10 @@
 ﻿namespace Xaki.LanguageResolvers
 {
-    public class StaticLanguageResolver : ILanguageResolver
+    public class DefaultLanguageResolver : ILanguageResolver
     {
         private readonly string _languageCode;
 
-        public StaticLanguageResolver(string languageCode)
+        public DefaultLanguageResolver(string languageCode)
         {
             _languageCode = languageCode;
         }

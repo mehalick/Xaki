@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using Xaki.LanguageResolvers;
 using Xaki.Sample.Models;
 using Xaki.Web.LanguageResolvers;
@@ -26,13 +29,38 @@ namespace Xaki.Sample
         {
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddScoped<ILocalizationService>(_ => new LocalizationService
+            services.Configure<RequestLocalizationOptions>(options =>
             {
-                RequiredLanguages = new[] { "en", "xx" },
+                var supportedCultures = new[]
+                {
+                    new CultureInfo("en"),
+                    new CultureInfo("zh"),
+                    new CultureInfo("ar"),
+                    new CultureInfo("es"),
+                    new CultureInfo("hi"),
+                    new CultureInfo("pt"),
+                    new CultureInfo("ru"),
+                    new CultureInfo("ja"),
+                    new CultureInfo("de"),
+                    new CultureInfo("el")
+                };
+
+                options.DefaultRequestCulture = new RequestCulture("en", "en");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+
+                // TODO support RouteDataRequestCultureProvider (https://joonasw.net/view/aspnet-core-localization-deep-dive)
+            });
+
+            services.AddScoped<ILocalizationService>(provider => new LocalizationService
+            {
+                RequiredLanguages = new[] { "en", "zh", "ar", "es", "hi" },
+                OptionalLanguages = new[] { "pt", "ru", "ja", "de", "el" },
                 LanguageResolvers = new List<ILanguageResolver>
                 {
-                    new CookieLanguageResolver(_.GetService<IHttpContextAccessor>()),
-                    new StaticLanguageResolver("en")
+                    new RequestLanguageResolver(provider.GetService<IHttpContextAccessor>()),
+                    new CultureInfoLanguageResolver(),
+                    new DefaultLanguageResolver("en")
                 }
             });
 
@@ -55,6 +83,9 @@ namespace Xaki.Sample
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
             }
+
+            var options = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            app.UseRequestLocalization(options.Value);
 
             app.UseStaticFiles();
             app.UseMvc();
