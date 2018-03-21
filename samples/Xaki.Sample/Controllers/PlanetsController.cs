@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Xaki.Sample.Models;
@@ -23,9 +22,6 @@ namespace Xaki.Sample.Controllers
         public async Task<IActionResult> Index()
         {
             var planets = await _planetService.GetPlanets();
-
-            CultureInfo.CurrentCulture = new CultureInfo("zh");
-            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("zh");
 
             planets = _localizationService.Localize<Planet>(planets).ToList();
 
