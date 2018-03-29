@@ -28,13 +28,14 @@ Internally multi-language content is stored as serialized JSON:
 planet.Name = "{'en':'Earth','ru':'Земля́','ja':'地球'}";
 ```
 
-To localize a list, say pulled from a database with Entity Framework, you can use the provided `Localize<T>()` extension method:
+To localize a list, say pulled from a database with Entity Framework, you can use the provided `IObjectLocalizer.Localize<T>()` method:
 
 ```csharp
 public async Task<IActionResult> GetPlanets()
 {
     var planets = await _db.Planets.ToListAsync();
-    var results = planets.Localize<Planet>();
+    
+    planets = _localizer.Localize(planets);
     
     return View(results);
 }

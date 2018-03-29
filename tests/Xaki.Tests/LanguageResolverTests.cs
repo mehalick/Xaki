@@ -10,7 +10,7 @@ namespace Xaki.Tests
         [Fact]
         public void LocalizeItem_ItemHasMultipleLanguages_ReturnsCorrectLocalization()
         {
-            var localizationService = new LocalizationService
+            var localizationService = new ObjectLocalizer
             {
                 LanguageResolvers = new[] { new DefaultLanguageResolver(Constants.LanguageCode1) },
                 RequiredLanguages = new[] { Constants.LanguageCode1, Constants.LanguageCode2 }
@@ -32,7 +32,7 @@ namespace Xaki.Tests
         [Fact]
         public void LocalizeItem_FirstLanguageResolverIsNull_ReturnsSecondLanguage()
         {
-            var localizationService = new LocalizationService
+            var localizationService = new ObjectLocalizer
             {
                 LanguageResolvers = new List<ILanguageResolver>
                 {

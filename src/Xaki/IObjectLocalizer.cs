@@ -2,7 +2,7 @@
 
 namespace Xaki
 {
-    public interface ILocalizationService
+    public interface IObjectLocalizer
     {
         string Serialize(IDictionary<string, string> content);
 

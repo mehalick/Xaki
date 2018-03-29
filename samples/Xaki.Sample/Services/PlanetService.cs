@@ -7,16 +7,21 @@ namespace Xaki.Sample.Services
 {
     public class PlanetService
     {
-        private readonly DataContext _dataContext;
+        private readonly DataContext _dc;
 
-        public PlanetService(DataContext dataContext)
+        public PlanetService(DataContext dc)
         {
-            _dataContext = dataContext;
+            _dc = dc;
         }
 
-        public async Task<IReadOnlyCollection<Planet>> GetPlanets()
+        public async Task<IEnumerable<Planet>> GetPlanets()
         {
-            return await _dataContext.Planets.ToListAsync();
+            return await _dc.Planets.ToListAsync();
+        }
+
+        public async Task<Planet> GetPlanetById(int planetId)
+        {
+            return await _dc.Planets.SingleOrDefaultAsync(i => i.PlanetId == planetId);
         }
     }
 }

@@ -52,7 +52,7 @@ namespace Xaki.Sample
                 // TODO support RouteDataRequestCultureProvider (https://joonasw.net/view/aspnet-core-localization-deep-dive)
             });
 
-            services.AddScoped<ILocalizationService>(provider => new LocalizationService
+            services.AddScoped<IObjectLocalizer>(provider => new ObjectLocalizer
             {
                 RequiredLanguages = new[] { "en", "zh", "ar", "es", "hi" },
                 OptionalLanguages = new[] { "pt", "ru", "ja", "de", "el" },
