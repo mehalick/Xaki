@@ -14,7 +14,7 @@ namespace Xaki.Sample.Services
             _dataContext = dataContext;
         }
 
-        public async Task<IReadOnlyCollection<Planet>> GetPlanets()
+        public async Task<IEnumerable<Planet>> GetPlanets()
         {
             return await _dataContext.Planets.ToListAsync();
         }

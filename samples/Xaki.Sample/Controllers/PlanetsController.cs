@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Xaki.Sample.Models;
 using Xaki.Sample.Services;
@@ -23,7 +22,9 @@ namespace Xaki.Sample.Controllers
         {
             var planets = await _planetService.GetPlanets();
 
-            planets = _localizationService.Localize<Planet>(planets).ToList();
+            planets = _localizationService.Localize(planets);
+
+            planets = planets.Localize(_localizationService);
 
             return View(planets);
         }

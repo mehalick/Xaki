@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
@@ -18,32 +19,19 @@ namespace Xaki.Sample
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
         public void ConfigureServices(IServiceCollection services)
         {
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+            var requiredLanguages = new List<string> { "en", "zh", "ar", "es", "hi" };
+            var optionalLanguages = new List<string> { "pt", "ru", "ja", "de", "el" };
+
             services.Configure<RequestLocalizationOptions>(options =>
             {
-                var supportedCultures = new[]
-                {
-                    new CultureInfo("en"),
-                    new CultureInfo("zh"),
-                    new CultureInfo("ar"),
-                    new CultureInfo("es"),
-                    new CultureInfo("hi"),
-                    new CultureInfo("pt"),
-                    new CultureInfo("ru"),
-                    new CultureInfo("ja"),
-                    new CultureInfo("de"),
-                    new CultureInfo("el")
-                };
+                var supportedCultures = requiredLanguages
+                    .Union(optionalLanguages)
+                    .Select(i => new CultureInfo(i))
+                    .ToList();
 
                 options.DefaultRequestCulture = new RequestCulture("en", "en");
                 options.SupportedCultures = supportedCultures;
@@ -54,8 +42,8 @@ namespace Xaki.Sample
 
             services.AddScoped<ILocalizationService>(provider => new LocalizationService
             {
-                RequiredLanguages = new[] { "en", "zh", "ar", "es", "hi" },
-                OptionalLanguages = new[] { "pt", "ru", "ja", "de", "el" },
+                RequiredLanguages = requiredLanguages,
+                OptionalLanguages = optionalLanguages,
                 LanguageResolvers = new List<ILanguageResolver>
                 {
                     new RequestLanguageResolver(provider.GetService<IHttpContextAccessor>()),
@@ -66,7 +54,7 @@ namespace Xaki.Sample
 
             services.AddDbContext<DataContext>(GetDbContext());
 
-            services.AddMvc();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         private static Action<DbContextOptionsBuilder> GetDbContext()

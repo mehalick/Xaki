@@ -4,7 +4,7 @@ namespace Xaki.Web.LanguageResolvers
 {
     public class CookieLanguageResolver : ILanguageResolver
     {
-        public const string CookieKey = "xaki-lc";
+        public const string CookieKey = ".AspNetCore.Culture";
 
         private readonly IHttpContextAccessor _contextAccessor;
 
