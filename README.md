@@ -1,4 +1,4 @@
-﻿<h1><img src="https://xaki.azureedge.net/assets/logo-text-dark-636572324193463289.svg" height="50" alt="Xaki"></h1>
+﻿<h1><img src="https://xaki.azureedge.net/assets/logo-text-dark-636589485845174980.svg" width="160" height="50" alt="Xaki"></h1>
 
 [![Build status](https://ci.appveyor.com/api/projects/status/d217t6s3py0ce6nn?svg=true)](https://ci.appveyor.com/project/mehalick/xaki)
 [![AppVeyor](https://img.shields.io/appveyor/ci/mehalick/xaki/master.svg)](https://ci.appveyor.com/project/mehalick/xaki)
@@ -28,13 +28,14 @@ Internally multi-language content is stored as serialized JSON:
 planet.Name = "{'en':'Earth','ru':'Земля́','ja':'地球'}";
 ```
 
-To localize a list, say pulled from a database with Entity Framework, you can use the provided `Localize<T>()` extension method:
+To localize a list, say pulled from a database with Entity Framework, you can use the provided `IObjectLocalizer.Localize<T>()` method:
 
 ```csharp
 public async Task<IActionResult> GetPlanets()
 {
     var planets = await _db.Planets.ToListAsync();
-    var results = planets.Localize<Planet>();
+    
+    planets = _localizer.Localize(planets);
     
     return View(results);
 }

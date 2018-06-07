@@ -3,11 +3,12 @@
     ViewData["Title"] = "Planets";
 }
 
-<table class="table">
+<table class="table table-hover">
     <thead>
     <tr>
         <th>ID</th>
         <th>Name</th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -16,6 +17,7 @@
         <tr>
             <td>@planet.PlanetId</td>
             <td>@planet.Name</td>
+            <td style="width: 1%;"><a asp-action="Edit" asp-route-planetId="@planet.PlanetId">Edit</a></td>
         </tr>
     }
     </tbody>

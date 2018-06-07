@@ -8,7 +8,7 @@ using Xaki.LanguageResolvers;
 
 namespace Xaki
 {
-    public class LocalizationService : ILocalizationService
+    public class ObjectLocalizer : IObjectLocalizer
     {
         public const string FallbackLanguageCode = "en";
 

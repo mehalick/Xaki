@@ -9,24 +9,32 @@ namespace Xaki.Sample.Controllers
     public class PlanetsController : Controller
     {
         private readonly PlanetService _planetService;
-        private readonly ILocalizationService _localizationService;
+        private readonly IObjectLocalizer _localizer;
 
-        public PlanetsController(DataContext dataContext, ILocalizationService localizationService)
+        public PlanetsController(DataContext dataContext, IObjectLocalizer localizer)
         {
             _planetService = new PlanetService(dataContext);
-            _localizationService = localizationService;
+            _localizer = localizer;
         }
 
-        [HttpGet("")]
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var planets = await _planetService.GetPlanets();
 
-            planets = _localizationService.Localize(planets);
+            planets = _localizer.Localize(planets);
 
             planets = planets.Localize(_localizationService);
 
             return View(planets);
+        }
+
+        [HttpGet("{planetId:int}")]
+        public async Task<IActionResult> Edit(int planetId)
+        {
+            var planet = await _planetService.GetPlanetById(planetId);
+
+            return View(planet);
         }
     }
 }
