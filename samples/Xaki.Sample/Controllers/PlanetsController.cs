@@ -24,8 +24,6 @@ namespace Xaki.Sample.Controllers
 
             planets = _localizer.Localize(planets);
 
-            planets = planets.Localize(_localizationService);
-
             return View(planets);
         }
 
@@ -33,8 +31,24 @@ namespace Xaki.Sample.Controllers
         public async Task<IActionResult> Edit(int planetId)
         {
             var planet = await _planetService.GetPlanetById(planetId);
+            if (planet == null)
+            {
+                return NotFound();
+            }
 
             return View(planet);
+        }
+
+        [HttpPost("{planetId:int}")]
+        public async Task<IActionResult> Edit(int planetId, Planet model)
+        {
+            var planet = await _planetService.UpdatePlanet(planetId, model);
+            if (planet == null)
+            {
+                return NotFound();
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

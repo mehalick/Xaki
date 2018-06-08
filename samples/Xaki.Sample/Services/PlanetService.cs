@@ -23,5 +23,20 @@ namespace Xaki.Sample.Services
         {
             return await _dc.Planets.SingleOrDefaultAsync(i => i.PlanetId == planetId);
         }
+
+        public async Task<Planet> UpdatePlanet(int planetId, Planet model)
+        {
+            var planet = await _dc.Planets.SingleOrDefaultAsync(i => i.PlanetId == planetId);
+            if (planet == null)
+            {
+                return null;
+            }
+
+            planet.Name = model.Name;
+
+            await _dc.SaveChangesAsync();
+
+            return planet;
+        }
     }
 }

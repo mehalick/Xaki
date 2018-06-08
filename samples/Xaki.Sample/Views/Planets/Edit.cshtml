@@ -1,1 +1,11 @@
 ﻿@model Planet
+@{
+    ViewData["Title"] = "Edit Planet";
+}
+
+<form asp-action="Edit">
+    <localized-editor for="Name"></localized-editor>
+    
+    <button type="submit">Submit</button>
+
+</form>

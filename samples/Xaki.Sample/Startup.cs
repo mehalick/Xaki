@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
@@ -14,13 +15,17 @@ using Microsoft.Extensions.Options;
 using Xaki.LanguageResolvers;
 using Xaki.Sample.Models;
 using Xaki.Web.LanguageResolvers;
+using Xaki.Web.ModelBinding;
 
 namespace Xaki.Sample
 {
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
+    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
     public class Startup
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             var requiredLanguages = new List<string> { "en", "zh", "ar", "es", "hi" };
@@ -54,7 +59,12 @@ namespace Xaki.Sample
 
             services.AddDbContext<DataContext>(GetDbContext());
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            Action<MvcOptions> setupAction = options =>
+            {
+                options.ModelBinderProviders.Insert(0, new LocalizableModelBinderProvider());
+            };
+
+            services.AddMvc(setupAction).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         private static Action<DbContextOptionsBuilder> GetDbContext()

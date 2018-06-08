@@ -4,9 +4,9 @@ namespace Xaki
 {
     public static class LocalizationExtensions
     {
-        public static IEnumerable<T> Localize<T>(this IEnumerable<T> items, ILocalizationService localizationService) where T : class, ILocalizable
+        public static IEnumerable<T> Localize<T>(this IEnumerable<T> items, IObjectLocalizer localizer) where T : class, ILocalizable
         {
-            return localizationService.Localize(items);
+            return localizer.Localize(items);
         }
     }
 }
