@@ -32,8 +32,7 @@ namespace Xaki.Web.ModelBinding
             for (var i = 0; i < 1024; i++) // assume FormOptions.ValueCountLimit is default 1024
             {
                 var hasKey = bindingContext.HttpContext.Request.Form.TryGetValue($"{bindingContext.ModelName}[{i}].Key", out var key);
-                var hasValue = bindingContext.HttpContext.Request.Form.TryGetValue($"{bindingContext.ModelName}[{i}].Value",
-                        out var value);
+                var hasValue = bindingContext.HttpContext.Request.Form.TryGetValue($"{bindingContext.ModelName}[{i}].Value", out var value);
 
                 if (!(hasKey && hasValue))
                 {

@@ -15,5 +15,9 @@ namespace Xaki
         IEnumerable<T> Localize<T>(IEnumerable<T> items) where T : class, ILocalizable;
 
         IEnumerable<T> Localize<T>(IEnumerable<T> items, string languageCode) where T : class, ILocalizable;
+
+        IEnumerable<string> RequiredLanguages { get; set; }
+        IEnumerable<string> OptionalLanguages { get; set; }
+        IEnumerable<string> SupportedLanguages { get; }
     }
 }

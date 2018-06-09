@@ -4,8 +4,9 @@
 }
 
 <form asp-action="Edit">
-    <localized-editor for="Name"></localized-editor>
-    
-    <button type="submit">Submit</button>
-
+    <div class="form-group">
+        <label>Name</label>
+        <input localized-for="Name" />
+    </div>  
+    <button type="submit" class="btn btn-dark">Submit</button>
 </form>

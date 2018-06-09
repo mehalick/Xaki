@@ -14,6 +14,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>
