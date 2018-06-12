@@ -1,28 +1,26 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Xaki.Sample.Models;
-using Xaki.Sample.Services;
 
 namespace Xaki.Sample.Controllers
 {
     [Route("planets")]
     public class PlanetsController : Controller
     {
-        private readonly PlanetService _planetService;
+        private readonly DataContext _context;
         private readonly IObjectLocalizer _localizer;
 
-        public PlanetsController(DataContext dataContext, IObjectLocalizer localizer)
+        public PlanetsController(DataContext context, IObjectLocalizer localizer)
         {
-            _planetService = new PlanetService(dataContext);
+            _context = context;
             _localizer = localizer;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var planets = await _planetService.GetPlanets();
-
-            planets = _localizer.Localize(planets);
+            var planets = (await _context.Planets.ToListAsync()).Localize(_localizer);
 
             return View(planets);
         }
@@ -30,7 +28,7 @@ namespace Xaki.Sample.Controllers
         [HttpGet("{planetId:int}")]
         public async Task<IActionResult> Edit(int planetId)
         {
-            var planet = await _planetService.GetPlanetById(planetId);
+            var planet = await _context.Planets.SingleOrDefaultAsync(i => i.PlanetId == planetId);
             if (planet == null)
             {
                 return NotFound();
@@ -40,13 +38,17 @@ namespace Xaki.Sample.Controllers
         }
 
         [HttpPost("{planetId:int}")]
-        public async Task<IActionResult> Edit(int planetId, Planet model)
+        public async Task<IActionResult> EditPost(int planetId)
         {
-            var planet = await _planetService.UpdatePlanet(planetId, model);
+            var planet = await _context.Planets.SingleOrDefaultAsync(i => i.PlanetId == planetId);
             if (planet == null)
             {
                 return NotFound();
             }
+
+            await TryUpdateModelAsync(planet);
+
+            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
