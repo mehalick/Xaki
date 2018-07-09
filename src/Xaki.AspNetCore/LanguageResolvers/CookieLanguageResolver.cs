@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Xaki.Web.LanguageResolvers
+namespace Xaki.AspNetCore.LanguageResolvers
 {
     public class CookieLanguageResolver : ILanguageResolver
     {

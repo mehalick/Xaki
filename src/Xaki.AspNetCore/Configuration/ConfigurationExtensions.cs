@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Xaki.AspNetCore.LanguageResolvers;
+using Xaki.AspNetCore.ModelBinding;
 using Xaki.LanguageResolvers;
-using Xaki.Web.LanguageResolvers;
-using Xaki.Web.ModelBinding;
 
-namespace Xaki.Web.Configuration
+namespace Xaki.AspNetCore.Configuration
 {
     public static class ConfigurationExtensions
     {

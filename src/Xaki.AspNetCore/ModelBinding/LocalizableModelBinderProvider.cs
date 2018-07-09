@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 
-namespace Xaki.Web.ModelBinding
+namespace Xaki.AspNetCore.ModelBinding
 {
     public class LocalizableModelBinderProvider : IModelBinderProvider
     {

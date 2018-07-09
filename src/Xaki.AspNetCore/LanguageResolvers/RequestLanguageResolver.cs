@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 
-namespace Xaki.Web.LanguageResolvers
+namespace Xaki.AspNetCore.LanguageResolvers
 {
     public class RequestLanguageResolver : ILanguageResolver
     {

@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Xaki.Sample.Models;
-using Xaki.Web.Configuration;
 
 namespace Xaki.Sample
 {

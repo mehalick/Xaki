@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace Xaki.Web.ModelBinding
+namespace Xaki.AspNetCore.ModelBinding
 {
     public class LocalizableModelBinder : IModelBinder
     {
