@@ -1,4 +1,4 @@
-version: 0.0.{build}
+version: {build}
 image: Visual Studio 2017
 branches:
   only:
@@ -8,18 +8,24 @@ pull_requests:
   do_not_increment_build_number: true
 init:
   - cmd: git config --global core.autocrlf true
-install:
-  # ...
-before_build:
-  # ...
 build_script:
-  - cmd: dotnet build ./src/Xaki/Xaki.csproj --verbosity m
-after_build:
-  # ...
+  - ps: .\build.ps1
+test: off
 artifacts:
-  # ...
-test_script:
-  - cmd: dotnet test ./tests/Xaki.Tests/Xaki.Tests.csproj --verbosity m
-on_finish:
-  # ...
-deploy: off
+- path: .\src\Xaki\artifacts\**\*.nupkg
+  name: NuGet
+deploy:
+- provider: NuGet
+  server: https://www.myget.org/F/mehalick/api/v2/package
+  api_key:
+    secure: IGG9TOzkfdC0AqFl8XS+0s2IjS6bgIhuH24JnQjEyThMXPw7SU9Glk9a84BgR3vc
+  skip_symbols: true
+  on:
+    branch: master
+- provider: NuGet
+  name: production
+  skip_symbols: true
+  api_key:
+    secure: t3blEIQiDIYjjWhOSTTtrcAnzJkmSi+0zYPxC1v4RDzm6oI/gIpD6ZtrOGsYu2jE
+  on:
+    appveyor_repo_tag: true
