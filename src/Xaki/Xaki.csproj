@@ -4,10 +4,14 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <VersionPrefix>0.0.1</VersionPrefix>
     <Authors>Andy Mehalick</Authors>
-    <RepositoryUrl>https://github.com/mehalick/Xaki</RepositoryUrl>
+    <RepositoryUrl>https://github.com/mehalick/Xaki.git</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/mehalick/Xaki/blob/master/LICENSE.md</PackageLicenseUrl>
     <Product />
     <Company />
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/mehalick/Xaki</PackageProjectUrl>
+    <Copyright>Copyright © Andy Mehalick</Copyright>
+    <Description>Simplified multi-language POCO localization for .NET Core</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
