@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Xaki.AspNetCore.Configuration;
 using Xaki.Sample.Models;
-using Xaki.Web.Configuration;
 
 namespace Xaki.Sample
 {

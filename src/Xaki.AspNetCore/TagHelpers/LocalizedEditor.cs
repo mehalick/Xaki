@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
-namespace Xaki.Web.TagHelpers
+namespace Xaki.AspNetCore.TagHelpers
 {
     [HtmlTargetElement("input", Attributes = "localized-for", TagStructure = TagStructure.NormalOrSelfClosing)]
     public class LocalizedEditor : TagHelper

@@ -1,7 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <VersionPrefix>0.0.1</VersionPrefix>
+    <Authors>Andy Mehalick</Authors>
+    <RepositoryUrl>https://github.com/mehalick/Xaki.git</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/mehalick/Xaki/blob/master/LICENSE.md</PackageLicenseUrl>
+    <Product />
+    <Company />
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/mehalick/Xaki</PackageProjectUrl>
+    <Copyright>Copyright © Andy Mehalick</Copyright>
+    <Description>Simplified multi-language POCO localization for .NET Core</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -10,13 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System.Threading.Thread">
-      <HintPath>..\..\..\..\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.6\System.Threading.Thread.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 
 </Project>
