@@ -47,7 +47,7 @@ namespace Xaki.Web.Configuration
             return services;
         }
 
-        public static IMvcBuilder WithXaki(this IMvcBuilder mvc)
+        public static IMvcBuilder AddXakiModelBinder(this IMvcBuilder mvc)
         {
             return mvc.AddMvcOptions(options =>
             {
