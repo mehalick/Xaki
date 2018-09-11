@@ -12,6 +12,7 @@
     <PackageProjectUrl>https://github.com/mehalick/Xaki</PackageProjectUrl>
     <Copyright>Copyright © Andy Mehalick</Copyright>
     <Description>Simplified multi-language POCO localization for .NET Core</Description>
+    <PackageIconUrl>https://xaki.azureedge.net/assets/logo-text-128x128-636722671998445178.png</PackageIconUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

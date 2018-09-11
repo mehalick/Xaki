@@ -1,4 +1,4 @@
-﻿<h1><img src="https://xaki.azureedge.net/assets/logo-text-dark-636589485845174980.svg" width="160" height="50" alt="Xaki"></h1>
+﻿<h1><img src="https://xaki.azureedge.net/assets/logo-text-636722670683489948.svg" width="512" height="190" alt="Xaki"></h1>
 
 [![Build status](https://ci.appveyor.com/api/projects/status/d217t6s3py0ce6nn?svg=true)](https://ci.appveyor.com/project/mehalick/xaki)
 [![AppVeyor](https://img.shields.io/appveyor/ci/mehalick/xaki/master.svg)](https://ci.appveyor.com/project/mehalick/xaki)
