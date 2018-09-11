@@ -3,6 +3,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/d217t6s3py0ce6nn?svg=true)](https://ci.appveyor.com/project/mehalick/xaki)
 [![AppVeyor](https://img.shields.io/appveyor/ci/mehalick/xaki/master.svg)](https://ci.appveyor.com/project/mehalick/xaki)
 [![AppVeyor](https://img.shields.io/appveyor/tests/mehalick/xaki/master.svg)](https://ci.appveyor.com/project/mehalick/xaki/build/tests)
+[![MyGet](https://img.shields.io/myget/xaki/v/Xaki.svg)](https://www.myget.org/feed/xaki/package/nuget/Xaki)
 
 Xaki is a .NET library for adding multi-language support to POCO classes. It includes a lightweight service for persisting and retrieving data to and from databases using any ORM.
 
@@ -51,7 +52,7 @@ public async Task<IActionResult> Index()
 For ASP.NET Core projects you'll add the **Xaki** and **Xaki.AspNetCore** NuGet packages to your project. While these packages are beta you'll install from MyGet:
 
 ```powershell
-dotnet add package Xaki.AspNetCore --version 0.0.1-* --source https://www.myget.org/F/mehalick/api/v3/index.json
+dotnet add package Xaki.AspNetCore --version 0.0.1-* --source https://www.myget.org/F/xaki/api/v3/index.json
 ```
 
 You may also want to add the NuGet feed above to your nuget.config file at the root of your solution:
@@ -60,7 +61,7 @@ You may also want to add the NuGet feed above to your nuget.config file at the r
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
   <packageSources>
-    <add key="MyGet" value="https://www.myget.org/F/mehalick/api/v3/index.json" />
+    <add key="MyGet" value="https://www.myget.org/F/xaki/api/v3/index.json" />
     <add key="NuGet" value="https://api.nuget.org/v3/index.json" />
   </packageSources>
 </configuration>

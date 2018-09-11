@@ -91,6 +91,19 @@ namespace Xaki.Tests
             }
         }
 
+        public class TryDeserialize : TestBase
+        {
+            [Fact]
+            public void Returns()
+            {
+                var result = ObjectLocalizer.TryDeserialize("NOT JSON", out var localizedContent);
+
+                Assert.False(result);
+                Assert.Equal(Constants.LanguageCode1, localizedContent.Keys.Single());
+                Assert.Equal("", localizedContent.Values.Single());
+            }
+        }
+
         public class Localize : TestBase
         {
             [Fact]
@@ -194,6 +207,20 @@ namespace Xaki.Tests
             public void ReturnsFallbackLanguageCodeWhenNoLanguageResolversSpecified()
             {
                 var objectLocalizer = new ObjectLocalizer();
+
+                Assert.Equal(ObjectLocalizer.FallbackLanguageCode, objectLocalizer.GetLanguageCode());
+            }
+
+            [Fact]
+            public void ReturnsFallbackLanguageCodeWhenNullLanguageResolversSpecified()
+            {
+                var objectLocalizer = new ObjectLocalizer
+                {
+                    LanguageResolvers = new List<ILanguageResolver>
+                    {
+                        new NullLanguageResolver()
+                    }
+                };
 
                 Assert.Equal(ObjectLocalizer.FallbackLanguageCode, objectLocalizer.GetLanguageCode());
             }
