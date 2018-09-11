@@ -38,7 +38,7 @@ namespace Xaki.Sample.Controllers
         public async Task<IActionResult> Edit(int planetId)
         {
             var planet = await _context.Planets.SingleOrDefaultAsync(i => i.PlanetId == planetId);
-            if (planet == null)
+            if (planet is null)
             {
                 return NotFound();
             }

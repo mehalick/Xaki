@@ -14,7 +14,7 @@ namespace Xaki.Tests
         {
             protected readonly IObjectLocalizer ObjectLocalizer = new ObjectLocalizer
             {
-                RequiredLanguages = new[] { Constants.LanguageCode1, Constants.LanguageCode2 }
+                RequiredLanguages = new HashSet<string>(new[] { Constants.LanguageCode1, Constants.LanguageCode2 })
             };
         }
 

@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 
@@ -14,19 +14,19 @@ namespace Xaki.AspNetCore.ModelBinding
             }
 
             var propName = context.Metadata.PropertyName;
-            if (propName == null)
+            if (string.IsNullOrWhiteSpace(propName))
             {
                 return null;
             }
 
             var propInfo = context.Metadata.ContainerType.GetProperty(propName);
-            if (propInfo == null)
+            if (propInfo is null)
             {
                 return null;
             }
 
-            var attribute = propInfo.GetCustomAttributes(typeof(LocalizedAttribute), false).FirstOrDefault();
-            if (attribute == null)
+            var hasLocalizedAttribute = Attribute.IsDefined(propInfo, typeof(LocalizedAttribute), false);
+            if (!hasLocalizedAttribute)
             {
                 return null;
             }
