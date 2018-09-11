@@ -55,3 +55,4 @@ foreach ($sample in $samples) {
 }
 
 exec { & dotnet pack .\src\Xaki\Xaki.csproj -c Release -o .\artifacts --include-symbols --no-build --version-suffix=$revision }
+exec { & dotnet pack .\src\Xaki.AspNetCore\Xaki.AspNetCore.csproj -c Release -o .\artifacts --include-symbols --no-build --version-suffix=$revision }
