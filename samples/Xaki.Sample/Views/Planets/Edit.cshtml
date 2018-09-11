@@ -3,10 +3,15 @@
     ViewData["Title"] = "Edit Planet";
 }
 
-<form asp-action="EditPost">
+<form asp-action="Edit">
+
+    <input asp-for="PlanetId" type="hidden" />
+
     <div class="form-group">
         <label>Name</label>
         <input localized-for="Name" />
-    </div>  
+    </div>
+
     <button type="submit" class="btn btn-dark">Submit</button>
+
 </form>

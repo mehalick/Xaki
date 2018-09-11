@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Xaki.Sample.Models;
@@ -17,10 +18,18 @@ namespace Xaki.Sample.Controllers
             _localizer = localizer;
         }
 
+        [HttpGet("~/")]
+        public IActionResult Redirect()
+        {
+            return RedirectToAction(nameof(Index));
+        }
+
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var planets = (await _context.Planets.ToListAsync()).Localize(_localizer);
+            var planets = await _context.Planets.ToListAsync();
+
+            planets = _localizer.Localize<Planet>(planets).ToList();
 
             return View(planets);
         }
@@ -38,15 +47,9 @@ namespace Xaki.Sample.Controllers
         }
 
         [HttpPost("{planetId:int}")]
-        public async Task<IActionResult> EditPost(int planetId)
+        public async Task<IActionResult> Edit(Planet planet)
         {
-            var planet = await _context.Planets.SingleOrDefaultAsync(i => i.PlanetId == planetId);
-            if (planet == null)
-            {
-                return NotFound();
-            }
-
-            await TryUpdateModelAsync(planet);
+            _context.Entry(planet).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
 
