@@ -8,6 +8,8 @@ namespace Xaki
 
         IDictionary<string, string> Deserialize(string json);
 
+        bool TryDeserialize(string json, out IDictionary<string, string> localizedContent);
+
         T Localize<T>(T item) where T : class, ILocalizable;
 
         T Localize<T>(T item, string languageCode) where T : class, ILocalizable;

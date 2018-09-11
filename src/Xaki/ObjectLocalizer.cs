@@ -119,7 +119,10 @@ namespace Xaki
             return items.Select(item => Localize(item, languageCode));
         }
 
-        private string GetLanguageCode()
+        /// <summary>
+        /// Gets the current language code provided by <see cref="LanguageResolvers"/>.
+        /// </summary>
+        public string GetLanguageCode()
         {
             foreach (var languageResolver in LanguageResolvers)
             {

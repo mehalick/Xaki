@@ -26,7 +26,7 @@ namespace Xaki.Sample
                 OptionalLanguages = new List<string> { "pt", "ru", "ja", "de", "el" }
             });
 
-            services.AddMvc().WithXaki().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().AddXakiMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         private static Action<DbContextOptionsBuilder> GetDbContext()

@@ -47,7 +47,7 @@ namespace Xaki.AspNetCore.Configuration
             return services;
         }
 
-        public static IMvcBuilder WithXaki(this IMvcBuilder mvc)
+        public static IMvcBuilder AddXakiMvc(this IMvcBuilder mvc)
         {
             return mvc.AddMvcOptions(options =>
             {
