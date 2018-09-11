@@ -22,7 +22,7 @@ function Exec
     }
 }
 
-if(Test-Path .\src\Xaki\artifacts) { 
+if (Test-Path .\src\Xaki\artifacts) { 
     Remove-Item .\src\Xaki\artifacts -Force -Recurse 
 }
 
@@ -35,7 +35,8 @@ Push-Location -Path .\tests\Xaki.Tests
 
 try {
     exec { & dotnet test -c Release --no-build --no-restore }
-} finally {
+} 
+finally {
     Pop-Location
 }
 
@@ -48,8 +49,10 @@ foreach ($sample in $samples) {
 
     try {
         exec { & dotnet run -c Release --no-build --no-restore }
-    } catch {
-    } finally {
+    } 
+    catch {
+    } 
+    finally {
         Pop-Location
     }
 }
