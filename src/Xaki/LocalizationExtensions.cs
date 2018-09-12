@@ -24,5 +24,15 @@ namespace Xaki
         {
             return ObjectLocalizerConfig.Get().Localize(items);
         }
+
+        public static T Localize<T>(this T item, string languageCode) where T : class, ILocalizable
+        {
+            return ObjectLocalizerConfig.Get().Localize(item, languageCode);
+        }
+
+        public static IEnumerable<T> Localize<T>(this IEnumerable<T> items, string languageCode) where T : class, ILocalizable
+        {
+            return ObjectLocalizerConfig.Get().Localize(items, languageCode);
+        }
     }
 }

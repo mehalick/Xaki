@@ -44,7 +44,18 @@ namespace Xaki.AspNetCore.Configuration
                 }
             });
 
-            ObjectLocalizerConfig.Set(() => services.BuildServiceProvider().GetService<IObjectLocalizer>());
+            return services;
+        }
+
+        /// <summary>
+        /// Should be chained after <see cref="AddXaki(IServiceCollection, XakiOptions)"/> and not before
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection SetXakiObjectLocalizerConfig(this IServiceCollection services)
+        {
+            var provider = services.BuildServiceProvider();
+            ObjectLocalizerConfig.Set(() => provider.GetService<IObjectLocalizer>());
             return services;
         }
 

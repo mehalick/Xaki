@@ -24,7 +24,7 @@ namespace Xaki.Sample
             {
                 RequiredLanguages = new List<string> { "en", "zh", "ar", "es", "hi" },
                 OptionalLanguages = new List<string> { "pt", "ru", "ja", "de", "el" }
-            });
+            }).SetXakiObjectLocalizerConfig();
 
             services.AddMvc().AddXakiMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

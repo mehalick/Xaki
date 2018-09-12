@@ -43,7 +43,7 @@ namespace Xaki
             var item = JObject.Parse(json);
 
             return SupportedLanguages
-                .Where(i => item[i] != null)
+                .Where(i => !(item[i] is null))
                 .ToDictionary(i => i, i => (string)item[i]);
         }
 
@@ -127,7 +127,7 @@ namespace Xaki
             foreach (var languageResolver in LanguageResolvers)
             {
                 var languageCode = languageResolver.GetLanguageCode();
-                if (languageCode != null)
+                if (!string.IsNullOrWhiteSpace(languageCode))
                 {
                     return languageCode;
                 }
