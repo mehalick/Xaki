@@ -1,9 +1,10 @@
-﻿<h1><img src="https://xaki.azureedge.net/assets/logo-text-636722670683489948.svg" width="512" height="190" alt="Xaki"></h1>
+﻿<h1><img src="https://xaki.azureedge.net/assets/logo-text-636723199289149229.svg" width="512" height="190" alt="Xaki"></h1>
 
-[![Build status](https://ci.appveyor.com/api/projects/status/d217t6s3py0ce6nn?svg=true)](https://ci.appveyor.com/project/mehalick/xaki)
-[![AppVeyor](https://img.shields.io/appveyor/ci/mehalick/xaki/master.svg)](https://ci.appveyor.com/project/mehalick/xaki)
-[![AppVeyor](https://img.shields.io/appveyor/tests/mehalick/xaki/master.svg)](https://ci.appveyor.com/project/mehalick/xaki/build/tests)
-[![MyGet](https://img.shields.io/myget/xaki/v/Xaki.svg)](https://www.myget.org/feed/xaki/package/nuget/Xaki)
+[![appveyor](https://img.shields.io/appveyor/ci/mehalick/xaki/master.svg?label=windows)](https://ci.appveyor.com/project/mehalick/xaki)
+[![travis](https://img.shields.io/travis/mehalick/Xaki.svg?label=linux/mac)](https://travis-ci.org/mehalick/Xaki)
+[![tests](https://img.shields.io/appveyor/tests/mehalick/xaki/master.svg)](https://ci.appveyor.com/project/mehalick/xaki/build/tests)
+[![nuget](https://img.shields.io/nuget/v/Xaki.svg)](https://www.nuget.org/packages/Xaki)
+[![myget](https://img.shields.io/myget/xaki/v/Xaki.svg?label=myget)](https://www.myget.org/feed/xaki/package/nuget/Xaki)
 
 Xaki is a .NET library for adding multi-language support to POCO classes. It includes a lightweight service for persisting and retrieving data to and from databases using any ORM.
 

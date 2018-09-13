@@ -32,3 +32,6 @@ artifacts/
 
 # Visual Studio 2015
 .vs/
+
+# Cake.NET
+tools/
