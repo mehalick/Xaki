@@ -35,4 +35,4 @@ env:
   - DOTNET_CLI_TELEMETRY_OPTOUT=true
 
 script:
-  - ./build.sh --target Test
+  - ./build.sh --target=Test
