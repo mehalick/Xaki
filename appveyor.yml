@@ -12,14 +12,15 @@ build_script:
   - ps: .\build.ps1
 test: off
 artifacts:
-- path: '**\*.nupkg'
+- path: .\artifacts\**\*.nupkg
   name: NuGet
 deploy:
 - provider: NuGet
   server: https://www.myget.org/F/xaki/api/v2/package
   api_key:
     secure: IGG9TOzkfdC0AqFl8XS+0s2IjS6bgIhuH24JnQjEyThMXPw7SU9Glk9a84BgR3vc
-  skip_symbols: true
+  skip_symbols: false
+  symbol_server: https://www.myget.org/F/xaki/symbols/api/v2/package
   on:
     branch: master
 - provider: NuGet
