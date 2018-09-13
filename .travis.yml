@@ -1,0 +1,8 @@
+language: csharp
+
+branches:
+  only:
+  - master
+
+script:
+  - ./build.sh
