@@ -1,5 +1,18 @@
 language: csharp
 
+matrix:
+  fast_finish: true
+  allow_failures:
+  - os: osx
+
+  include:
+    - os: linux
+      dotnet: 2.0.0
+      mono: none
+    - os: osx
+      dotnet: 2.0.0
+      mono: none
+
 branches:
   only:
   - master

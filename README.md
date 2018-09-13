@@ -1,8 +1,7 @@
 ﻿<h1><img src="https://xaki.azureedge.net/assets/logo-text-636723199289149229.svg" width="512" height="190" alt="Xaki"></h1>
 
-[![Build status](https://ci.appveyor.com/api/projects/status/d217t6s3py0ce6nn?svg=true)](https://ci.appveyor.com/project/mehalick/xaki)
-[![AppVeyor](https://img.shields.io/appveyor/ci/mehalick/xaki/master.svg)](https://ci.appveyor.com/project/mehalick/xaki)
-[![AppVeyor](https://img.shields.io/appveyor/tests/mehalick/xaki/master.svg)](https://ci.appveyor.com/project/mehalick/xaki/build/tests)
+[![AppVeyor](https://img.shields.io/appveyor/ci/mehalick/xaki/master.svg?logo=appveyor)](https://ci.appveyor.com/project/mehalick/xaki)
+[![AppVeyor](https://img.shields.io/appveyor/tests/mehalick/xaki/master.svg?logo=appveyor)](https://ci.appveyor.com/project/mehalick/xaki/build/tests)
 [![NuGet](https://img.shields.io/nuget/v/Xaki.svg)](https://www.nuget.org/packages/Xaki)
 [![MyGet](https://img.shields.io/myget/xaki/v/Xaki.svg?label=myget)](https://www.myget.org/feed/xaki/package/nuget/Xaki)
 
