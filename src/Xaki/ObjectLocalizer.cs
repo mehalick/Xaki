@@ -13,9 +13,9 @@ namespace Xaki
         public const string FallbackLanguageCode = "en";
 
         public IEnumerable<ILanguageResolver> LanguageResolvers { get; set; } = new[] { new DefaultLanguageResolver(FallbackLanguageCode) };
-        public IEnumerable<string> RequiredLanguages { get; set; } = new[] { FallbackLanguageCode };
-        public IEnumerable<string> OptionalLanguages { get; set; } = Enumerable.Empty<string>();
-        public IEnumerable<string> SupportedLanguages => RequiredLanguages.Union(OptionalLanguages);
+        public HashSet<string> RequiredLanguages { get; set; } = new HashSet<string>(new[] { FallbackLanguageCode });
+        public HashSet<string> OptionalLanguages { get; set; } = new HashSet<string>();
+        public HashSet<string> SupportedLanguages => new HashSet<string>(RequiredLanguages.Union(OptionalLanguages).Select(x => x.ToLowerInvariant()));
 
         /// <summary>
         /// Serializes a localized content <see cref="IDictionary{TKey,TValue}"/> to JSON.
@@ -28,7 +28,7 @@ namespace Xaki
             {
                 if (content.TryGetValue(languageCode, out var value))
                 {
-                    item[languageCode.ToLowerInvariant()] = value;
+                    item[languageCode] = value;
                 }
             }
 
@@ -43,7 +43,7 @@ namespace Xaki
             var item = JObject.Parse(json);
 
             return SupportedLanguages
-                .Where(i => item[i] != null)
+                .Where(i => !(item[i] is null))
                 .ToDictionary(i => i, i => (string)item[i]);
         }
 
@@ -86,7 +86,7 @@ namespace Xaki
         /// </summary>
         public T Localize<T>(T item, string languageCode) where T : class, ILocalizable
         {
-            if (item == null)
+            if (item is null)
             {
                 return null;
             }
@@ -127,7 +127,7 @@ namespace Xaki
             foreach (var languageResolver in LanguageResolvers)
             {
                 var languageCode = languageResolver.GetLanguageCode();
-                if (languageCode != null)
+                if (!string.IsNullOrWhiteSpace(languageCode))
                 {
                     return languageCode;
                 }
@@ -138,8 +138,7 @@ namespace Xaki
 
         private void LocalizeProperties<T>(T item, string languageCode) where T : class, ILocalizable
         {
-            var properties = item
-                .GetType()
+            var properties = typeof(T)
                 .GetTypeInfo()
                 .DeclaredProperties
                 .Where(i => i.IsDefined(typeof(LocalizedAttribute)));
@@ -147,7 +146,7 @@ namespace Xaki
             foreach (var propertyInfo in properties)
             {
                 var propertyValue = propertyInfo.GetValue(item)?.ToString();
-                if (string.IsNullOrEmpty(propertyValue))
+                if (string.IsNullOrWhiteSpace(propertyValue))
                 {
                     continue;
                 }
@@ -164,20 +163,27 @@ namespace Xaki
 
         private string GetContentForLanguage(IDictionary<string, string> localizedContents, string languageCode)
         {
-            if (!localizedContents.Any())
+            if (!localizedContents.Keys.Any())
             {
                 throw new ArgumentException("Cannot localize property, no localized property values exist.", nameof(localizedContents));
             }
 
-            var localizedContent = localizedContents.SingleOrDefault(i => i.Key.Equals(languageCode, StringComparison.OrdinalIgnoreCase) && !string.IsNullOrWhiteSpace(i.Value)).Value;
+            if (localizedContents.TryGetValue(languageCode, out var content) && !string.IsNullOrWhiteSpace(content))
+            {
+                return content;
+            }
 
-            return localizedContent ?? GetContentForFirstLanguage(localizedContents);
+            return GetContentForFirstLanguage(localizedContents);
         }
 
         private string GetContentForFirstLanguage(IDictionary<string, string> localizedContents)
         {
-            return localizedContents.SingleOrDefault(i => i.Key.Equals(SupportedLanguages.First())).Value ??
-                   localizedContents.First().Value;
+            if (localizedContents.TryGetValue(SupportedLanguages.First(), out var content))
+            {
+                return content;
+            }
+
+            return localizedContents.First().Value; //Note: Keys are not ordered in a dictionary.
         }
     }
 }

@@ -8,5 +8,6 @@ namespace Xaki.AspNetCore.Configuration
         public IEnumerable<string> RequiredLanguages { get; set; }
         public IEnumerable<string> OptionalLanguages { get; set; }
         public IEnumerable<string> SupportedLanguages => RequiredLanguages.Union(OptionalLanguages);
+        public bool EnablePerCallLocalizeExtensions { get; set; } = false;
     }
 }

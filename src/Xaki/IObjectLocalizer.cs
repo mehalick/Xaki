@@ -18,8 +18,8 @@ namespace Xaki
 
         IEnumerable<T> Localize<T>(IEnumerable<T> items, string languageCode) where T : class, ILocalizable;
 
-        IEnumerable<string> RequiredLanguages { get; set; }
-        IEnumerable<string> OptionalLanguages { get; set; }
-        IEnumerable<string> SupportedLanguages { get; }
+        HashSet<string> RequiredLanguages { get; }
+        HashSet<string> OptionalLanguages { get; }
+        HashSet<string> SupportedLanguages { get; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Xaki.Configuration;
 using Xaki.LanguageResolvers;
 using Xaki.Tests.Common;
 using Xunit;
@@ -14,7 +15,7 @@ namespace Xaki.Tests
         {
             protected readonly IObjectLocalizer ObjectLocalizer = new ObjectLocalizer
             {
-                RequiredLanguages = new[] { Constants.LanguageCode1, Constants.LanguageCode2 }
+                RequiredLanguages = new HashSet<string>(new[] { Constants.LanguageCode1, Constants.LanguageCode2 })
             };
         }
 
@@ -238,6 +239,109 @@ namespace Xaki.Tests
                 };
 
                 Assert.Equal(Constants.LanguageCode1, objectLocalizer.GetLanguageCode());
+            }
+        }
+
+        public class ObjectLocalizerConfigExtensions : TestBase
+        {
+            [Fact]
+            public void ReturnsNullWhenItemIsNull()
+            {
+                TestClass testClass = null;
+
+                ObjectLocalizerConfig.Set(() => ObjectLocalizer);
+                var result = testClass.Localize();
+
+                Assert.Null(result);
+            }
+
+            [Fact]
+            public void ReturnsFirstLocalizationWhenLanguageCodeIsNull()
+            {
+                var name = ObjectLocalizer.Serialize(new Dictionary<string, string>
+                {
+                    { Constants.LanguageCode1, Constants.AnyString1 },
+                    { Constants.LanguageCode2, Constants.AnyString2 }
+                });
+
+                var testClass = new TestClass(name);
+
+                ObjectLocalizerConfig.Set(() => ObjectLocalizer);
+                var result = testClass.Localize();
+
+                Assert.Equal(Constants.AnyString1, result.Name);
+            }
+
+            [Fact]
+            public void ReturnsFirstLocalizationWhenLanguageCodeIsNotSupported()
+            {
+                var name = ObjectLocalizer.Serialize(new Dictionary<string, string>
+                {
+                    { Constants.LanguageCode1, Constants.AnyString1 },
+                    { Constants.LanguageCode2, Constants.AnyString2 }
+                });
+
+                var testClass = new TestClass(name);
+
+                ObjectLocalizerConfig.Set(() => ObjectLocalizer);
+                var result = testClass.Localize(Constants.LanguageCode3);
+
+                Assert.Equal(Constants.AnyString1, result.Name);
+            }
+
+            [Fact]
+            public void ReturnsCorrectLocalizationWhenItemHasOneLanguage()
+            {
+                var name = ObjectLocalizer.Serialize(new Dictionary<string, string>
+                {
+                    { Constants.LanguageCode1, Constants.AnyString1 }
+                });
+
+                var testClass = new TestClass(name);
+
+                ObjectLocalizerConfig.Set(() => ObjectLocalizer);
+                var result = testClass.Localize(Constants.LanguageCode1);
+
+                Assert.Equal(Constants.AnyString1, result.Name);
+            }
+
+            [Fact]
+            public void ReturnsCorrectLocalizationWhenItemHasMultipleLanguages()
+            {
+                var name = ObjectLocalizer.Serialize(new Dictionary<string, string>
+                {
+                    { Constants.LanguageCode1, Constants.AnyString1 },
+                    { Constants.LanguageCode2, Constants.AnyString2 }
+                });
+
+                var testClass = new TestClass(name);
+
+                ObjectLocalizerConfig.Set(() => ObjectLocalizer);
+                var result = testClass.Localize(Constants.LanguageCode2);
+
+                Assert.Equal(Constants.AnyString2, result.Name);
+            }
+
+            [Fact]
+            public void ReturnsCorrectLocalizationsItemsHaveMultipleLanguages()
+            {
+                var name = ObjectLocalizer.Serialize(new Dictionary<string, string>
+                {
+                    { Constants.LanguageCode1, Constants.AnyString1 },
+                    { Constants.LanguageCode2, Constants.AnyString2 }
+                });
+
+                var testClasses = new[]
+                {
+                    new TestClass(name),
+                    new TestClass(name)
+                };
+
+                ObjectLocalizerConfig.Set(() => ObjectLocalizer);
+                var results = testClasses.Localize<TestClass>(Constants.LanguageCode1).ToList();
+
+                Assert.Equal(Constants.AnyString1, results.ElementAt(0).Name);
+                Assert.Equal(Constants.AnyString1, results.ElementAt(1).Name);
             }
         }
     }

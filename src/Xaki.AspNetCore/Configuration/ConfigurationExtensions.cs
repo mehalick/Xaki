@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Xaki.AspNetCore.LanguageResolvers;
 using Xaki.AspNetCore.ModelBinding;
+using Xaki.Configuration;
 using Xaki.LanguageResolvers;
 
 namespace Xaki.AspNetCore.Configuration
@@ -16,7 +16,7 @@ namespace Xaki.AspNetCore.Configuration
     {
         public static IServiceCollection AddXaki(this IServiceCollection services, XakiOptions xakiOptions)
         {
-            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddHttpContextAccessor();
 
             services.Configure<RequestLocalizationOptions>(options =>
             {
@@ -34,8 +34,8 @@ namespace Xaki.AspNetCore.Configuration
 
             services.AddScoped<IObjectLocalizer>(provider => new ObjectLocalizer
             {
-                RequiredLanguages = xakiOptions.RequiredLanguages,
-                OptionalLanguages = xakiOptions.OptionalLanguages,
+                RequiredLanguages = new HashSet<string>(xakiOptions.RequiredLanguages),
+                OptionalLanguages = new HashSet<string>(xakiOptions.OptionalLanguages),
                 LanguageResolvers = new List<ILanguageResolver>
                 {
                     new RequestLanguageResolver(provider.GetService<IHttpContextAccessor>()),
@@ -43,6 +43,12 @@ namespace Xaki.AspNetCore.Configuration
                     new DefaultLanguageResolver("en")
                 }
             });
+
+            if (xakiOptions.EnablePerCallLocalizeExtensions)
+            {
+                var provider = services.BuildServiceProvider();
+                ObjectLocalizerConfig.Set(() => provider.GetService<IObjectLocalizer>());
+            }
 
             return services;
         }

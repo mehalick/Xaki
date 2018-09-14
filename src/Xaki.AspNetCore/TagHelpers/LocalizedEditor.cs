@@ -25,7 +25,7 @@ namespace Xaki.AspNetCore.TagHelpers
         {
             var propertyId = $"localized-editor-{Guid.NewGuid():n}";
             var propertyName = Model.Metadata.PropertyName;
-            var friendlyName = Regex.Replace(Regex.Replace(propertyName, @"(\P{Ll})(\P{Ll}\p{Ll})", "$1 $2"), @"(\p{Ll})(\P{Ll})", "$1 $2");
+            var friendlyName = Regex.Replace(Regex.Replace(propertyName, @"(\P{Ll})(\P{Ll}\p{Ll})", "$1 $2", RegexOptions.Compiled), @"(\p{Ll})(\P{Ll})", "$1 $2", RegexOptions.Compiled);
 
             output.TagName = "ul";
             output.TagMode = TagMode.StartTagAndEndTag;
@@ -123,14 +123,6 @@ namespace Xaki.AspNetCore.TagHelpers
                 }
 
                 output.PreContent.AppendHtml(li);
-
-                //output.PreElement.AppendHtml($@"
-                //    <style>
-                //        .localized-editor li {{ margin-bottom: {Spacing}px }}
-                //        .localized-editor li:last-child {{ margin-bottom: 0; }}
-                //        .localized-editor .input-group-text {{
-                //        }}
-                //    </style>");
 
                 output.PostContent.AppendHtml($@"
                     <script>
