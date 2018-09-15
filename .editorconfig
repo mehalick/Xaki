@@ -78,8 +78,8 @@ dotnet_style_coalesce_expression = true:suggestion
 dotnet_style_null_propagation = true:suggestion
 
 # Expression-bodied members
-csharp_style_expression_bodied_methods = false
-csharp_style_expression_bodied_constructors = false
+csharp_style_expression_bodied_methods = false:suggestion
+csharp_style_expression_bodied_constructors = false:suggestion
 csharp_style_expression_bodied_operators = true:suggestion
 csharp_style_expression_bodied_properties = true:suggestion
 csharp_style_expression_bodied_indexers = true:suggestion
@@ -132,6 +132,10 @@ indent_size = 2
 
 # Xml config files
 [*.{props,targets,config,nuspec}]
+indent_size = 2
+
+# JSON files
+[*.json]
 indent_size = 2
 
 # Shell scripts

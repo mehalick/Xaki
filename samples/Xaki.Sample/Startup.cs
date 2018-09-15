@@ -1,39 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Xaki.AspNetCore.Configuration;
 using Xaki.Sample.Models;
 
 namespace Xaki.Sample
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    [SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
     public class Startup
     {
-        public void ConfigureServices(IServiceCollection services)
+        public Startup(IConfiguration configuration)
         {
-            services.AddDbContext<DataContext>(GetDbContext());
-
-            services.AddXaki(new XakiOptions
-            {
-                RequiredLanguages = new List<string> { "en", "zh", "ar", "es", "hi" },
-                OptionalLanguages = new List<string> { "pt", "ru", "ja", "de", "el" },
-                EnablePerCallLocalizeExtensions = true
-            });
-            services.AddMvc().AddXakiMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            Configuration = configuration;
         }
 
-        private static Action<DbContextOptionsBuilder> GetDbContext()
-        {
-            const string connection = @"Server=(localdb)\mssqllocaldb;Database=Xaki;Trusted_Connection=True;ConnectRetryCount=0";
+        public IConfiguration Configuration { get; }
 
-            return options => options.UseSqlServer(connection);
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddXaki(new XakiOptions
+                {
+                    RequiredLanguages = new List<string> { "en", "zh", "ar", "es", "hi" },
+                    OptionalLanguages = new List<string> { "pt", "ru", "ja", "de", "el" }
+                });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -44,10 +39,8 @@ namespace Xaki.Sample
                 app.UseBrowserLink();
             }
 
-            var options = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
-            app.UseRequestLocalization(options.Value);
-
             app.UseStaticFiles();
+            app.UseXaki(); // must precede UseMvc()
             app.UseMvc();
         }
     }
