@@ -26,8 +26,8 @@ namespace Xaki.Tests
             {
                 var contents = new Dictionary<string, string>
                 {
-                    {Constants.LanguageCode1, Constants.AnyString1 },
-                    {Constants.LanguageCode2, Constants.AnyString2 }
+                    [Constants.LanguageCode1] = Constants.AnyString1,
+                    [Constants.LanguageCode2] = Constants.AnyString2
                 };
 
                 var actual = ObjectLocalizer.Serialize(contents);
@@ -41,10 +41,10 @@ namespace Xaki.Tests
             public void ReturnsJsonInOrderWhenInputOutOfOrder()
             {
                 var contents = new Dictionary<string, string>
-            {
-                {Constants.LanguageCode2, Constants.AnyString2 },
-                {Constants.LanguageCode1, Constants.AnyString1 }
-            };
+                {
+                    [Constants.LanguageCode2] = Constants.AnyString2,
+                    [Constants.LanguageCode1] = Constants.AnyString1
+                };
 
                 var actual = ObjectLocalizer.Serialize(contents);
 
@@ -57,11 +57,11 @@ namespace Xaki.Tests
             public void ReturnsJsonWithoutInvalidLanguageCodesWhenInputContainsInvalidLanguageCodes()
             {
                 var contents = new Dictionary<string, string>
-            {
-                {Constants.LanguageCode1, Constants.AnyString1 },
-                {Constants.LanguageCode2, Constants.AnyString2 },
-                {Constants.LanguageCode3, Constants.AnyString2 }
-            };
+                {
+                    [Constants.LanguageCode1] = Constants.AnyString1,
+                    [Constants.LanguageCode2] = Constants.AnyString2,
+                    [Constants.LanguageCode3] = Constants.AnyString2
+                };
 
                 var actual = ObjectLocalizer.Serialize(contents);
 
@@ -101,7 +101,7 @@ namespace Xaki.Tests
 
                 Assert.False(result);
                 Assert.Equal(Constants.LanguageCode1, localizedContent.Keys.Single());
-                Assert.Equal("", localizedContent.Values.Single());
+                Assert.Equal(string.Empty, localizedContent.Values.Single());
             }
         }
 
@@ -122,8 +122,8 @@ namespace Xaki.Tests
             {
                 var name = ObjectLocalizer.Serialize(new Dictionary<string, string>
                 {
-                    { Constants.LanguageCode1, Constants.AnyString1 },
-                    { Constants.LanguageCode2, Constants.AnyString2 }
+                    [Constants.LanguageCode1] = Constants.AnyString1,
+                    [Constants.LanguageCode2] = Constants.AnyString2
                 });
 
                 var testClass = new TestClass(name);
@@ -138,8 +138,8 @@ namespace Xaki.Tests
             {
                 var name = ObjectLocalizer.Serialize(new Dictionary<string, string>
                 {
-                    { Constants.LanguageCode1, Constants.AnyString1 },
-                    { Constants.LanguageCode2, Constants.AnyString2 }
+                    [Constants.LanguageCode1] = Constants.AnyString1,
+                    [Constants.LanguageCode2] = Constants.AnyString2
                 });
 
                 var testClass = new TestClass(name);
@@ -154,7 +154,7 @@ namespace Xaki.Tests
             {
                 var name = ObjectLocalizer.Serialize(new Dictionary<string, string>
                 {
-                    { Constants.LanguageCode1, Constants.AnyString1 }
+                    [Constants.LanguageCode1] = Constants.AnyString1
                 });
 
                 var testClass = new TestClass(name);
@@ -169,8 +169,8 @@ namespace Xaki.Tests
             {
                 var name = ObjectLocalizer.Serialize(new Dictionary<string, string>
                 {
-                    { Constants.LanguageCode1, Constants.AnyString1 },
-                    { Constants.LanguageCode2, Constants.AnyString2 }
+                    [Constants.LanguageCode1] = Constants.AnyString1,
+                    [Constants.LanguageCode2] = Constants.AnyString2
                 });
 
                 var testClass = new TestClass(name);
@@ -185,8 +185,8 @@ namespace Xaki.Tests
             {
                 var name = ObjectLocalizer.Serialize(new Dictionary<string, string>
                 {
-                    { Constants.LanguageCode1, Constants.AnyString1 },
-                    { Constants.LanguageCode2, Constants.AnyString2 }
+                    [Constants.LanguageCode1] = Constants.AnyString1,
+                    [Constants.LanguageCode2] = Constants.AnyString2
                 });
 
                 var testClasses = new[]
@@ -260,8 +260,8 @@ namespace Xaki.Tests
             {
                 var name = ObjectLocalizer.Serialize(new Dictionary<string, string>
                 {
-                    { Constants.LanguageCode1, Constants.AnyString1 },
-                    { Constants.LanguageCode2, Constants.AnyString2 }
+                    [Constants.LanguageCode1] = Constants.AnyString1,
+                    [Constants.LanguageCode2] = Constants.AnyString2
                 });
 
                 var testClass = new TestClass(name);
@@ -277,8 +277,8 @@ namespace Xaki.Tests
             {
                 var name = ObjectLocalizer.Serialize(new Dictionary<string, string>
                 {
-                    { Constants.LanguageCode1, Constants.AnyString1 },
-                    { Constants.LanguageCode2, Constants.AnyString2 }
+                    [Constants.LanguageCode1] = Constants.AnyString1,
+                    [Constants.LanguageCode2] = Constants.AnyString2
                 });
 
                 var testClass = new TestClass(name);
@@ -294,7 +294,7 @@ namespace Xaki.Tests
             {
                 var name = ObjectLocalizer.Serialize(new Dictionary<string, string>
                 {
-                    { Constants.LanguageCode1, Constants.AnyString1 }
+                    [Constants.LanguageCode1] = Constants.AnyString1
                 });
 
                 var testClass = new TestClass(name);
@@ -310,8 +310,8 @@ namespace Xaki.Tests
             {
                 var name = ObjectLocalizer.Serialize(new Dictionary<string, string>
                 {
-                    { Constants.LanguageCode1, Constants.AnyString1 },
-                    { Constants.LanguageCode2, Constants.AnyString2 }
+                    [Constants.LanguageCode1] = Constants.AnyString1,
+                    [Constants.LanguageCode2] = Constants.AnyString2
                 });
 
                 var testClass = new TestClass(name);
@@ -327,8 +327,8 @@ namespace Xaki.Tests
             {
                 var name = ObjectLocalizer.Serialize(new Dictionary<string, string>
                 {
-                    { Constants.LanguageCode1, Constants.AnyString1 },
-                    { Constants.LanguageCode2, Constants.AnyString2 }
+                    [Constants.LanguageCode1] = Constants.AnyString1,
+                    [Constants.LanguageCode2] = Constants.AnyString2
                 });
 
                 var testClasses = new[]

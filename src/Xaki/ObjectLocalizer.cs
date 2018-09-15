@@ -13,9 +13,9 @@ namespace Xaki
         public const string FallbackLanguageCode = "en";
 
         public IEnumerable<ILanguageResolver> LanguageResolvers { get; set; } = new[] { new DefaultLanguageResolver(FallbackLanguageCode) };
-        public HashSet<string> RequiredLanguages { get; set; } = new HashSet<string>(new[] { FallbackLanguageCode });
-        public HashSet<string> OptionalLanguages { get; set; } = new HashSet<string>();
-        public HashSet<string> SupportedLanguages => new HashSet<string>(RequiredLanguages.Union(OptionalLanguages).Select(x => x.ToLowerInvariant()));
+        public HashSet<string> RequiredLanguages { get; set; } = new HashSet<string>(new[] { FallbackLanguageCode }, StringComparer.InvariantCultureIgnoreCase);
+        public HashSet<string> OptionalLanguages { get; set; } = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
+        public HashSet<string> SupportedLanguages => new HashSet<string>(RequiredLanguages.Union(OptionalLanguages), StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Serializes a localized content <see cref="IDictionary{TKey,TValue}"/> to JSON.
@@ -64,7 +64,7 @@ namespace Xaki
             {
                 localizedContent = new Dictionary<string, string>
                 {
-                    { SupportedLanguages.First(), "" }
+                    [SupportedLanguages.First()] = string.Empty
                 };
 
                 return false;
