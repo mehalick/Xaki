@@ -23,6 +23,7 @@ deploy:
   symbol_server: https://www.myget.org/F/xaki/symbols/api/v2/package
   on:
     branch: master
+    appveyor_repo_tag: false
 - provider: NuGet
   name: production
   skip_symbols: true
