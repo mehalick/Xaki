@@ -4,6 +4,8 @@ namespace Xaki
 {
     public interface IObjectLocalizer
     {
+        string GetEmptyJsonString();
+
         string Serialize(IDictionary<string, string> content);
 
         IDictionary<string, string> Deserialize(string json);
