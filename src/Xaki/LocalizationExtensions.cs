@@ -5,34 +5,34 @@ namespace Xaki
 {
     public static class LocalizationExtensions
     {
-        public static T Localize<T>(this T item, IObjectLocalizer localizer) where T : class, ILocalizable
+        public static T Localize<T>(this T item, IObjectLocalizer localizer, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable
         {
-            return localizer.Localize(item);
+            return localizer.Localize(item, depth);
         }
 
-        public static IEnumerable<T> Localize<T>(this IEnumerable<T> items, IObjectLocalizer localizer) where T : class, ILocalizable
+        public static IEnumerable<T> Localize<T>(this IEnumerable<T> items, IObjectLocalizer localizer, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable
         {
-            return localizer.Localize(items);
+            return localizer.Localize(items, depth);
         }
 
-        public static T Localize<T>(this T item) where T : class, ILocalizable
+        public static T Localize<T>(this T item, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable
         {
-            return ObjectLocalizerConfig.Get().Localize(item);
+            return ObjectLocalizerConfig.Get().Localize(item, depth);
         }
 
-        public static IEnumerable<T> Localize<T>(this IEnumerable<T> items) where T : class, ILocalizable
+        public static IEnumerable<T> Localize<T>(this IEnumerable<T> items, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable
         {
-            return ObjectLocalizerConfig.Get().Localize(items);
+            return ObjectLocalizerConfig.Get().Localize(items, depth);
         }
 
-        public static T Localize<T>(this T item, string languageCode) where T : class, ILocalizable
+        public static T Localize<T>(this T item, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable
         {
-            return ObjectLocalizerConfig.Get().Localize(item, languageCode);
+            return ObjectLocalizerConfig.Get().Localize(item, languageCode, depth);
         }
 
-        public static IEnumerable<T> Localize<T>(this IEnumerable<T> items, string languageCode) where T : class, ILocalizable
+        public static IEnumerable<T> Localize<T>(this IEnumerable<T> items, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable
         {
-            return ObjectLocalizerConfig.Get().Localize(items, languageCode);
+            return ObjectLocalizerConfig.Get().Localize(items, languageCode, depth);
         }
     }
 }

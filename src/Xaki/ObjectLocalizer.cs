@@ -89,7 +89,7 @@ namespace Xaki
         {
             var languageCode = GetLanguageCode();
 
-            return Localize(item, languageCode);
+            return Localize(item, languageCode, depth);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Xaki
                 languageCode = SupportedLanguages.First();
             }
 
-            LocalizeProperties(item, languageCode);
+            LocalizeProperties(item, languageCode, depth);
 
             return item;
         }
@@ -119,7 +119,7 @@ namespace Xaki
         {
             var languageCode = GetLanguageCode();
 
-            return items.Select(item => Localize(item, languageCode));
+            return items.Select(item => Localize(item, languageCode, depth));
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Xaki
         /// </summary>
         public IEnumerable<T> Localize<T>(IEnumerable<T> items, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable
         {
-            return items.Select(item => Localize(item, languageCode));
+            return items.Select(item => Localize(item, languageCode, depth));
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace Xaki
             return FallbackLanguageCode;
         }
 
-        private void LocalizeProperties<T>(T item, string languageCode) where T : class, ILocalizable
+        private void LocalizeProperties<T>(T item, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable
         {
             var properties = typeof(T)
                 .GetTypeInfo()
