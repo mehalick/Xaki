@@ -107,7 +107,7 @@ namespace Xaki
                 languageCode = SupportedLanguages.First();
             }
 
-            LocalizeProperties(item, languageCode, depth);
+            LocalizeItem(item, languageCode, depth);
 
             return item;
         }
@@ -147,29 +147,49 @@ namespace Xaki
             return FallbackLanguageCode;
         }
 
-        private void LocalizeProperties<T>(T item, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable
+        private void LocalizeItem<T>(T item, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow)
+            where T : class, ILocalizable
         {
-            var properties = typeof(T)
-                .GetTypeInfo()
-                .DeclaredProperties
-                .Where(i => i.IsDefined(typeof(LocalizedAttribute)));
-
-            foreach (var propertyInfo in properties)
+            //TODO(t): Cache the three following steps/props (in memory ConcurentDictionary) for better pref (if possible)
+            foreach (var property in typeof(T).GetTypeInfo().DeclaredProperties)
             {
-                var propertyValue = propertyInfo.GetValue(item)?.ToString();
-                if (string.IsNullOrWhiteSpace(propertyValue))
+                if (property.IsDefined(typeof(LocalizedAttribute)))
                 {
-                    continue;
+                    LocalizeProperty(item, property, languageCode);
                 }
-
-                if (!TryDeserialize(propertyValue, out var localizedContents))
+                else if (depth != LocalizationDepth.Shallow)
                 {
-                    continue;
+                    if (typeof(ILocalizable).IsAssignableFrom(property.DeclaringType))
+                    {
+                        LocalizeItem(property.GetValue(item, null) as ILocalizable, languageCode, LocalizationDepth.Shallow);
+                    }
+                    else if (typeof(IEnumerable<ILocalizable>).IsAssignableFrom(property.DeclaringType))
+                    {
+                        foreach (var child in property.GetValue(item, null) as IEnumerable<ILocalizable>)
+                        {
+                            LocalizeItem(child, languageCode, LocalizationDepth.Shallow);
+                        }
+                    }
                 }
-
-                var contentForLanguage = GetContentForLanguage(localizedContents, languageCode);
-                propertyInfo.SetValue(item, contentForLanguage, null);
             }
+        }
+
+        private void LocalizeProperty<T>(T item, PropertyInfo propertyInfo, string languageCode)
+            where T : class, ILocalizable
+        {
+            var propertyValue = propertyInfo.GetValue(item)?.ToString();
+            if (string.IsNullOrWhiteSpace(propertyValue))
+            {
+                return;
+            }
+
+            if (!TryDeserialize(propertyValue, out var localizedContents))
+            {
+                return;
+            }
+
+            var contentForLanguage = GetContentForLanguage(localizedContents, languageCode);
+            propertyInfo.SetValue(item, contentForLanguage, null);
         }
 
         private string GetContentForLanguage(IDictionary<string, string> localizedContents, string languageCode)
