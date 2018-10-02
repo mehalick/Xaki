@@ -171,13 +171,13 @@ namespace Xaki
                 {
                     if (typeof(ILocalizable).IsAssignableFrom(property.DeclaringType))
                     {
-                        LocalizeItem(property.GetValue(item, null) as ILocalizable, languageCode, LocalizationDepth.Shallow);
+                        LocalizeProperty(item, property.GetValue(item, null) as ILocalizable, languageCode, LocalizationDepth.Shallow);
                     }
                     else if (typeof(IEnumerable<ILocalizable>).IsAssignableFrom(property.DeclaringType))
                     {
-                        foreach (var child in property.GetValue(item, null) as IEnumerable<ILocalizable>)
+                        foreach (var member in property.GetValue(item, null) as IEnumerable<ILocalizable>)
                         {
-                            LocalizeItem(child, languageCode, LocalizationDepth.Shallow);
+                            LocalizeProperty(item, member, languageCode, LocalizationDepth.Shallow);
                         }
                     }
                 }
@@ -200,6 +200,28 @@ namespace Xaki
 
             var contentForLanguage = GetContentForLanguage(localizedContents, languageCode);
             propertyInfo.SetValue(item, contentForLanguage, null);
+        }
+
+        private void LocalizeProperty<T>(T @base, T member, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow)
+             where T : class, ILocalizable
+        {
+            if (SkipItemLocalization(@base, member))
+            {
+                return;
+            }
+
+            LocalizeItem(member, languageCode, depth);
+        }
+
+        private bool SkipItemLocalization<T>(T @base, T member)
+            where T : class, ILocalizable
+        {
+            if (@base is null || member is null)
+            {
+                return true;
+            }
+
+            return base.GetType() == member.GetType() && @base.Equals(member);
         }
 
         private string GetContentForLanguage(IDictionary<string, string> localizedContents, string languageCode)
