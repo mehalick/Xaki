@@ -221,7 +221,7 @@ namespace Xaki
                 return true;
             }
 
-            return base.GetType() == member.GetType() && @base.Equals(member);
+            return @base.GetType() == member.GetType() && ReferenceEquals(@base, member);
         }
 
         private string GetContentForLanguage(IDictionary<string, string> localizedContents, string languageCode)
