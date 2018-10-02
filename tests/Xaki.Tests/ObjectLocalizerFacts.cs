@@ -19,6 +19,17 @@ namespace Xaki.Tests
             };
         }
 
+        public class GetEmptyJsonString : TestBase
+        {
+            [Fact]
+            public void ReturnsCorrectJsonStringForSupportedLanguages()
+            {
+                var actual = ObjectLocalizer.GetEmptyJsonString();
+
+                Assert.Equal("{\"en\":\"\",\"xx\":\"\"}", actual);
+            }
+        }
+
         public class Serialize : TestBase
         {
             [Fact]
