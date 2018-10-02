@@ -18,6 +18,16 @@ namespace Xaki
         public HashSet<string> SupportedLanguages => new HashSet<string>(RequiredLanguages.Union(OptionalLanguages), StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
+        /// Initializes a new serialized collection of localized content items using all supported languages.
+        /// </summary>
+        public string GetEmptyJsonString()
+        {
+            var dictionary = SupportedLanguages.ToDictionary(i => i, _ => "");
+
+            return Serialize(dictionary);
+        }
+
+        /// <summary>
         /// Serializes a localized content <see cref="IDictionary{TKey,TValue}"/> to JSON.
         /// </summary>
         public string Serialize(IDictionary<string, string> content)
