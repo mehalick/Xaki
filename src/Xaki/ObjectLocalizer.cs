@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Xaki.LanguageResolvers;
 
 namespace Xaki
@@ -32,17 +32,22 @@ namespace Xaki
         /// </summary>
         public string Serialize(IDictionary<string, string> content)
         {
-            var item = new JObject();
-
-            foreach (var languageCode in SupportedLanguages)
+            using (var sw = new StringWriter())
+            using (var jw = new JsonTextWriter(sw))
             {
-                if (content.TryGetValue(languageCode, out var value))
+                jw.WriteStartObject();
+                foreach (var languageCode in SupportedLanguages)
                 {
-                    item[languageCode] = value;
+                    if (content.TryGetValue(languageCode, out var value))
+                    {
+                        jw.WritePropertyName(languageCode);
+                        jw.WriteValue(value);
+                    }
                 }
-            }
 
-            return item.ToString(Formatting.None);
+                jw.WriteEndObject();
+                return sw.ToString();
+            }
         }
 
         /// <summary>
@@ -50,11 +55,17 @@ namespace Xaki
         /// </summary>
         public IDictionary<string, string> Deserialize(string json)
         {
-            var item = JObject.Parse(json);
+            var item = JsonConvert.DeserializeObject<IDictionary<string, string>>(json);
 
-            return SupportedLanguages
-                .Where(i => !(item[i] is null))
-                .ToDictionary(i => i, i => (string)item[i]);
+            foreach (var key in item.Keys)
+            {
+                if (!SupportedLanguages.Contains(key))
+                {
+                    item.Remove(key);
+                }
+            }
+
+            return item;
         }
 
         /// <summary>
@@ -84,17 +95,17 @@ namespace Xaki
         /// <summary>
         /// Localizes all properties on an <see cref="ILocalizable"/> item with the language code provided by <see cref="ILanguageResolver"/>.
         /// </summary>
-        public T Localize<T>(T item) where T : class, ILocalizable
+        public T Localize<T>(T item, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable
         {
             var languageCode = GetLanguageCode();
 
-            return Localize(item, languageCode);
+            return Localize(item, languageCode, depth);
         }
 
         /// <summary>
         /// Localizes all properties on an <see cref="ILocalizable"/> item with the specified language code.
         /// </summary>
-        public T Localize<T>(T item, string languageCode) where T : class, ILocalizable
+        public T Localize<T>(T item, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable
         {
             if (item is null)
             {
@@ -106,7 +117,7 @@ namespace Xaki
                 languageCode = SupportedLanguages.First();
             }
 
-            LocalizeProperties(item, languageCode);
+            LocalizeItem(item, languageCode, depth);
 
             return item;
         }
@@ -114,19 +125,19 @@ namespace Xaki
         /// <summary>
         /// Localizes all properties on each <see cref="ILocalizable"/> item in a collection with the language code provided by <see cref="ILanguageResolver"/>.
         /// </summary>
-        public IEnumerable<T> Localize<T>(IEnumerable<T> items) where T : class, ILocalizable
+        public IEnumerable<T> Localize<T>(IEnumerable<T> items, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable
         {
             var languageCode = GetLanguageCode();
 
-            return items.Select(item => Localize(item, languageCode));
+            return items.Select(item => Localize(item, languageCode, depth));
         }
 
         /// <summary>
         /// Localizes all properties on each <see cref="ILocalizable"/> item in a collection with the specified language code.
         /// </summary>
-        public IEnumerable<T> Localize<T>(IEnumerable<T> items, string languageCode) where T : class, ILocalizable
+        public IEnumerable<T> Localize<T>(IEnumerable<T> items, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable
         {
-            return items.Select(item => Localize(item, languageCode));
+            return items.Select(item => Localize(item, languageCode, depth));
         }
 
         /// <summary>
@@ -146,29 +157,71 @@ namespace Xaki
             return FallbackLanguageCode;
         }
 
-        private void LocalizeProperties<T>(T item, string languageCode) where T : class, ILocalizable
+        private void LocalizeItem<T>(T item, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow)
+            where T : class, ILocalizable
         {
-            var properties = typeof(T)
-                .GetTypeInfo()
-                .DeclaredProperties
-                .Where(i => i.IsDefined(typeof(LocalizedAttribute)));
-
-            foreach (var propertyInfo in properties)
+            //TODO(t): Cache the three following steps/props (in memory ConcurentDictionary) for better pref (if possible)
+            foreach (var property in typeof(T).GetTypeInfo().DeclaredProperties)
             {
-                var propertyValue = propertyInfo.GetValue(item)?.ToString();
-                if (string.IsNullOrWhiteSpace(propertyValue))
+                if (property.IsDefined(typeof(LocalizedAttribute)))
                 {
-                    continue;
+                    LocalizeProperty(item, property, languageCode);
                 }
-
-                if (!TryDeserialize(propertyValue, out var localizedContents))
+                else if (depth != LocalizationDepth.Shallow)
                 {
-                    continue;
+                    if (typeof(ILocalizable).IsAssignableFrom(property.DeclaringType))
+                    {
+                        LocalizeProperty(item, property.GetValue(item, null) as ILocalizable, languageCode, LocalizationDepth.Shallow);
+                    }
+                    else if (typeof(IEnumerable<ILocalizable>).IsAssignableFrom(property.DeclaringType))
+                    {
+                        foreach (var member in property.GetValue(item, null) as IEnumerable<ILocalizable>)
+                        {
+                            LocalizeProperty(item, member, languageCode, LocalizationDepth.Shallow);
+                        }
+                    }
                 }
-
-                var contentForLanguage = GetContentForLanguage(localizedContents, languageCode);
-                propertyInfo.SetValue(item, contentForLanguage, null);
             }
+        }
+
+        private void LocalizeProperty<T>(T item, PropertyInfo propertyInfo, string languageCode)
+            where T : class, ILocalizable
+        {
+            var propertyValue = propertyInfo.GetValue(item)?.ToString();
+            if (string.IsNullOrWhiteSpace(propertyValue))
+            {
+                return;
+            }
+
+            if (!TryDeserialize(propertyValue, out var localizedContents))
+            {
+                return;
+            }
+
+            var contentForLanguage = GetContentForLanguage(localizedContents, languageCode);
+            propertyInfo.SetValue(item, contentForLanguage, null);
+        }
+
+        private void LocalizeProperty<T>(T @base, T member, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow)
+             where T : class, ILocalizable
+        {
+            if (SkipItemLocalization(@base, member))
+            {
+                return;
+            }
+
+            LocalizeItem(member, languageCode, depth);
+        }
+
+        private bool SkipItemLocalization<T>(T @base, T member)
+            where T : class, ILocalizable
+        {
+            if (@base is null || member is null)
+            {
+                return true;
+            }
+
+            return @base.GetType() == member.GetType() && ReferenceEquals(@base, member);
         }
 
         private string GetContentForLanguage(IDictionary<string, string> localizedContents, string languageCode)
