@@ -18,13 +18,20 @@ namespace Xaki
         public HashSet<string> SupportedLanguages => new HashSet<string>(RequiredLanguages.Union(OptionalLanguages), StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
-        /// Initializes a new serialized collection of localized content items using all supported languages.
+        /// Gets the current language code provided by <see cref="LanguageResolvers"/>.
         /// </summary>
-        public string GetEmptyJsonString()
+        public string GetLanguageCode()
         {
-            var dictionary = SupportedLanguages.ToDictionary(i => i, _ => "");
+            foreach (var languageResolver in LanguageResolvers)
+            {
+                var languageCode = languageResolver.GetLanguageCode();
+                if (!string.IsNullOrWhiteSpace(languageCode))
+                {
+                    return languageCode;
+                }
+            }
 
-            return Serialize(dictionary);
+            return FallbackLanguageCode;
         }
 
         /// <summary>
@@ -148,23 +155,6 @@ namespace Xaki
         public IEnumerable<T> Localize<T>(IEnumerable<T> items, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable
         {
             return items.Select(item => Localize(item, languageCode, depth));
-        }
-
-        /// <summary>
-        /// Gets the current language code provided by <see cref="LanguageResolvers"/>.
-        /// </summary>
-        public string GetLanguageCode()
-        {
-            foreach (var languageResolver in LanguageResolvers)
-            {
-                var languageCode = languageResolver.GetLanguageCode();
-                if (!string.IsNullOrWhiteSpace(languageCode))
-                {
-                    return languageCode;
-                }
-            }
-
-            return FallbackLanguageCode;
         }
 
         private void LocalizeItem<T>(T item, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow)
