@@ -34,13 +34,13 @@ namespace Xaki.AspNetCore.TagHelpers
 
             var items = _localizer.Deserialize(Model.Model.ToString());
 
-            for (var i = 0; i < _localizer.SupportedLanguages.Count(); i++)
+            for (var i = 0; i < _localizer.SupportedLanguages.Count; i++)
             {
                 var languageCode = _localizer.SupportedLanguages.ElementAt(i);
 
                 if (!items.TryGetValue(languageCode, out var languageValue))
                 {
-                    languageValue = "";
+                    languageValue = string.Empty;
                 }
 
                 var inputId = $"{Model.Name}_{i}_Value";
@@ -129,22 +129,22 @@ namespace Xaki.AspNetCore.TagHelpers
 
                         (function () {{
                             var getMaxWidth = function(elements) {{
-                                var width = 0;
-                                for (var i = 0; i < elements.length; i++) {{
+                                let width = 0;
+                                for (let i = 0; i < elements.length; i++) {{
                                     width = Math.max(width, elements[i].offsetWidth);
                                 }}
                                 return width;
                             }}
 
                             var setMinWidth = function (elements, width) {{
-                                for (var i = 0; i < elements.length; i++) {{
+                                for (let i = 0; i < elements.length; i++) {{
                                     elements[i].style.minWidth = `${{width}}px`;
                                 }}
                             }}
 
-                            var parent = document.getElementById('{propertyId}');
-                            var labels = parent.getElementsByClassName('input-group-text');
-                            var maxWidth = getMaxWidth(labels);
+                            let parent = document.getElementById('{propertyId}');
+                            let labels = parent.getElementsByClassName('input-group-text');
+                            let maxWidth = getMaxWidth(labels);
                             setMinWidth(labels, maxWidth);
                         }})();
 
