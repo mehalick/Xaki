@@ -46,7 +46,7 @@ namespace Xaki.Docs
                 .FontSources(s => s.CustomSources("data:", "https://cdnjs.cloudflare.com", "https://fonts.gstatic.com"))
                 .ImageSources(s => s.Self().CustomSources("data:", "https://xaki.azureedge.net"))
                 .ScriptSources(s => s.Self().UnsafeInline().CustomSources("https://cdnjs.cloudflare.com"))
-                .StyleSources(s => s.Self().UnsafeInline().CustomSources("https://cdnjs.cloudflare.com")));
+                .StyleSources(s => s.Self().UnsafeInline().CustomSources("https://cdnjs.cloudflare.com", "https://fonts.googleapis.com")));
 
             app.UseResponseCaching();
 

@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Xaki.Docs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css" integrity="sha256-oDCP2dNW17Y1QhBwQ+u2kLaKxoauWvIGks3a4as9QKs=" crossorigin="anonymous" />
 
     <environment include="Development">
         <link rel="stylesheet" href="~/css/site.css" />
@@ -12,29 +13,51 @@
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
 </head>
-<body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <a asp-page="/Index" class="navbar-brand">Xaki.Docs</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-page="/Index">Home</a></li>
-                    <li><a asp-page="/About">About</a></li>
-                    <li><a asp-page="/Contact">Contact</a></li>
-                </ul>
+<body id="admin">
+
+    <div id="sidebar" class="ui vertical inverted sidebar menu">
+        <partial name="_Layout_NavLinks" />
+    </div>
+
+    <div id="main-menu" class="ui fixed inverted main menu">
+        <div class="ui container">
+            <a class="launch icon item">
+                <i class="content icon"></i>
+            </a>
+            <div class="item">
+                Xaki
             </div>
         </div>
-    </nav>
-
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2018 - Xaki.Docs</p>
-        </footer>
     </div>
+
+    <div class="pusher">
+        <div class="full height">
+            <div class="toc">
+                <nav class="ui vertical inverted sticky menu">
+                    <partial name="_Layout_NavLinks" />
+                </nav>
+            </div>
+            <div class="article">
+                <header class="ui masthead vertical segment">
+                    <div class="ui container">
+                        <div class="introduction">
+                            <div class="ui header">
+                                <div class="ui breadcrumb">
+                                    Home
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <main class="main ui intro container">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.js" integrity="sha256-RKNmL9+6j/3jB72OcIg8OQr91Bi4OgFPnKQOFS1O+fo=" crossorigin="anonymous"></script>
 
     <environment include="Development">
         <script src="~/js/site.js" asp-append-version="true"></script>
