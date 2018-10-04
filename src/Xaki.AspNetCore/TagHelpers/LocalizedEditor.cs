@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace Xaki.AspNetCore.TagHelpers
 {
     [HtmlTargetElement("input", Attributes = "localized-for", TagStructure = TagStructure.NormalOrSelfClosing)]
+    [HtmlTargetElement("textarea", Attributes = "localized-for", TagStructure = TagStructure.NormalOrSelfClosing)]
     public class LocalizedEditor : TagHelper
     {
         [HtmlAttributeName("localized-for")]

@@ -6,8 +6,10 @@
 <table class="table table-hover">
     <thead>
     <tr>
-        <th>ID</th>
+        <th></th>
         <th>Name</th>
+        <th>Description</th>
+        <th>Moons</th>
         <th></th>
     </tr>
     </thead>
@@ -15,9 +17,16 @@
     @foreach (var planet in Model)
     {
         <tr>
-            <td>@planet.PlanetId</td>
+            <td class="thumbnail">
+                @if (!string.IsNullOrWhiteSpace(planet.ImageUrl))
+                {
+                    <img src="@planet.ImageUrl" alt="@planet.Name" />
+                }
+            </td>
             <td>@planet.Name</td>
-            <td style="width: 1%;"><a asp-action="Edit" asp-route-planetId="@planet.PlanetId">Edit</a></td>
+            <td>@planet.Description</td>
+            <td>@planet.Moons.Count</td>
+            <td style="width: 1%;"><a asp-action="Details" asp-route-planetId="@planet.PlanetId">Details</a></td>
         </tr>
     }
     </tbody>

@@ -27,7 +27,7 @@ namespace Xaki.Sample.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var planets = await _context.Planets.ToListAsync();
+            var planets = await _context.Planets.Include(i => i.Moons).ToListAsync();
 
             planets = _localizer.Localize<Planet>(planets).ToList();
 
@@ -35,9 +35,27 @@ namespace Xaki.Sample.Controllers
         }
 
         [HttpGet("{planetId:int}")]
+        public async Task<IActionResult> Details(int planetId)
+        {
+            var planet = await _context.Planets
+                .Include(i => i.Moons)
+                .SingleOrDefaultAsync(i => i.PlanetId == planetId);
+
+            if (planet is null)
+            {
+                return NotFound();
+            }
+
+            planet = _localizer.Localize(planet, LocalizationDepth.OneLevel);
+
+            return View(planet);
+        }
+
+        [HttpGet("{planetId:int}/edit")]
         public async Task<IActionResult> Edit(int planetId)
         {
             var planet = await _context.Planets.SingleOrDefaultAsync(i => i.PlanetId == planetId);
+
             if (planet is null)
             {
                 return NotFound();
@@ -46,7 +64,7 @@ namespace Xaki.Sample.Controllers
             return View(planet);
         }
 
-        [HttpPost("{planetId:int}")]
+        [HttpPost("{planetId:int}/edit")]
         public async Task<IActionResult> Edit(Planet planet)
         {
             _context.Entry(planet).State = EntityState.Modified;
@@ -54,6 +72,29 @@ namespace Xaki.Sample.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet("{planetId:int}/moons/{moonId:int}/edit")]
+        public async Task<IActionResult> EditMoon(int planetId, int moonId)
+        {
+            var moon = await _context.Moons.SingleOrDefaultAsync(i => i.PlanetId == planetId && i.MoonId == moonId);
+
+            if (moon is null)
+            {
+                return NotFound();
+            }
+
+            return View(moon);
+        }
+
+        [HttpPost("{planetId:int}/moons/{moonId:int}/edit")]
+        public async Task<IActionResult> EditMoon(Moon moon)
+        {
+            _context.Entry(moon).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Details), new { moon.PlanetId });
         }
     }
 }
