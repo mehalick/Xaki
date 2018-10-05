@@ -4,6 +4,8 @@ namespace Xaki
 {
     public interface IObjectLocalizer
     {
+        string GetLanguageCode();
+
         string GetEmptyJsonString();
 
         string Serialize(IDictionary<string, string> content);
@@ -19,8 +21,6 @@ namespace Xaki
         IEnumerable<T> Localize<T>(IEnumerable<T> items, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable;
 
         IEnumerable<T> Localize<T>(IEnumerable<T> items, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable;
-
-        string GetLanguageCode();
 
         HashSet<string> RequiredLanguages { get; }
         HashSet<string> OptionalLanguages { get; }

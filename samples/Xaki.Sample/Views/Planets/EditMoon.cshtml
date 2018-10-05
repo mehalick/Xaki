@@ -1,0 +1,17 @@
+﻿@model Moon
+@{
+    ViewData["Title"] = "Edit Moon";
+}
+
+<form asp-action="EditMoon">
+
+    <input type="hidden" asp-for="PlanetId" />
+    <input type="hidden" asp-for="MoonId" />
+
+    <div class="form-group">
+        <label>Name</label>
+        <input localized-for="Name" />
+    </div>
+
+    <button type="submit" class="btn btn-dark">Submit</button>
+</form>

@@ -18,11 +18,28 @@ namespace Xaki
         public HashSet<string> SupportedLanguages => new HashSet<string>(RequiredLanguages.Union(OptionalLanguages), StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
+        /// Gets the current language code provided by <see cref="LanguageResolvers"/>.
+        /// </summary>
+        public string GetLanguageCode()
+        {
+            foreach (var languageResolver in LanguageResolvers)
+            {
+                var languageCode = languageResolver.GetLanguageCode();
+                if (!string.IsNullOrWhiteSpace(languageCode))
+                {
+                    return languageCode;
+                }
+            }
+
+            return FallbackLanguageCode;
+        }
+
+        /// <summary>
         /// Initializes a new serialized collection of localized content items using all supported languages.
         /// </summary>
         public string GetEmptyJsonString()
         {
-            var dictionary = SupportedLanguages.ToDictionary(i => i, _ => "");
+            var dictionary = SupportedLanguages.ToDictionary(i => i, _ => string.Empty);
 
             return Serialize(dictionary);
         }
@@ -138,23 +155,6 @@ namespace Xaki
         public IEnumerable<T> Localize<T>(IEnumerable<T> items, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable
         {
             return items.Select(item => Localize(item, languageCode, depth));
-        }
-
-        /// <summary>
-        /// Gets the current language code provided by <see cref="LanguageResolvers"/>.
-        /// </summary>
-        public string GetLanguageCode()
-        {
-            foreach (var languageResolver in LanguageResolvers)
-            {
-                var languageCode = languageResolver.GetLanguageCode();
-                if (!string.IsNullOrWhiteSpace(languageCode))
-                {
-                    return languageCode;
-                }
-            }
-
-            return FallbackLanguageCode;
         }
 
         private void LocalizeItem<T>(T item, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow)
