@@ -62,8 +62,8 @@ Task("Test")
     {
         foreach(var project in GetFiles("./tests/**/*Tests.csproj"))
         {
-            var outputFilePath = MakeAbsolute(artifactsDirectory.Path)
-                .CombineWithFilePath(project.GetFilenameWithoutExtension());
+            var outputFilePath = MakeAbsolute(artifactsDirectory.Path).CombineWithFilePath(project.GetFilenameWithoutExtension());
+            
             DotNetCoreTool(
                 project,
                 "xunit",
@@ -78,14 +78,17 @@ Task("Pack")
     .IsDependentOn("Test")
     .Does(() =>
     {
-        DotNetCorePack(
-            ".",
-            new DotNetCorePackSettings()
-            {
-                Configuration = configuration,
-                OutputDirectory = artifactsDirectory,
-                VersionSuffix = versionSuffix
-            });
+        foreach(var project in GetFiles("./src/**/*.csproj"))
+        {
+            DotNetCorePack(
+                project.FullPath,
+                new DotNetCorePackSettings()
+                {
+                    Configuration = configuration,
+                    OutputDirectory = artifactsDirectory,
+                    VersionSuffix = versionSuffix
+                });
+        }
     });
 
 Task("Default")
