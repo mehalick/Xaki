@@ -3,20 +3,14 @@
     ViewData["Title"] = Model.Name;
 }
 
-
 <div class="clearfix">
     <img src="@Model.ImageUrl" alt="@Model.Name" class="img-fluid rounded float-right" style="max-width: 160px;" />
-    <p>@Model.Description</p>
+    <p>@Html.Raw(Model.Description)</p>
     <p><a asp-action="Edit" asp-route-planetId="@Model.PlanetId">Edit @Model.Name</a></p>
 
 </div>
 
-
-
-
 <h2>Moons</h2>
-
-
 
 <table class="table table-hover table-bordered table-striped">
     <thead class="thead-dark">

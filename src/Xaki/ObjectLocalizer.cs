@@ -161,7 +161,7 @@ namespace Xaki
         private void LocalizeItem<T>(T item, string languageCode, List<ILocalizable> depthChain, LocalizationDepth depth = LocalizationDepth.Shallow)
             where T : class, ILocalizable
         {
-            //TODO(t): Cache the three following steps/props (in memory ConcurentDictionary) for better pref (if possible)
+            //TODO(t): Cache the three following steps/props (in memory ConcurrentDictionary) for better pref (if possible)
             foreach (var property in item.GetType().GetTypeInfo().DeclaredProperties)
             {
                 if (property.IsDefined(typeof(LocalizedAttribute)))
@@ -176,7 +176,7 @@ namespace Xaki
                     }
                     else if (typeof(IEnumerable<ILocalizable>).IsAssignableFrom(property.PropertyType))
                     {
-                        foreach (var member in property.GetValue(item, null) as IEnumerable<ILocalizable>)
+                        foreach (var member in (IEnumerable<ILocalizable>)property.GetValue(item, null))
                         {
                             TryLocalizeProperty(item, member, languageCode, depthChain, depth);
                         }
@@ -201,6 +201,7 @@ namespace Xaki
 
             var contentForLanguage = GetContentForLanguage(localizedContents, languageCode);
             propertyInfo.SetValue(item, contentForLanguage, null);
+
             return true;
         }
 
@@ -225,10 +226,11 @@ namespace Xaki
             }
 
             LocalizeItem(member, languageCode, depthChain, depth);
+
             return true;
         }
 
-        private bool SkipItemLocalization<T>(T @base, T member)
+        private static bool SkipItemLocalization<T>(T @base, T member)
             where T : class, ILocalizable
         {
             if (@base is null || member is null)
@@ -239,7 +241,7 @@ namespace Xaki
             return AreTwoItemsEqual(@base, member);
         }
 
-        private bool TryAddToDepthChain<T>(T item, List<ILocalizable> depthChain)
+        private static bool TryAddToDepthChain<T>(T item, ICollection<ILocalizable> depthChain)
             where T : class, ILocalizable
         {
             if (item is null)
@@ -257,7 +259,7 @@ namespace Xaki
             return true;
         }
 
-        private bool AreTwoItemsEqual<T>(T first, T second)
+        private static bool AreTwoItemsEqual<T>(T first, T second)
             where T : class, ILocalizable
         {
             return first.GetType() == second.GetType() && ReferenceEquals(first, second);

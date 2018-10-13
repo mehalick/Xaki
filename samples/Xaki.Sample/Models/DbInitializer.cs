@@ -1,19 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 
 namespace Xaki.Sample.Models
 {
-    public class DataContext : DbContext
-    {
-        public DataContext(DbContextOptions options) : base(options)
-        { }
-
-        public DbSet<Planet> Planets { get; set; }
-        public DbSet<Moon> Moons { get; set; }
-    }
-
     public static class DbInitializer
     {
         public static void Initialize(DataContext context)
@@ -306,32 +295,5 @@ namespace Xaki.Sample.Models
 
             context.SaveChanges();
         }
-    }
-
-    public class Planet : ILocalizable
-    {
-        public int PlanetId { get; set; }
-
-        [Required, Localized]
-        public string Name { get; set; }
-
-        [Localized]
-        public string Description { get; set; }
-
-        public string ImageUrl { get; set; }
-
-        public virtual ICollection<Moon> Moons { get; set; }
-    }
-
-    public class Moon : ILocalizable
-    {
-        public int MoonId { get; set; }
-
-        public int PlanetId { get; set; }
-
-        [Required, Localized]
-        public string Name { get; set; }
-
-        public virtual Planet Planet { get; set; }
     }
 }

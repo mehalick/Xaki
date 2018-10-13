@@ -24,7 +24,7 @@
                 }
             </td>
             <td>@planet.Name</td>
-            <td>@planet.Description</td>
+            <td>@Html.Raw(planet.Description)</td>
             <td>@planet.Moons.Count</td>
             <td style="width: 1%;"><a asp-action="Details" asp-route-planetId="@planet.PlanetId">Details</a></td>
         </tr>

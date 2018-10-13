@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Xaki.Benchmarks.Benchmarks</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet=v0.11.1, OS=Windows 10.0.17134.286 (1803/April2018Update/Redstone4)
+AMD Ryzen 7 1800X Eight-Core Processor (Max: 3.60GHz), 1 CPU, 16 logical and 8 physical cores
+Frequency=3509027 Hz, Resolution=284.9793 ns, Timer=TSC
+.NET Core SDK=2.1.402
+  [Host] : .NET Core 2.1.4 (CoreCLR 4.6.26814.03, CoreFX 4.6.26814.02), 64bit RyuJIT
+  Clr    : .NET Framework 4.7.2 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.3163.0
+  Core   : .NET Core 2.1.4 (CoreCLR 4.6.26814.03, CoreFX 4.6.26814.02), 64bit RyuJIT
+  Mono   : Mono 5.14.0 (Visual Studio), 64bit 
+</code></pre>
+<pre><code></code></pre>
+
+<table>
+<thead><tr><th>Method</th><th>Job</th><th>Runtime</th><th> Mean</th><th>Error</th><th>StdDev</th>
+</tr>
+</thead><tbody><tr><td>Shallow</td><td>Clr</td><td>Clr</td><td>75.88 ns</td><td>0.2761 ns</td><td>0.2582 ns</td>
+</tr><tr><td>OneLevel</td><td>Clr</td><td>Clr</td><td>75.93 ns</td><td>0.2014 ns</td><td>0.1884 ns</td>
+</tr><tr><td>Deep</td><td>Clr</td><td>Clr</td><td>75.82 ns</td><td>0.3290 ns</td><td>0.3077 ns</td>
+</tr><tr><td>Shallow</td><td>Core</td><td>Core</td><td>119.37 ns</td><td>0.2918 ns</td><td>0.2587 ns</td>
+</tr><tr><td>OneLevel</td><td>Core</td><td>Core</td><td>119.39 ns</td><td>0.3237 ns</td><td>0.3028 ns</td>
+</tr><tr><td>Deep</td><td>Core</td><td>Core</td><td>119.84 ns</td><td>0.6888 ns</td><td>0.6443 ns</td>
+</tr><tr><td>Shallow</td><td>Mono</td><td>Mono</td><td>2,943.44 ns</td><td>17.1636 ns</td><td>16.0549 ns</td>
+</tr><tr><td>OneLevel</td><td>Mono</td><td>Mono</td><td>2,888.70 ns</td><td>15.0383 ns</td><td>14.0668 ns</td>
+</tr><tr><td>Deep</td><td>Mono</td><td>Mono</td><td>2,936.73 ns</td><td>12.3258 ns</td><td>11.5295 ns</td>
+</tr></tbody></table>
+</body>
+</html>
