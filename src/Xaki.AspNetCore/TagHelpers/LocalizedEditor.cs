@@ -1,8 +1,13 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
@@ -24,6 +29,8 @@ namespace Xaki.AspNetCore.TagHelpers
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
+            var tagName = output.TagName;
+
             var propertyId = $"localized-editor-{Guid.NewGuid():n}";
             var propertyName = Model.Metadata.PropertyName;
             var friendlyName = Regex.Replace(Regex.Replace(propertyName, @"(\P{Ll})(\P{Ll}\p{Ll})", "$1 $2", RegexOptions.Compiled), @"(\p{Ll})(\P{Ll})", "$1 $2", RegexOptions.Compiled);
@@ -31,7 +38,13 @@ namespace Xaki.AspNetCore.TagHelpers
             output.TagName = "ul";
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Add("id", propertyId);
-            output.Attributes.Add("class", "localized-editor list-unstyled");
+            output.AddClass("localized-editor", HtmlEncoder.Default);
+            output.AddClass("list-unstyled", HtmlEncoder.Default);
+
+            if (IsHtml(Model.Metadata))
+            {
+                output.AddClass("localized-editor-html", HtmlEncoder.Default);
+            }
 
             var items = _localizer.Deserialize(Model.Model.ToString());
 
@@ -63,14 +76,23 @@ namespace Xaki.AspNetCore.TagHelpers
 
                 output.PreContent.AppendHtml(label);
 
-                var input = new TagBuilder("input");
+                var input = new TagBuilder(tagName);
                 input.AddCssClass("form-control localized-input");
                 input.Attributes.Add("type", "text");
                 input.Attributes.Add("id", inputId);
                 input.Attributes.Add("name", inputName);
-                input.Attributes.Add("value", languageValue);
+
                 input.Attributes.Add("lang", languageCode);
                 input.Attributes.Add("dir", languageDirection);
+
+                if (tagName == "input")
+                {
+                    input.Attributes.Add("value", languageValue);
+                }
+                else
+                {
+                    input.InnerHtml.AppendHtml(languageValue);
+                }
 
                 if (isRequired)
                 {
@@ -151,6 +173,11 @@ namespace Xaki.AspNetCore.TagHelpers
 
                     </script>");
             }
+        }
+
+        private bool IsHtml(ModelMetadata modelMetadata)
+        {
+            return ((DataTypeAttribute)modelMetadata.ContainerType.GetProperty(Model.Name)?.GetCustomAttribute(typeof(DataTypeAttribute)))?.DataType == DataType.Html;
         }
     }
 }

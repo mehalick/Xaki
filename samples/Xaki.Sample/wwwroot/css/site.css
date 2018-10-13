@@ -33,3 +33,12 @@ h1 {
     height: auto;
     border-radius: 4px;
 }
+
+.cke_chrome {
+    display: flex;
+    flex: auto;
+}
+
+.cke_inner {
+    width: 100%;
+}
