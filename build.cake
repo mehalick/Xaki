@@ -47,13 +47,16 @@ Task("Restore")
     .IsDependentOn("Restore")
     .Does(() =>
     {
-        DotNetCoreBuild(
-            ".",
-            new DotNetCoreBuildSettings()
-            {
-                Configuration = configuration,
-                VersionSuffix = versionSuffix
-            });
+        foreach(var project in GetFiles("./src/**/*.csproj"))
+        {
+            DotNetCoreBuild(
+                project.FullPath,
+                new DotNetCoreBuildSettings()
+                {
+                    Configuration = configuration,
+                    VersionSuffix = versionSuffix
+                });
+        }
     });
 
 Task("Test")
