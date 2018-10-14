@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,6 +17,8 @@ namespace Xaki
         public HashSet<string> RequiredLanguages { get; set; } = new HashSet<string>(new[] { FallbackLanguageCode }, StringComparer.InvariantCultureIgnoreCase);
         public HashSet<string> OptionalLanguages { get; set; } = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
         public HashSet<string> SupportedLanguages => new HashSet<string>(RequiredLanguages.Union(OptionalLanguages), StringComparer.InvariantCultureIgnoreCase);
+
+        private readonly ConcurrentDictionary<Type, IEnumerable<PropertyInfo>> _propertyCache = new ConcurrentDictionary<Type, IEnumerable<PropertyInfo>>();
 
         /// <summary>
         /// Gets the current language code provided by <see cref="LanguageResolvers"/>.
@@ -174,17 +177,17 @@ namespace Xaki
             }
         }
 
-        private static IEnumerable<PropertyInfo> GetProperties<T>(T item) where T : class, ILocalizable
+        private IEnumerable<PropertyInfo> GetProperties<T>(T item) where T : class, ILocalizable
         {
             var type = item.GetType();
 
             // unwrap EF dynamic proxy class if necessary
             if (type.Namespace == "System.Data.Entity.DynamicProxies")
             {
-                type = type.BaseType;
+                type = type.BaseType ?? throw new NullReferenceException($"Cannot determine base type for {type}.");
             }
 
-            return type.GetTypeInfo().DeclaredProperties;
+            return _propertyCache.GetOrAdd(type, _ => type.GetTypeInfo().DeclaredProperties);
         }
 
         private void TryLocalizeChildren<T>(T item, PropertyInfo property, string languageCode, List<ILocalizable> depthChain,
@@ -207,6 +210,7 @@ namespace Xaki
             where T : class, ILocalizable
         {
             var propertyValue = propertyInfo.GetValue(item)?.ToString();
+
             if (string.IsNullOrWhiteSpace(propertyValue))
             {
                 return;
@@ -269,6 +273,7 @@ namespace Xaki
             }
 
             depthChain.Add(item);
+
             return true;
         }
 
