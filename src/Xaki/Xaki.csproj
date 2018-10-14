@@ -2,16 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <VersionPrefix>0.0.6</VersionPrefix>
     <Authors>Andy Mehalick</Authors>
     <Company>Andy Mehalick</Company>
     <Copyright>Copyright © Andy Mehalick</Copyright>
-    <Description>Simplified multi-language POCO localization for .NET Core</Description>
+    <Description>Simplified multi-language POCO localization for .NET Core</Description>   
     <PackageIconUrl>https://xaki.azureedge.net/assets/logo-icon-128x128-636723723011536470.png</PackageIconUrl>
     <PackageLicenseUrl>https://github.com/mehalick/Xaki/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/mehalick/Xaki</PackageProjectUrl>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/mehalick/Xaki.git</RepositoryUrl>
-    <VersionPrefix>0.0.6</VersionPrefix>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -20,6 +21,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
 
