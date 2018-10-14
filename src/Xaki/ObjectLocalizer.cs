@@ -161,8 +161,7 @@ namespace Xaki
         private void LocalizeItem<T>(T item, string languageCode, List<ILocalizable> depthChain, LocalizationDepth depth = LocalizationDepth.Shallow)
             where T : class, ILocalizable
         {
-            //TODO(t): Cache the three following steps/props (in memory ConcurrentDictionary) for better pref (if possible)
-            foreach (var property in item.GetType().GetTypeInfo().DeclaredProperties)
+            foreach (var property in GetProperties(item))
             {
                 if (property.IsDefined(typeof(LocalizedAttribute)))
                 {
@@ -170,17 +169,36 @@ namespace Xaki
                 }
                 else if (depth != LocalizationDepth.Shallow)
                 {
-                    if (typeof(ILocalizable).IsAssignableFrom(property.PropertyType))
-                    {
-                        TryLocalizeProperty(item, property.GetValue(item, null) as ILocalizable, languageCode, depthChain, depth);
-                    }
-                    else if (typeof(IEnumerable<ILocalizable>).IsAssignableFrom(property.PropertyType))
-                    {
-                        foreach (var member in (IEnumerable<ILocalizable>)property.GetValue(item, null))
-                        {
-                            TryLocalizeProperty(item, member, languageCode, depthChain, depth);
-                        }
-                    }
+                    TryLocalizeChildren(item, property, languageCode, depthChain, depth);
+                }
+            }
+        }
+
+        private static IEnumerable<PropertyInfo> GetProperties<T>(T item) where T : class, ILocalizable
+        {
+            var type = item.GetType();
+
+            // unwrap EF dynamic proxy class if necessary
+            if (type.Namespace == "System.Data.Entity.DynamicProxies")
+            {
+                type = type.BaseType;
+            }
+
+            return type.GetTypeInfo().DeclaredProperties;
+        }
+
+        private void TryLocalizeChildren<T>(T item, PropertyInfo property, string languageCode, List<ILocalizable> depthChain,
+            LocalizationDepth depth) where T : class, ILocalizable
+        {
+            if (typeof(ILocalizable).IsAssignableFrom(property.PropertyType))
+            {
+                TryLocalizeProperty(item, property.GetValue(item, null) as ILocalizable, languageCode, depthChain, depth);
+            }
+            else if (typeof(IEnumerable<ILocalizable>).IsAssignableFrom(property.PropertyType))
+            {
+                foreach (var member in (IEnumerable<ILocalizable>)property.GetValue(item, null))
+                {
+                    TryLocalizeProperty(item, member, languageCode, depthChain, depth);
                 }
             }
         }
