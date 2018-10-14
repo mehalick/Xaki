@@ -1,8 +1,3 @@
-# ASP.NET Core
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
 trigger:
 - master
 
@@ -15,13 +10,8 @@ jobs:
   # You can see the software installed on each agent at the same link.
   pool:
     vmImage: 'ubuntu-16.04'
-
-  # The steps to run to execute the build. I'm using
-  # Cake, and so I execute a bash script on Linx and macOS
   steps:
   - bash: ./build.sh
-    # You can set environment variables for the build. These
-    # aren't really necessary, but they're here as an example
     env:
       COREHOST_TRACE: 0
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
@@ -39,9 +29,7 @@ jobs:
 
 - job: Windows
   pool:
-    vmImage: 'vs2017-win2017'
-  # The Windows build involves running a powershell script
-  # to execute the Cake build script
+    vmImage: 'vs2017-win2016'
   steps:
   - powershell: .\build.ps1
     env:
