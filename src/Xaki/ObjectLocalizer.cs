@@ -203,39 +203,37 @@ namespace Xaki
             }
         }
 
-        private bool TryLocalizeProperty<T>(T item, PropertyInfo propertyInfo, string languageCode)
+        private void TryLocalizeProperty<T>(T item, PropertyInfo propertyInfo, string languageCode)
             where T : class, ILocalizable
         {
             var propertyValue = propertyInfo.GetValue(item)?.ToString();
             if (string.IsNullOrWhiteSpace(propertyValue))
             {
-                return false;
+                return;
             }
 
             if (!TryDeserialize(propertyValue, out var localizedContents))
             {
-                return false;
+                return;
             }
 
             var contentForLanguage = GetContentForLanguage(localizedContents, languageCode);
             propertyInfo.SetValue(item, contentForLanguage, null);
-
-            return true;
         }
 
-        private bool TryLocalizeProperty<T>(T @base, T member, string languageCode, List<ILocalizable> depthChain, LocalizationDepth depth = LocalizationDepth.Shallow)
+        private void TryLocalizeProperty<T>(T @base, T member, string languageCode, List<ILocalizable> depthChain, LocalizationDepth depth = LocalizationDepth.Shallow)
              where T : class, ILocalizable
         {
             if (SkipItemLocalization(@base, member))
             {
-                return false;
+                return;
             }
 
             TryAddToDepthChain(@base, depthChain);
 
             if (!TryAddToDepthChain(member, depthChain))
             {
-                return false;
+                return;
             }
 
             if (depth == LocalizationDepth.OneLevel)
@@ -244,8 +242,6 @@ namespace Xaki
             }
 
             LocalizeItem(member, languageCode, depthChain, depth);
-
-            return true;
         }
 
         private static bool SkipItemLocalization<T>(T @base, T member)
@@ -267,7 +263,6 @@ namespace Xaki
                 return false;
             }
 
-            //Could be possible to just use .Contains as well
             if (depthChain.AsParallel().Any(x => AreTwoItemsEqual(item, x)))
             {
                 return false;
@@ -305,7 +300,7 @@ namespace Xaki
                 return content;
             }
 
-            return localizedContents.First().Value; //Note: Keys are not ordered in a dictionary.
+            return localizedContents.First().Value; // Note: Keys are not ordered in a dictionary.
         }
     }
 }
