@@ -229,9 +229,9 @@ namespace Xaki.Tests
                 AssertReferencePropertiesAreNotLocalized(json, results.ElementAt(1).B);
             }
 
-            private void AssertReferencePropertiesAreNotLocalized(string json, ITestClass testClass)
+            private static void AssertReferencePropertiesAreNotLocalized(string json, ITestClass testClass)
             {
-                //You can even add more to this go wild and try to wrap your head around the refrences
+                // You can even add more to this go wild and try to wrap your head around the references.
                 Assert.Equal(json, testClass.A.Name);
 
                 Assert.Equal(json, testClass.A.A.Name);
@@ -241,9 +241,9 @@ namespace Xaki.Tests
                 AssertReferenceListPropertiesAreNotLocalized(json, testClass.B);
             }
 
-            private void AssertReferenceListPropertiesAreNotLocalized(string json, ITestClass testClass)
+            private static void AssertReferenceListPropertiesAreNotLocalized(string json, ITestClass testClass)
             {
-                //You can even add more to this go wild and try to wrap your head around the refrences
+                // You can even add more to this go wild and try to wrap your head around the references.
                 foreach (var a in testClass.ListOfA)
                 {
                     Assert.Equal(json, a.Name);
@@ -399,7 +399,7 @@ namespace Xaki.Tests
                 AssertObjectIsNotLocalized(Constants.AnyString1, json, results.ElementAt(1).B);
             }
 
-            private void AssertObjectIsLocalized(string name, ITestClass testClass)
+            private static void AssertObjectIsLocalized(string name, ITestClass testClass)
             {
                 Assert.Equal(name, testClass.A.Name);
                 foreach (var a in testClass.ListOfA)
@@ -413,7 +413,7 @@ namespace Xaki.Tests
                 }
             }
 
-            private void AssertObjectIsNotLocalized(string name, string json, ITestClass testClass)
+            private static void AssertObjectIsNotLocalized(string name, string json, ITestClass testClass)
             {
                 var type = testClass.GetType();
 
@@ -559,9 +559,9 @@ namespace Xaki.Tests
                 AssertObjectIsLocalized(Constants.AnyString1, results.ElementAt(1).B);
             }
 
-            private void AssertObjectIsLocalized(string name, ITestClass testClass)
+            private static void AssertObjectIsLocalized(string name, ITestClass testClass)
             {
-                //Feel free to  go crazy with recursion here, or add more tests, but you are warrned.
+                // Feel free to  go crazy with recursion here, or add more tests, but you are warned.
                 Assert.Equal(name, testClass.A.Name);
                 foreach (var a in testClass.ListOfA)
                 {

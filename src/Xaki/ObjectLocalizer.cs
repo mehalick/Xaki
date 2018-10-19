@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,6 +17,8 @@ namespace Xaki
         public HashSet<string> RequiredLanguages { get; set; } = new HashSet<string>(new[] { FallbackLanguageCode }, StringComparer.InvariantCultureIgnoreCase);
         public HashSet<string> OptionalLanguages { get; set; } = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
         public HashSet<string> SupportedLanguages => new HashSet<string>(RequiredLanguages.Union(OptionalLanguages), StringComparer.InvariantCultureIgnoreCase);
+
+        private readonly ConcurrentDictionary<Type, IEnumerable<PropertyInfo>> _propertyCache = new ConcurrentDictionary<Type, IEnumerable<PropertyInfo>>();
 
         /// <summary>
         /// Gets the current language code provided by <see cref="LanguageResolvers"/>.
@@ -161,8 +164,7 @@ namespace Xaki
         private void LocalizeItem<T>(T item, string languageCode, List<ILocalizable> depthChain, LocalizationDepth depth = LocalizationDepth.Shallow)
             where T : class, ILocalizable
         {
-            //TODO(t): Cache the three following steps/props (in memory ConcurrentDictionary) for better pref (if possible)
-            foreach (var property in item.GetType().GetTypeInfo().DeclaredProperties)
+            foreach (var property in GetProperties(item))
             {
                 if (property.IsDefined(typeof(LocalizedAttribute)))
                 {
@@ -170,54 +172,72 @@ namespace Xaki
                 }
                 else if (depth != LocalizationDepth.Shallow)
                 {
-                    if (typeof(ILocalizable).IsAssignableFrom(property.PropertyType))
-                    {
-                        TryLocalizeProperty(item, property.GetValue(item, null) as ILocalizable, languageCode, depthChain, depth);
-                    }
-                    else if (typeof(IEnumerable<ILocalizable>).IsAssignableFrom(property.PropertyType))
-                    {
-                        foreach (var member in (IEnumerable<ILocalizable>)property.GetValue(item, null))
-                        {
-                            TryLocalizeProperty(item, member, languageCode, depthChain, depth);
-                        }
-                    }
+                    TryLocalizeChildren(item, property, languageCode, depthChain, depth);
                 }
             }
         }
 
-        private bool TryLocalizeProperty<T>(T item, PropertyInfo propertyInfo, string languageCode)
+        private IEnumerable<PropertyInfo> GetProperties<T>(T item) where T : class, ILocalizable
+        {
+            var type = item.GetType();
+
+            // unwrap EF dynamic proxy class if necessary
+            if (type.Namespace == "System.Data.Entity.DynamicProxies")
+            {
+                type = type.BaseType ?? throw new NullReferenceException($"Cannot determine base type for {type}.");
+            }
+
+            return _propertyCache.GetOrAdd(type, _ => type.GetTypeInfo().DeclaredProperties);
+        }
+
+        private void TryLocalizeChildren<T>(T item, PropertyInfo property, string languageCode, List<ILocalizable> depthChain,
+            LocalizationDepth depth) where T : class, ILocalizable
+        {
+            if (typeof(ILocalizable).IsAssignableFrom(property.PropertyType))
+            {
+                TryLocalizeProperty(item, property.GetValue(item, null) as ILocalizable, languageCode, depthChain, depth);
+            }
+            else if (typeof(IEnumerable<ILocalizable>).IsAssignableFrom(property.PropertyType))
+            {
+                foreach (var member in (IEnumerable<ILocalizable>)property.GetValue(item, null))
+                {
+                    TryLocalizeProperty(item, member, languageCode, depthChain, depth);
+                }
+            }
+        }
+
+        private void TryLocalizeProperty<T>(T item, PropertyInfo propertyInfo, string languageCode)
             where T : class, ILocalizable
         {
             var propertyValue = propertyInfo.GetValue(item)?.ToString();
+
             if (string.IsNullOrWhiteSpace(propertyValue))
             {
-                return false;
+                return;
             }
 
             if (!TryDeserialize(propertyValue, out var localizedContents))
             {
-                return false;
+                return;
             }
 
             var contentForLanguage = GetContentForLanguage(localizedContents, languageCode);
             propertyInfo.SetValue(item, contentForLanguage, null);
-
-            return true;
         }
 
-        private bool TryLocalizeProperty<T>(T @base, T member, string languageCode, List<ILocalizable> depthChain, LocalizationDepth depth = LocalizationDepth.Shallow)
+        private void TryLocalizeProperty<T>(T @base, T member, string languageCode, List<ILocalizable> depthChain, LocalizationDepth depth = LocalizationDepth.Shallow)
              where T : class, ILocalizable
         {
             if (SkipItemLocalization(@base, member))
             {
-                return false;
+                return;
             }
 
             TryAddToDepthChain(@base, depthChain);
 
             if (!TryAddToDepthChain(member, depthChain))
             {
-                return false;
+                return;
             }
 
             if (depth == LocalizationDepth.OneLevel)
@@ -226,8 +246,6 @@ namespace Xaki
             }
 
             LocalizeItem(member, languageCode, depthChain, depth);
-
-            return true;
         }
 
         private static bool SkipItemLocalization<T>(T @base, T member)
@@ -249,13 +267,13 @@ namespace Xaki
                 return false;
             }
 
-            //Could be possible to just use .Contains as well
             if (depthChain.AsParallel().Any(x => AreTwoItemsEqual(item, x)))
             {
                 return false;
             }
 
             depthChain.Add(item);
+
             return true;
         }
 
@@ -287,7 +305,7 @@ namespace Xaki
                 return content;
             }
 
-            return localizedContents.First().Value; //Note: Keys are not ordered in a dictionary.
+            return localizedContents.First().Value; // Note: Keys are not ordered in a dictionary.
         }
     }
 }
