@@ -180,10 +180,12 @@ namespace Xaki
         private static IEnumerable<PropertyInfo> GetProperties<T>(T item)
             where T : class, ILocalizable
         {
-            var type = typeof(T);
-            if (type == typeof(ILocalizable))
+            var type = item.GetType();
+
+            // unwrap EF dynamic proxy class if necessary
+            if (type.Namespace == "System.Data.Entity.DynamicProxies")
             {
-                type = item.GetType();
+                type = type.BaseType ?? throw new NullReferenceException($"Cannot determine base type for {type}.");
             }
 
             return _propertyCache.GetOrAdd(type, _ => type.GetTypeInfo().DeclaredProperties);
