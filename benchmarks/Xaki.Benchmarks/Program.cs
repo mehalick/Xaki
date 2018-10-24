@@ -15,6 +15,7 @@ namespace Xaki.Benchmarks
     }
 
     [ClrJob, MonoJob, CoreJob]
+    [MemoryDiagnoser]
     public class Benchmarks
     {
         private readonly IObjectLocalizer _localizer;
