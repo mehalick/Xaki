@@ -5,12 +5,35 @@
 
 <form asp-action="Edit">
 
-    <input asp-for="PlanetId" type="hidden" />
+    <input type="hidden" asp-for="PlanetId" />
 
     <div class="form-group">
         <label>Name</label>
         <input localized-for="Name" />
     </div>
 
+    <div class="form-group">
+        <label>Description</label>
+        <textarea localized-for="Description"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ImageUrl">Image</label>
+        <input asp-for="ImageUrl" class="form-control" />
+    </div>
+
     <button type="submit" class="btn btn-dark">Submit</button>
 </form>
+
+@section Scripts {
+    <script src="https://cdn.ckeditor.com/4.10.1/basic/ckeditor.js"></script>
+    <script>
+        const editors = document.querySelectorAll(".localized-editor-html textarea");
+        if (editors) {
+            editors.forEach(editor => {
+                CKEDITOR.replace(editor.id,
+                    { height: 220, contentsLangDirection: editor.dir, disableNativeSpellChecker: false });
+            });
+        }
+    </script>
+}

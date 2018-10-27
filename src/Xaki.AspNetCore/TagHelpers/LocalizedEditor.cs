@@ -1,14 +1,20 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Xaki.AspNetCore.TagHelpers
 {
     [HtmlTargetElement("input", Attributes = "localized-for", TagStructure = TagStructure.NormalOrSelfClosing)]
+    [HtmlTargetElement("textarea", Attributes = "localized-for", TagStructure = TagStructure.NormalOrSelfClosing)]
     public class LocalizedEditor : TagHelper
     {
         [HtmlAttributeName("localized-for")]
@@ -23,6 +29,8 @@ namespace Xaki.AspNetCore.TagHelpers
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
+            var tagName = output.TagName;
+
             var propertyId = $"localized-editor-{Guid.NewGuid():n}";
             var propertyName = Model.Metadata.PropertyName;
             var friendlyName = Regex.Replace(Regex.Replace(propertyName, @"(\P{Ll})(\P{Ll}\p{Ll})", "$1 $2", RegexOptions.Compiled), @"(\p{Ll})(\P{Ll})", "$1 $2", RegexOptions.Compiled);
@@ -30,17 +38,23 @@ namespace Xaki.AspNetCore.TagHelpers
             output.TagName = "ul";
             output.TagMode = TagMode.StartTagAndEndTag;
             output.Attributes.Add("id", propertyId);
-            output.Attributes.Add("class", "localized-editor list-unstyled");
+            output.AddClass("localized-editor", HtmlEncoder.Default);
+            output.AddClass("list-unstyled", HtmlEncoder.Default);
+
+            if (IsHtml(Model.Metadata))
+            {
+                output.AddClass("localized-editor-html", HtmlEncoder.Default);
+            }
 
             var items = _localizer.Deserialize(Model.Model.ToString());
 
-            for (var i = 0; i < _localizer.SupportedLanguages.Count(); i++)
+            for (var i = 0; i < _localizer.SupportedLanguages.Count; i++)
             {
                 var languageCode = _localizer.SupportedLanguages.ElementAt(i);
 
                 if (!items.TryGetValue(languageCode, out var languageValue))
                 {
-                    languageValue = "";
+                    languageValue = string.Empty;
                 }
 
                 var inputId = $"{Model.Name}_{i}_Value";
@@ -62,14 +76,23 @@ namespace Xaki.AspNetCore.TagHelpers
 
                 output.PreContent.AppendHtml(label);
 
-                var input = new TagBuilder("input");
+                var input = new TagBuilder(tagName);
                 input.AddCssClass("form-control localized-input");
                 input.Attributes.Add("type", "text");
                 input.Attributes.Add("id", inputId);
                 input.Attributes.Add("name", inputName);
-                input.Attributes.Add("value", languageValue);
+
                 input.Attributes.Add("lang", languageCode);
                 input.Attributes.Add("dir", languageDirection);
+
+                if (tagName == "input")
+                {
+                    input.Attributes.Add("value", languageValue);
+                }
+                else
+                {
+                    input.InnerHtml.AppendHtml(languageValue);
+                }
 
                 if (isRequired)
                 {
@@ -129,27 +152,32 @@ namespace Xaki.AspNetCore.TagHelpers
 
                         (function () {{
                             var getMaxWidth = function(elements) {{
-                                var width = 0;
-                                for (var i = 0; i < elements.length; i++) {{
+                                let width = 0;
+                                for (let i = 0; i < elements.length; i++) {{
                                     width = Math.max(width, elements[i].offsetWidth);
                                 }}
                                 return width;
                             }}
 
                             var setMinWidth = function (elements, width) {{
-                                for (var i = 0; i < elements.length; i++) {{
+                                for (let i = 0; i < elements.length; i++) {{
                                     elements[i].style.minWidth = `${{width}}px`;
                                 }}
                             }}
 
-                            var parent = document.getElementById('{propertyId}');
-                            var labels = parent.getElementsByClassName('input-group-text');
-                            var maxWidth = getMaxWidth(labels);
+                            let parent = document.getElementById('{propertyId}');
+                            let labels = parent.getElementsByClassName('input-group-text');
+                            let maxWidth = getMaxWidth(labels);
                             setMinWidth(labels, maxWidth);
                         }})();
 
                     </script>");
             }
+        }
+
+        private bool IsHtml(ModelMetadata modelMetadata)
+        {
+            return ((DataTypeAttribute)modelMetadata.ContainerType.GetProperty(Model.Name)?.GetCustomAttribute(typeof(DataTypeAttribute)))?.DataType == DataType.Html;
         }
     }
 }

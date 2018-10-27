@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Xaki.LanguageResolvers;
 
 namespace Xaki
@@ -13,121 +14,11 @@ namespace Xaki
         public const string FallbackLanguageCode = "en";
 
         public IEnumerable<ILanguageResolver> LanguageResolvers { get; set; } = new[] { new DefaultLanguageResolver(FallbackLanguageCode) };
-        public HashSet<string> RequiredLanguages { get; set; } = new HashSet<string>(new[] { FallbackLanguageCode });
-        public HashSet<string> OptionalLanguages { get; set; } = new HashSet<string>();
-        public HashSet<string> SupportedLanguages => new HashSet<string>(RequiredLanguages.Union(OptionalLanguages).Select(x => x.ToLowerInvariant()));
+        public HashSet<string> RequiredLanguages { get; set; } = new HashSet<string>(new[] { FallbackLanguageCode }, StringComparer.InvariantCultureIgnoreCase);
+        public HashSet<string> OptionalLanguages { get; set; } = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
+        public HashSet<string> SupportedLanguages => new HashSet<string>(RequiredLanguages.Union(OptionalLanguages), StringComparer.InvariantCultureIgnoreCase);
 
-        /// <summary>
-        /// Initializes a new serialized collection of localized content items using all supported languages.
-        /// </summary>
-        public string GetEmptyJsonString()
-        {
-            var dictionary = SupportedLanguages.ToDictionary(i => i, _ => "");
-
-            return Serialize(dictionary);
-        }
-
-        /// <summary>
-        /// Serializes a localized content <see cref="IDictionary{TKey,TValue}"/> to JSON.
-        /// </summary>
-        public string Serialize(IDictionary<string, string> content)
-        {
-            var item = new JObject();
-
-            foreach (var languageCode in SupportedLanguages)
-            {
-                if (content.TryGetValue(languageCode, out var value))
-                {
-                    item[languageCode] = value;
-                }
-            }
-
-            return item.ToString(Formatting.None);
-        }
-
-        /// <summary>
-        /// Deserializes JSON localized content to <see cref="IDictionary{TKey,TValue}"/>.
-        /// </summary>
-        public IDictionary<string, string> Deserialize(string json)
-        {
-            var item = JObject.Parse(json);
-
-            return SupportedLanguages
-                .Where(i => !(item[i] is null))
-                .ToDictionary(i => i, i => (string)item[i]);
-        }
-
-        /// <summary>
-        /// Deserializes a serialized collection of <see cref="IDictionary{TKey,TValue}"/> items, returns a new collection with default languageCode if JSON reader exception occurs.
-        /// </summary>
-        /// <param name="json">JSON serialized localized content.</param>
-        /// <param name="localizedContent">A <see cref="IDictionary{TKey,TValue}"/> of localized content.</param>
-        public bool TryDeserialize(string json, out IDictionary<string, string> localizedContent)
-        {
-            try
-            {
-                localizedContent = Deserialize(json);
-
-                return true;
-            }
-            catch (Exception ex) when (ex is JsonReaderException || ex is JsonSerializationException)
-            {
-                localizedContent = new Dictionary<string, string>
-                {
-                    { SupportedLanguages.First(), "" }
-                };
-
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Localizes all properties on an <see cref="ILocalizable"/> item with the language code provided by <see cref="ILanguageResolver"/>.
-        /// </summary>
-        public T Localize<T>(T item) where T : class, ILocalizable
-        {
-            var languageCode = GetLanguageCode();
-
-            return Localize(item, languageCode);
-        }
-
-        /// <summary>
-        /// Localizes all properties on an <see cref="ILocalizable"/> item with the specified language code.
-        /// </summary>
-        public T Localize<T>(T item, string languageCode) where T : class, ILocalizable
-        {
-            if (item is null)
-            {
-                return null;
-            }
-
-            if (!SupportedLanguages.Contains(languageCode))
-            {
-                languageCode = SupportedLanguages.First();
-            }
-
-            LocalizeProperties(item, languageCode);
-
-            return item;
-        }
-
-        /// <summary>
-        /// Localizes all properties on each <see cref="ILocalizable"/> item in a collection with the language code provided by <see cref="ILanguageResolver"/>.
-        /// </summary>
-        public IEnumerable<T> Localize<T>(IEnumerable<T> items) where T : class, ILocalizable
-        {
-            var languageCode = GetLanguageCode();
-
-            return items.Select(item => Localize(item, languageCode));
-        }
-
-        /// <summary>
-        /// Localizes all properties on each <see cref="ILocalizable"/> item in a collection with the specified language code.
-        /// </summary>
-        public IEnumerable<T> Localize<T>(IEnumerable<T> items, string languageCode) where T : class, ILocalizable
-        {
-            return items.Select(item => Localize(item, languageCode));
-        }
+        private static readonly ConcurrentDictionary<Type, IEnumerable<PropertyInfo>> _propertyCache = new ConcurrentDictionary<Type, IEnumerable<PropertyInfo>>();
 
         /// <summary>
         /// Gets the current language code provided by <see cref="LanguageResolvers"/>.
@@ -146,29 +37,245 @@ namespace Xaki
             return FallbackLanguageCode;
         }
 
-        private void LocalizeProperties<T>(T item, string languageCode) where T : class, ILocalizable
+        /// <summary>
+        /// Initializes a new serialized collection of localized content items using all supported languages.
+        /// </summary>
+        public string GetEmptyJsonString()
         {
-            var properties = typeof(T)
-                .GetTypeInfo()
-                .DeclaredProperties
-                .Where(i => i.IsDefined(typeof(LocalizedAttribute)));
+            var dictionary = SupportedLanguages.ToDictionary(i => i, _ => string.Empty);
 
-            foreach (var propertyInfo in properties)
+            return Serialize(dictionary);
+        }
+
+        /// <summary>
+        /// Serializes a localized content <see cref="IDictionary{TKey,TValue}"/> to JSON.
+        /// </summary>
+        public string Serialize(in IDictionary<string, string> content)
+        {
+            using (var sw = new StringWriter())
+            using (var jw = new JsonTextWriter(sw))
             {
-                var propertyValue = propertyInfo.GetValue(item)?.ToString();
-                if (string.IsNullOrWhiteSpace(propertyValue))
+                jw.WriteStartObject();
+                foreach (var languageCode in SupportedLanguages)
                 {
-                    continue;
+                    if (content.TryGetValue(languageCode, out var value))
+                    {
+                        jw.WritePropertyName(languageCode);
+                        jw.WriteValue(value);
+                    }
                 }
 
-                if (!TryDeserialize(propertyValue, out var localizedContents))
-                {
-                    continue;
-                }
-
-                var contentForLanguage = GetContentForLanguage(localizedContents, languageCode);
-                propertyInfo.SetValue(item, contentForLanguage, null);
+                jw.WriteEndObject();
+                return sw.ToString();
             }
+        }
+
+        /// <summary>
+        /// Deserializes JSON localized content to <see cref="IDictionary{TKey,TValue}"/>.
+        /// </summary>
+        public IDictionary<string, string> Deserialize(in string json)
+        {
+            var item = JsonConvert.DeserializeObject<IDictionary<string, string>>(json);
+
+            foreach (var key in item.Keys)
+            {
+                if (!SupportedLanguages.Contains(key))
+                {
+                    item.Remove(key);
+                }
+            }
+
+            return item;
+        }
+
+        /// <summary>
+        /// Deserializes a serialized collection of <see cref="IDictionary{TKey,TValue}"/> items, returns a new collection with default languageCode if JSON reader exception occurs.
+        /// </summary>
+        /// <param name="json">JSON serialized localized content.</param>
+        /// <param name="localizedContent">A <see cref="IDictionary{TKey,TValue}"/> of localized content.</param>
+        public bool TryDeserialize(in string json, out IDictionary<string, string> localizedContent)
+        {
+            try
+            {
+                localizedContent = Deserialize(json);
+
+                return true;
+            }
+            catch (Exception ex) when (ex is JsonReaderException || ex is JsonSerializationException)
+            {
+                localizedContent = new Dictionary<string, string>
+                {
+                    [SupportedLanguages.First()] = string.Empty
+                };
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Localizes all properties on an <see cref="ILocalizable"/> item with the language code provided by <see cref="ILanguageResolver"/>.
+        /// </summary>
+        public T Localize<T>(in T item, in LocalizationDepth depth = LocalizationDepth.Shallow)
+            where T : class, ILocalizable
+        {
+            var languageCode = GetLanguageCode();
+
+            return Localize(item, languageCode, depth);
+        }
+
+        /// <summary>
+        /// Localizes all properties on an <see cref="ILocalizable"/> item with the specified language code.
+        /// </summary>
+        public T Localize<T>(in T item, in string languageCode, in LocalizationDepth depth = LocalizationDepth.Shallow)
+            where T : class, ILocalizable
+        {
+            if (item is null)
+            {
+                return null;
+            }
+
+            var depthChain = new List<ILocalizable>(32);
+
+            LocalizeItem(item, SupportedLanguages.Contains(languageCode) ? languageCode : SupportedLanguages.First(), depthChain, depth);
+
+            return item;
+        }
+
+        /// <summary>
+        /// Localizes all properties on each <see cref="ILocalizable"/> item in a collection with the language code provided by <see cref="ILanguageResolver"/>.
+        /// </summary>
+        public IEnumerable<T> Localize<T>(in IEnumerable<T> items, LocalizationDepth depth = LocalizationDepth.Shallow)
+            where T : class, ILocalizable
+        {
+            var languageCode = GetLanguageCode();
+
+            return items.Select(item => Localize(item, languageCode, depth));
+        }
+
+        /// <summary>
+        /// Localizes all properties on each <see cref="ILocalizable"/> item in a collection with the specified language code.
+        /// </summary>
+        public IEnumerable<T> Localize<T>(in IEnumerable<T> items, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow)
+            where T : class, ILocalizable
+        {
+            return items.Select(item => Localize(item, languageCode, depth));
+        }
+
+        private void LocalizeItem<T>(in T item, in string languageCode, List<ILocalizable> depthChain, in LocalizationDepth depth = LocalizationDepth.Shallow)
+            where T : class, ILocalizable
+        {
+            foreach (var property in GetProperties(item))
+            {
+                if (property.IsDefined(typeof(LocalizedAttribute)))
+                {
+                    TryLocalizeProperty(item, property, languageCode);
+                }
+                else if (depth != LocalizationDepth.Shallow)
+                {
+                    TryLocalizeChildren(item, property, languageCode, depthChain, depth);
+                }
+            }
+        }
+
+        private static IEnumerable<PropertyInfo> GetProperties<T>(T item)
+            where T : class, ILocalizable
+        {
+            var type = item.GetType();
+
+            // unwrap EF dynamic proxy class if necessary
+            if (type.Namespace == "System.Data.Entity.DynamicProxies")
+            {
+                type = type.BaseType ?? throw new NullReferenceException($"Cannot determine base type for {type}.");
+            }
+
+            return _propertyCache.GetOrAdd(type, _ => type.GetTypeInfo().DeclaredProperties);
+        }
+
+        private void TryLocalizeChildren<T>(T item, PropertyInfo property, string languageCode, List<ILocalizable> depthChain, LocalizationDepth depth)
+            where T : class, ILocalizable
+        {
+            if (typeof(ILocalizable).IsAssignableFrom(property.PropertyType))
+            {
+                TryLocalizeProperty(item, property.GetValue(item, null) as ILocalizable, languageCode, depthChain, depth);
+            }
+            else if (typeof(IEnumerable<ILocalizable>).IsAssignableFrom(property.PropertyType))
+            {
+                foreach (var member in (IEnumerable<ILocalizable>)property.GetValue(item, null))
+                {
+                    TryLocalizeProperty(item, member, languageCode, depthChain, depth);
+                }
+            }
+        }
+
+        private void TryLocalizeProperty<T>(T item, PropertyInfo propertyInfo, string languageCode)
+            where T : class, ILocalizable
+        {
+            var propertyValue = propertyInfo.GetValue(item)?.ToString();
+
+            if (string.IsNullOrWhiteSpace(propertyValue))
+            {
+                return;
+            }
+
+            if (!TryDeserialize(propertyValue, out var localizedContents))
+            {
+                return;
+            }
+
+            var contentForLanguage = GetContentForLanguage(localizedContents, languageCode);
+            propertyInfo.SetValue(item, contentForLanguage, null);
+        }
+
+        private void TryLocalizeProperty<T>(T @base, T member, string languageCode, List<ILocalizable> depthChain, LocalizationDepth depth = LocalizationDepth.Shallow)
+             where T : class, ILocalizable
+        {
+            if (SkipItemLocalization(@base, member))
+            {
+                return;
+            }
+
+            TryAddToDepthChain(@base, depthChain);
+
+            if (!TryAddToDepthChain(member, depthChain))
+            {
+                return;
+            }
+
+            if (depth == LocalizationDepth.OneLevel)
+            {
+                depth = LocalizationDepth.Shallow;
+            }
+
+            LocalizeItem(member, languageCode, depthChain, depth);
+        }
+
+        private static bool SkipItemLocalization<T>(T @base, T member)
+            where T : class, ILocalizable
+        {
+            if (@base is null || member is null)
+            {
+                return true;
+            }
+
+            return ReferenceEquals(@base, member);
+        }
+
+        private static bool TryAddToDepthChain<T>(T item, ICollection<ILocalizable> depthChain)
+            where T : class, ILocalizable
+        {
+            if (item is null)
+            {
+                return false;
+            }
+
+            if (depthChain.AsParallel().Any(x => ReferenceEquals(item, x)))
+            {
+                return false;
+            }
+
+            depthChain.Add(item);
+
+            return true;
         }
 
         private string GetContentForLanguage(IDictionary<string, string> localizedContents, string languageCode)
@@ -188,12 +295,7 @@ namespace Xaki
 
         private string GetContentForFirstLanguage(IDictionary<string, string> localizedContents)
         {
-            if (localizedContents.TryGetValue(SupportedLanguages.First(), out var content))
-            {
-                return content;
-            }
-
-            return localizedContents.First().Value; //Note: Keys are not ordered in a dictionary.
+            return localizedContents.TryGetValue(SupportedLanguages.First(), out var content) ? content : localizedContents.First().Value;
         }
     }
 }
