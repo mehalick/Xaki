@@ -18,7 +18,7 @@ namespace Xaki
         public HashSet<string> OptionalLanguages { get; set; } = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
         public HashSet<string> SupportedLanguages => new HashSet<string>(RequiredLanguages.Union(OptionalLanguages), StringComparer.InvariantCultureIgnoreCase);
 
-        private readonly ConcurrentDictionary<Type, IEnumerable<PropertyInfo>> _propertyCache = new ConcurrentDictionary<Type, IEnumerable<PropertyInfo>>();
+        private static readonly ConcurrentDictionary<Type, IEnumerable<PropertyInfo>> _propertyCache = new ConcurrentDictionary<Type, IEnumerable<PropertyInfo>>();
 
         /// <summary>
         /// Gets the current language code provided by <see cref="LanguageResolvers"/>.
@@ -50,7 +50,7 @@ namespace Xaki
         /// <summary>
         /// Serializes a localized content <see cref="IDictionary{TKey,TValue}"/> to JSON.
         /// </summary>
-        public string Serialize(IDictionary<string, string> content)
+        public string Serialize(in IDictionary<string, string> content)
         {
             using (var sw = new StringWriter())
             using (var jw = new JsonTextWriter(sw))
@@ -73,7 +73,7 @@ namespace Xaki
         /// <summary>
         /// Deserializes JSON localized content to <see cref="IDictionary{TKey,TValue}"/>.
         /// </summary>
-        public IDictionary<string, string> Deserialize(string json)
+        public IDictionary<string, string> Deserialize(in string json)
         {
             var item = JsonConvert.DeserializeObject<IDictionary<string, string>>(json);
 
@@ -93,7 +93,7 @@ namespace Xaki
         /// </summary>
         /// <param name="json">JSON serialized localized content.</param>
         /// <param name="localizedContent">A <see cref="IDictionary{TKey,TValue}"/> of localized content.</param>
-        public bool TryDeserialize(string json, out IDictionary<string, string> localizedContent)
+        public bool TryDeserialize(in string json, out IDictionary<string, string> localizedContent)
         {
             try
             {
@@ -115,7 +115,8 @@ namespace Xaki
         /// <summary>
         /// Localizes all properties on an <see cref="ILocalizable"/> item with the language code provided by <see cref="ILanguageResolver"/>.
         /// </summary>
-        public T Localize<T>(T item, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable
+        public T Localize<T>(in T item, in LocalizationDepth depth = LocalizationDepth.Shallow)
+            where T : class, ILocalizable
         {
             var languageCode = GetLanguageCode();
 
@@ -125,20 +126,17 @@ namespace Xaki
         /// <summary>
         /// Localizes all properties on an <see cref="ILocalizable"/> item with the specified language code.
         /// </summary>
-        public T Localize<T>(T item, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable
+        public T Localize<T>(in T item, in string languageCode, in LocalizationDepth depth = LocalizationDepth.Shallow)
+            where T : class, ILocalizable
         {
             if (item is null)
             {
                 return null;
             }
 
-            if (!SupportedLanguages.Contains(languageCode))
-            {
-                languageCode = SupportedLanguages.First();
-            }
-
             var depthChain = new List<ILocalizable>(32);
-            LocalizeItem(item, languageCode, depthChain, depth);
+
+            LocalizeItem(item, SupportedLanguages.Contains(languageCode) ? languageCode : SupportedLanguages.First(), depthChain, depth);
 
             return item;
         }
@@ -146,7 +144,8 @@ namespace Xaki
         /// <summary>
         /// Localizes all properties on each <see cref="ILocalizable"/> item in a collection with the language code provided by <see cref="ILanguageResolver"/>.
         /// </summary>
-        public IEnumerable<T> Localize<T>(IEnumerable<T> items, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable
+        public IEnumerable<T> Localize<T>(in IEnumerable<T> items, LocalizationDepth depth = LocalizationDepth.Shallow)
+            where T : class, ILocalizable
         {
             var languageCode = GetLanguageCode();
 
@@ -156,12 +155,13 @@ namespace Xaki
         /// <summary>
         /// Localizes all properties on each <see cref="ILocalizable"/> item in a collection with the specified language code.
         /// </summary>
-        public IEnumerable<T> Localize<T>(IEnumerable<T> items, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable
+        public IEnumerable<T> Localize<T>(in IEnumerable<T> items, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow)
+            where T : class, ILocalizable
         {
             return items.Select(item => Localize(item, languageCode, depth));
         }
 
-        private void LocalizeItem<T>(T item, string languageCode, List<ILocalizable> depthChain, LocalizationDepth depth = LocalizationDepth.Shallow)
+        private void LocalizeItem<T>(in T item, in string languageCode, List<ILocalizable> depthChain, in LocalizationDepth depth = LocalizationDepth.Shallow)
             where T : class, ILocalizable
         {
             foreach (var property in GetProperties(item))
@@ -177,7 +177,8 @@ namespace Xaki
             }
         }
 
-        private IEnumerable<PropertyInfo> GetProperties<T>(T item) where T : class, ILocalizable
+        private static IEnumerable<PropertyInfo> GetProperties<T>(T item)
+            where T : class, ILocalizable
         {
             var type = item.GetType();
 
@@ -190,8 +191,8 @@ namespace Xaki
             return _propertyCache.GetOrAdd(type, _ => type.GetTypeInfo().DeclaredProperties);
         }
 
-        private void TryLocalizeChildren<T>(T item, PropertyInfo property, string languageCode, List<ILocalizable> depthChain,
-            LocalizationDepth depth) where T : class, ILocalizable
+        private void TryLocalizeChildren<T>(T item, PropertyInfo property, string languageCode, List<ILocalizable> depthChain, LocalizationDepth depth)
+            where T : class, ILocalizable
         {
             if (typeof(ILocalizable).IsAssignableFrom(property.PropertyType))
             {
@@ -256,7 +257,7 @@ namespace Xaki
                 return true;
             }
 
-            return AreTwoItemsEqual(@base, member);
+            return ReferenceEquals(@base, member);
         }
 
         private static bool TryAddToDepthChain<T>(T item, ICollection<ILocalizable> depthChain)
@@ -267,7 +268,7 @@ namespace Xaki
                 return false;
             }
 
-            if (depthChain.AsParallel().Any(x => AreTwoItemsEqual(item, x)))
+            if (depthChain.AsParallel().Any(x => ReferenceEquals(item, x)))
             {
                 return false;
             }
@@ -275,12 +276,6 @@ namespace Xaki
             depthChain.Add(item);
 
             return true;
-        }
-
-        private static bool AreTwoItemsEqual<T>(T first, T second)
-            where T : class, ILocalizable
-        {
-            return first.GetType() == second.GetType() && ReferenceEquals(first, second);
         }
 
         private string GetContentForLanguage(IDictionary<string, string> localizedContents, string languageCode)
@@ -300,12 +295,7 @@ namespace Xaki
 
         private string GetContentForFirstLanguage(IDictionary<string, string> localizedContents)
         {
-            if (localizedContents.TryGetValue(SupportedLanguages.First(), out var content))
-            {
-                return content;
-            }
-
-            return localizedContents.First().Value; // Note: Keys are not ordered in a dictionary.
+            return localizedContents.TryGetValue(SupportedLanguages.First(), out var content) ? content : localizedContents.First().Value;
         }
     }
 }

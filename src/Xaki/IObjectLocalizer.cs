@@ -8,19 +8,19 @@ namespace Xaki
 
         string GetEmptyJsonString();
 
-        string Serialize(IDictionary<string, string> content);
+        string Serialize(in IDictionary<string, string> content);
 
-        IDictionary<string, string> Deserialize(string json);
+        IDictionary<string, string> Deserialize(in string json);
 
-        bool TryDeserialize(string json, out IDictionary<string, string> localizedContent);
+        bool TryDeserialize(in string json, out IDictionary<string, string> localizedContent);
 
-        T Localize<T>(T item, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable;
+        T Localize<T>(in T item, in LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable;
 
-        T Localize<T>(T item, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable;
+        T Localize<T>(in T item, in string languageCode, in LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable;
 
-        IEnumerable<T> Localize<T>(IEnumerable<T> items, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable;
+        IEnumerable<T> Localize<T>(in IEnumerable<T> items, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable;
 
-        IEnumerable<T> Localize<T>(IEnumerable<T> items, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable;
+        IEnumerable<T> Localize<T>(in IEnumerable<T> items, string languageCode, LocalizationDepth depth = LocalizationDepth.Shallow) where T : class, ILocalizable;
 
         HashSet<string> RequiredLanguages { get; }
         HashSet<string> OptionalLanguages { get; }
