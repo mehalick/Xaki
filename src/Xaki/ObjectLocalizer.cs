@@ -164,9 +164,9 @@ namespace Xaki
         private void LocalizeItem<T>(in T item, in string languageCode, List<ILocalizable> depthChain, in LocalizationDepth depth = LocalizationDepth.Shallow)
             where T : class, ILocalizable
         {
-            foreach (var property in GetProperties(item))
+            foreach (var property in _propertyCache.GetOrAdd(item.GetType(), t => t.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty)))
             {
-                if (property.IsDefined(typeof(LocalizedAttribute)))
+                if (property.IsDefined(typeof(LocalizedAttribute), true))
                 {
                     TryLocalizeProperty(item, property, languageCode);
                 }
@@ -175,20 +175,6 @@ namespace Xaki
                     TryLocalizeChildren(item, property, languageCode, depthChain, depth);
                 }
             }
-        }
-
-        private static IEnumerable<PropertyInfo> GetProperties<T>(T item)
-            where T : class, ILocalizable
-        {
-            var type = item.GetType();
-
-            // unwrap EF dynamic proxy class if necessary
-            if (type.Namespace == "System.Data.Entity.DynamicProxies")
-            {
-                type = type.BaseType ?? throw new NullReferenceException($"Cannot determine base type for {type}.");
-            }
-
-            return _propertyCache.GetOrAdd(type, _ => type.GetTypeInfo().DeclaredProperties);
         }
 
         private void TryLocalizeChildren<T>(T item, PropertyInfo property, string languageCode, List<ILocalizable> depthChain, LocalizationDepth depth)
