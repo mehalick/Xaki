@@ -22,7 +22,7 @@
 
         body {
             background: #eef1f5;
-            font-family: 'Lato', sans-serif;
+            font-family: 'Lato', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
             font-size: 1.4rem;
             line-height: 1.5;
             color: #333333;
@@ -216,7 +216,7 @@
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker
                 .register("/service-worker.js")
-                .then(function () { console.log("[ServiceWorker] Registered"); });
+                .then(function () { console.log("[Service Worker] Registered"); });
         }
 
         var unsetActive = () => {
