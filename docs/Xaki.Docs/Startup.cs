@@ -44,7 +44,8 @@ namespace Xaki.Docs
                 .BlockAllMixedContent()
                 .DefaultSources(c => c.Self())
                 .FontSources(s => s.CustomSources("data:", "https://cdnjs.cloudflare.com", "https://fonts.gstatic.com"))
-                .ImageSources(s => s.Self().CustomSources("data:", "https://xaki.azureedge.net"))
+                .ImageSources(s => s.Self().CustomSources("data:", "https://xaki.azureedge.net", "https://s3.amazonaws.com"))
+                .ConnectSources(s => s.Self().CustomSources("https://xaki.azureedge.net", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com", "https://fonts.gstatic.com", "https://s3.amazonaws.com"))
                 .ScriptSources(s => s.Self().UnsafeInline().CustomSources("https://cdnjs.cloudflare.com"))
                 .StyleSources(s => s.Self().UnsafeInline().CustomSources("https://cdnjs.cloudflare.com", "https://fonts.googleapis.com")));
 

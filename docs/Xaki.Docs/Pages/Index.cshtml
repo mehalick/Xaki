@@ -1,7 +1,226 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    Layout = null;
 }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Xaki</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="shortcut icon" href="https://xaki.azureedge.net/assets/favicon-636762577492363000.ico">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/reset.min.css" integrity="sha256-YPwiKuHVDvjv0uwXyusnOfomzuB6gWUuk1gcVYSsEfc=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/grid.min.css" integrity="sha256-5IgY2t07GpHlSASMb+MHMxPLwH0SZ7wL1q/Dft7rkA0=" crossorigin="anonymous">
+    <style>
+        html {
+            font-size: 62.5%;
+        }
 
-<p>@DateTime.Now</p>
+        body {
+            background: #eef1f5;
+            font-family: 'Lato', sans-serif;
+            font-size: 1.4rem;
+            line-height: 1.5;
+            color: #333333;
+        }
+
+        header {
+            padding: 24px;
+            background-image: linear-gradient(to bottom right, #03dac5, #3700b3);
+        }
+
+        #logo {
+            text-align: center;
+        }
+
+        h1 {
+            margin: 32px 0;
+            font-size: 2.8rem;
+            font-weight: 500;
+            color: white;
+            text-align: center;
+        }
+
+        #buttons {
+            margin: 24px 0 96px 0;
+            text-align: center;
+        }
+
+        #buttons a {
+            display: inline-block;
+            min-width: 212px;
+            margin: 12px;
+            padding: 6px 12px;
+            background: #eef1f5;
+            border-radius: 5px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.1);
+            color: #333333;
+            text-decoration: none;
+            font-size: 1.6rem;
+            font-weight: bold;
+            transition: opacity 250ms ease-in-out;
+        }
+
+        #buttons a:hover {
+            opacity: 0.75;
+        }
+
+        #intro {
+            max-width: 800px;
+            margin: -72px auto 16px auto;
+            padding: 16px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.1);
+        }
+
+        #intro #screenshot {
+            width: 100%;
+            opacity: 1;
+        }
+
+        #intro #screenshot.hidden {
+            opacity: 0;
+        }
+
+        #intro .feature {
+            padding: 12px;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        #intro .feature:after {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            content: '';
+            height: 5px;
+            background-image: linear-gradient(to right, #03dac5, #3700b3);
+            opacity: 0;
+        }
+
+        #intro .feature h2 {
+            margin: 0 0 6px 0;
+            font-size: 1.8rem;
+        }
+
+        #intro .feature p {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        #intro .feature.selected {
+            background: #eef1f5;
+        }
+
+        #intro .feature.selected:after {
+            opacity: 1;
+        }
+
+        #intro.transitions #screenshot,
+        #intro.transitions .feature,
+        #intro.transitions .feature:after {
+            transition: all 500ms ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div id="logo"><img src="https://xaki.azureedge.net/assets/logo-text-only--white-636762353196739215.svg" alt="Xaki" height="88" /></div>
+        <h1>Simplified Multi-language POCO Localization for .NET Core</h1>
+        <div id="buttons">
+            <a class="ui button" href="/get-started">Get Started</a>
+            <a href="https://github.com/mehalick/Xaki">View on GitHub</a>
+        </div>
+        <a href="https://github.com/mehalick/Xaki"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+    </header>
+    <main>
+        <section>
+            <div id="intro" class="transitions">
+                <div class="ui equal width padded grid">
+                    <div class="feature column selected" data-index="0">
+                        <h2>Easy<br />Setup</h2>
+                        <p>Make new or existing classes localizable with a single attribute.</p>
+                    </div>
+                    <div class="feature column" data-index="1">
+                        <h2>Automatic<br />Localization</h2>
+                        <p>Implement ILocalizable and decorate properties with Localize attribute.</p>
+                    </div>
+                    <div class="feature column" data-index="2">
+                        <h2>Tag Helper<br />Editors</h2>
+                        <p>Implement ILocalizable and decorate properties with Localize attribute.</p>
+                    </div>
+                    <div class="feature column" data-index="3">
+                        <h2>Database<br />Friendly</h2>
+                        <p>Implement ILocalizable and decorate properties with Localize attribute.</p>
+                    </div>
+                </div>
+                <p>
+                    <img id="screenshot" src="https://xaki.azureedge.net/assets/screenshot-code-636762469004296092.png" alt="screen shot code" />
+                </p>
+            </div>
+        </section>
+    </main>
+    <script>
+
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker
+                .register("/service-worker.js")
+                .then(function () { console.log("Service Worker Registered"); });
+        }
+
+        const elements = {
+            intro: document.getElementById("intro"),
+            features: document.getElementsByClassName("feature"),
+            screenshot: document.getElementById("screenshot")
+        }
+
+        const images = [
+            "https://xaki.azureedge.net/assets/screenshot-code-636762469004296092.png",
+            "https://xaki.azureedge.net/assets/screenshot-display-636762469210964183.png",
+            "https://xaki.azureedge.net/assets/screenshot-editor-636762470434829974.png",
+            "https://xaki.azureedge.net/assets/screenshot-database-636762477677917476.png"
+        ];
+
+        var unsetActive = () => {
+            for (let i = 0; i < elements.features.length; i++) {
+                elements.features[i].classList.remove("selected");
+            }
+            elements.screenshot.classList.add("hidden");
+        };
+
+        var setActive = (index) => {
+            elements.screenshot.src = images[index];
+            elements.screenshot.classList.remove("hidden");
+            elements.features[index].classList.add("selected");
+        }
+
+        for (let i = 0; i < elements.features.length; i++) {
+            elements.features[i].addEventListener("click", (e) => {
+                clearInterval(interval);
+                elements.intro.classList.remove("transitions");
+                unsetActive();
+                setActive(e.currentTarget.dataset.index);
+            });
+        }
+
+        let index = 1;
+        let interval = setInterval(function () {
+            unsetActive();
+            setTimeout(() => {
+                setActive(index);
+                index++;
+                if (index === 4) {
+                    index = 0;
+                }
+            }, 500);
+        }, 5000);
+    </script>
+</body>
+</html>
