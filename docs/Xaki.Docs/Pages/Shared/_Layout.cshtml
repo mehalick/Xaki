@@ -1,11 +1,13 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Xaki.Docs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Xaki | @ViewData["Title"]</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="shortcut icon" href="https://xaki.azureedge.net/assets/favicon-636762577492363000.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css" integrity="sha256-oDCP2dNW17Y1QhBwQ+u2kLaKxoauWvIGks3a4as9QKs=" crossorigin="anonymous" />
-
     <environment include="Development">
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
@@ -43,7 +45,7 @@
                         <div class="introduction">
                             <div class="ui header">
                                 <div class="ui breadcrumb">
-                                    Home
+                                    @ViewData["Title"]
                                 </div>
                             </div>
                         </div>

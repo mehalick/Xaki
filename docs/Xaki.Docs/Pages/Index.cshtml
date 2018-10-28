@@ -6,10 +6,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Xaki</title>
+    <title>Xaki | Simplified Multi-language POCO Localization for .NET Core</title>
     <link rel="manifest" href="/manifest.json">
     <link rel="shortcut icon" href="https://xaki.azureedge.net/assets/favicon-636762577492363000.ico">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700">
@@ -33,11 +33,21 @@
             background-image: linear-gradient(to bottom right, #03dac5, #3700b3);
         }
 
+        footer {
+            margin: 16px 16px 48px 16px;
+            text-align: center;
+        }
+
+        footer a {
+            color: #333333;
+            text-decoration: none;
+        }
+
         #logo {
             text-align: center;
         }
 
-        h1 {
+        #lead {
             margin: 32px 0;
             font-size: 2.8rem;
             font-weight: 500;
@@ -56,7 +66,7 @@
             margin: 12px;
             padding: 6px 12px;
             background: #eef1f5;
-            border-radius: 5px;
+            border-radius: 4px;
             box-shadow: 0 10px 50px rgba(0,0,0,0.1);
             color: #333333;
             text-decoration: none;
@@ -74,12 +84,19 @@
             margin: -72px auto 16px auto;
             padding: 16px;
             background: white;
-            border-radius: 5px;
             box-shadow: 0 10px 50px rgba(0,0,0,0.1);
+        }
+
+        @@media (min-width: 800px) {
+            #intro {
+                border-radius: 4px;
+            }
         }
 
         #intro #screenshot {
             width: 100%;
+            max-width: 768px;
+            margin-top: 16px;
             opacity: 1;
         }
 
@@ -89,7 +106,7 @@
 
         #intro .feature {
             padding: 12px;
-            border-radius: 5px;
+            border-radius: 4px;
             text-align: center;
             cursor: pointer;
         }
@@ -108,6 +125,16 @@
         #intro .feature h2 {
             margin: 0 0 6px 0;
             font-size: 1.8rem;
+        }
+
+        #intro .feature h2 br {
+            display: none;
+        }
+
+        @@media (min-width: 768px) {
+            #intro .feature h2 br {
+                display: block;
+            }
         }
 
         #intro .feature p {
@@ -133,9 +160,9 @@
 <body>
     <header>
         <div id="logo"><img src="https://xaki.azureedge.net/assets/logo-text-only--white-636762353196739215.svg" alt="Xaki" height="88" /></div>
-        <h1>Simplified Multi-language POCO Localization for .NET Core</h1>
+        <h1 id="lead">Simplified Multi-language POCO Localization for .NET Core</h1>
         <div id="buttons">
-            <a class="ui button" href="/get-started">Get Started</a>
+            <a asp-page="Docs">Get Started</a>
             <a href="https://github.com/mehalick/Xaki">View on GitHub</a>
         </div>
         <a href="https://github.com/mehalick/Xaki"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
@@ -143,37 +170,30 @@
     <main>
         <section>
             <div id="intro" class="transitions">
-                <div class="ui equal width padded grid">
+                <div class="ui stackable four column padded grid">
                     <div class="feature column selected" data-index="0">
-                        <h2>Easy<br />Setup</h2>
-                        <p>Make new or existing classes localizable with a single attribute.</p>
+                        <h2>Easy<br /> Setup</h2>
+                        <p>Decorate new or existing classes with a single localization attribute.</p>
                     </div>
                     <div class="feature column" data-index="1">
-                        <h2>Automatic<br />Localization</h2>
-                        <p>Implement ILocalizable and decorate properties with Localize attribute.</p>
+                        <h2>Automatic<br /> Localization</h2>
+                        <p>Leverage ASP.NET Core's existing localization to display language-specific data.</p>
                     </div>
                     <div class="feature column" data-index="2">
-                        <h2>Tag Helper<br />Editors</h2>
-                        <p>Implement ILocalizable and decorate properties with Localize attribute.</p>
+                        <h2>Tag Helper<br /> Editors</h2>
+                        <p>Use built-in tag helpers to quickly add multi-language editors to forms.</p>
                     </div>
                     <div class="feature column" data-index="3">
-                        <h2>Database<br />Friendly</h2>
-                        <p>Implement ILocalizable and decorate properties with Localize attribute.</p>
+                        <h2>Database<br /> Friendly</h2>
+                        <p>Store content as simple and readable JSON for easy search, query, and export.</p>
                     </div>
                 </div>
-                <p>
-                    <img id="screenshot" src="https://xaki.azureedge.net/assets/screenshot-code-636762469004296092.png" alt="screen shot code" />
-                </p>
+                <img id="screenshot" src="https://xaki.azureedge.net/assets/screenshot-01-636763134429881325.png" alt="screenshot" />
             </div>
         </section>
     </main>
+    <footer><small>&copy; @DateTime.Today.Year <a href="https://andy.mehalick.com/">Andy Mehalick</a></small></footer>
     <script>
-
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker
-                .register("/service-worker.js")
-                .then(function () { console.log("Service Worker Registered"); });
-        }
 
         const elements = {
             intro: document.getElementById("intro"),
@@ -182,11 +202,22 @@
         }
 
         const images = [
-            "https://xaki.azureedge.net/assets/screenshot-code-636762469004296092.png",
-            "https://xaki.azureedge.net/assets/screenshot-display-636762469210964183.png",
-            "https://xaki.azureedge.net/assets/screenshot-editor-636762470434829974.png",
-            "https://xaki.azureedge.net/assets/screenshot-database-636762477677917476.png"
+            "https://xaki.azureedge.net/assets/screenshot-01-636763134429881325.png",
+            "https://xaki.azureedge.net/assets/screenshot-02-636763134444368750.png",
+            "https://xaki.azureedge.net/assets/screenshot-03-636763134448780250.png",
+            "https://xaki.azureedge.net/assets/screenshot-04-636763134451195384.png"
         ];
+
+        for (let i = 1; i < images.length; i++) {
+            const image = new Image();
+            image.src = images[i];
+        }
+
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker
+                .register("/service-worker.js")
+                .then(function () { console.log("[ServiceWorker] Registered"); });
+        }
 
         var unsetActive = () => {
             for (let i = 0; i < elements.features.length; i++) {
