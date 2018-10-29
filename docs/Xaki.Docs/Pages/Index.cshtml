@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Xaki | Simplified Multi-language POCO Localization for .NET Core</title>
+    <meta name="description" content="Xaki is a .NET Standard library for adding multi-language support to POCO classes. It includes a lightweight service for persisting and retrieving data to and from databases using any ORM. Xaki includes first-class support for ASP.NET Core, ASP.NET MVC, and all version of Entity Framework.">
     <link rel="manifest" href="/manifest.json">
     <link rel="shortcut icon" href="https://xaki.azureedge.net/assets/favicon-636762577492363000.ico">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700">
@@ -173,7 +174,7 @@
                 <div class="ui stackable four column padded grid">
                     <div class="feature column selected" data-index="0">
                         <h2>Easy<br /> Setup</h2>
-                        <p>Decorate new or existing classes with a single localization attribute.</p>
+                        <p>Decorate new or existing class properties with a single localization attribute.</p>
                     </div>
                     <div class="feature column" data-index="1">
                         <h2>Automatic<br /> Localization</h2>
@@ -195,20 +196,38 @@
     <footer><small>&copy; @DateTime.Today.Year <a href="https://andy.mehalick.com/">Andy Mehalick</a></small></footer>
     <script>
 
-        const elements = {
-            intro: document.getElementById("intro"),
-            features: document.getElementsByClassName("feature"),
-            screenshot: document.getElementById("screenshot")
+        const page = {
+            elements: {
+                intro: document.getElementById("intro"),
+                features: document.getElementsByClassName("feature"),
+                screenshot: document.getElementById("screenshot")
+            },
+            images: [
+                "https://xaki.azureedge.net/assets/screenshot-01-636763134429881325.png",
+                "https://xaki.azureedge.net/assets/screenshot-02-636763134444368750.png",
+                "https://xaki.azureedge.net/assets/screenshot-03-636763134448780250.png",
+                "https://xaki.azureedge.net/assets/screenshot-04-636763134451195384.png"
+            ]
+        };
+
+        page.unsetActive = () => {
+            for (let i = 0; i < elements.features.length; i++) {
+                elements.features[i].classList.remove("selected");
+            }
+            elements.screenshot.classList.add("hidden");
+        };
+
+        page.setActive = (index) => {
+            elements.screenshot.src = images[index];
+            elements.screenshot.classList.remove("hidden");
+            elements.features[index].classList.add("selected");
         }
 
-        const images = [
-            "https://xaki.azureedge.net/assets/screenshot-01-636763134429881325.png",
-            "https://xaki.azureedge.net/assets/screenshot-02-636763134444368750.png",
-            "https://xaki.azureedge.net/assets/screenshot-03-636763134448780250.png",
-            "https://xaki.azureedge.net/assets/screenshot-04-636763134451195384.png"
-        ];
+        page.bindEvents = () => {
 
-        for (let i = 1; i < images.length; i++) {
+        }
+
+        for (let i = 1; i < page.images.length; i++) {
             const image = new Image();
             image.src = images[i];
         }
@@ -219,33 +238,20 @@
                 .then(function () { console.log("[Service Worker] Registered"); });
         }
 
-        var unsetActive = () => {
-            for (let i = 0; i < elements.features.length; i++) {
-                elements.features[i].classList.remove("selected");
-            }
-            elements.screenshot.classList.add("hidden");
-        };
-
-        var setActive = (index) => {
-            elements.screenshot.src = images[index];
-            elements.screenshot.classList.remove("hidden");
-            elements.features[index].classList.add("selected");
-        }
-
-        for (let i = 0; i < elements.features.length; i++) {
-            elements.features[i].addEventListener("click", (e) => {
+        page.elements.features.forEach(item => {
+            item.addEventListener("click", (e) => {
                 clearInterval(interval);
-                elements.intro.classList.remove("transitions");
-                unsetActive();
-                setActive(e.currentTarget.dataset.index);
+                page.elements.intro.classList.remove("transitions");
+                page.unsetActive();
+                page.setActive(e.currentTarget.dataset.index);
             });
-        }
+        });
 
         let index = 1;
-        let interval = setInterval(function () {
-            unsetActive();
+        const interval = setInterval(function () {
+            page.unsetActive();
             setTimeout(() => {
-                setActive(index);
+                page.setActive(index);
                 index++;
                 if (index === 4) {
                     index = 0;
