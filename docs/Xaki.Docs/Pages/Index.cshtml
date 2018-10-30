@@ -199,7 +199,7 @@
         const page = {
             elements: {
                 intro: document.getElementById("intro"),
-                features: document.getElementsByClassName("feature"),
+                features: Array.from(document.getElementsByClassName("feature")),
                 screenshot: document.getElementById("screenshot")
             },
             images: [
@@ -211,53 +211,64 @@
         };
 
         page.unsetActive = () => {
-            for (let i = 0; i < elements.features.length; i++) {
-                elements.features[i].classList.remove("selected");
-            }
-            elements.screenshot.classList.add("hidden");
+            page.elements.features.forEach(item => {
+                item.classList.remove("selected");
+            });
+            page.elements.screenshot.classList.add("hidden");
         };
 
         page.setActive = (index) => {
-            elements.screenshot.src = images[index];
-            elements.screenshot.classList.remove("hidden");
-            elements.features[index].classList.add("selected");
+            page.elements.screenshot.src = page.images[index];
+            page.elements.screenshot.classList.remove("hidden");
+            page.elements.features[index].classList.add("selected");
+        }
+
+        page.initServiceWorker = () => {
+            if ("serviceWorker" in navigator) {
+                navigator.serviceWorker
+                    .register("/service-worker.js")
+                    .then(function () { console.log("[Service Worker] Registered"); });
+            }
         }
 
         page.bindEvents = () => {
-
-        }
-
-        for (let i = 1; i < page.images.length; i++) {
-            const image = new Image();
-            image.src = images[i];
-        }
-
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker
-                .register("/service-worker.js")
-                .then(function () { console.log("[Service Worker] Registered"); });
-        }
-
-        page.elements.features.forEach(item => {
-            item.addEventListener("click", (e) => {
-                clearInterval(interval);
-                page.elements.intro.classList.remove("transitions");
-                page.unsetActive();
-                page.setActive(e.currentTarget.dataset.index);
+            page.elements.features.forEach(item => {
+                item.addEventListener("click", (e) => {
+                    clearInterval(page.interval);
+                    page.elements.intro.classList.remove("transitions");
+                    page.unsetActive();
+                    page.setActive(e.currentTarget.dataset.index);
+                });
             });
-        });
+        }
 
-        let index = 1;
-        const interval = setInterval(function () {
-            page.unsetActive();
-            setTimeout(() => {
-                page.setActive(index);
-                index++;
-                if (index === 4) {
-                    index = 0;
-                }
-            }, 500);
-        }, 5000);
+        page.preloadImages = () => {
+            page.images.forEach(url => {
+                const image = new Image();
+                image.src = url;
+            });
+        }
+
+        page.runSlideshow = () => {
+            let index = 1;
+            return setInterval(function () {
+                page.unsetActive();
+                setTimeout(() => {
+                    page.setActive(index);
+                    index++;
+                    if (index === 4) {
+                        index = 0;
+                    }
+                }, 500);
+            }, 5000);
+        };
+
+        page.initServiceWorker();
+        page.bindEvents();
+        page.preloadImages();
+
+        page.interval = page.runSlideshow();
+
     </script>
 </body>
 </html>
