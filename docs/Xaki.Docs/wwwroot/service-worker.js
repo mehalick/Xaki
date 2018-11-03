@@ -1,4 +1,4 @@
-var cacheName = "201810281442";
+var cacheName = "201811032059";
 var filesToCache = [
     "/",
     "https://xaki.azureedge.net/assets/favicon-636762577492363000.ico",
