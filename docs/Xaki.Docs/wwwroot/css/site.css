@@ -1,4 +1,7 @@
-﻿body.pushable > .pusher {
+﻿body {
+  font-size: 16px; }
+
+body.pushable > .pusher {
   display: flex;
   flex-direction: column;
   margin-top: 40.5px; }
@@ -9,9 +12,22 @@
     min-height: 100%;
     flex: 1 0 auto; }
 
-@media only screen and (max-width: 1272px) {
-  .full.height > .toc {
-    width: 200px; } }
+header.ui.vertical.segment {
+  display: flex;
+  padding: 2rem; }
+  header.ui.vertical.segment h1 {
+    align-self: center; }
+  @media (min-width: 1145px) {
+    header.ui.vertical.segment {
+      min-height: 62px;
+      padding: 0 2rem; }
+      header.ui.vertical.segment h1 {
+        margin: 0 !important; } }
+
+main.ui.container {
+  width: auto !important;
+  max-width: 960px !important;
+  margin: 2rem !important; }
 
 @media only screen and (min-width: 1145px) {
   .fixed.main.menu {
@@ -20,8 +36,6 @@
 @media only screen and (max-width: 1144px) {
   .full.height > .toc {
     display: none; }
-  .masthead.segment {
-    padding-top: 5em; }
   .masthead > .container,
   .main.container,
   .fixed.menu > .container {
@@ -32,9 +46,6 @@
     width: 100% !important;
     max-width: none !important; } }
 
-/*******************************
-             Global
-*******************************/
 /*--------------
      Sidebar
 ---------------*/
@@ -81,12 +92,7 @@
          Sidebar Layout
 *******************************/
 #admin > .pusher > .full.height {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
   flex-direction: row; }
 
 #admin:not(.site) > .pusher > .full.height {
@@ -98,9 +104,6 @@
   z-index: 1;
   background-color: #1b1c1d;
   width: 250px;
-  -webkit-box-flex: 0;
-  -webkit-flex: 0 0 auto;
-  -ms-flex: 0 0 auto;
   flex: 0 0 auto; }
 
 #admin .full.height > .toc .ui.menu {
@@ -113,21 +116,5 @@
   will-change: transform; }
 
 #admin .article {
-  -webkit-box-flex: 1;
-  -webkit-flex: 1 1 auto;
-  -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   min-width: 0px; }
-
-/*******************************
-          Responsive
-*******************************/
-/* Defaults */
-#admin .masthead > .container,
-#admin .main.container,
-#admin .fixed.menu > .container {
-  margin-left: 3em !important;
-  margin-right: 3em !important;
-  width: auto !important;
-  max-width: 960px !important; }
-

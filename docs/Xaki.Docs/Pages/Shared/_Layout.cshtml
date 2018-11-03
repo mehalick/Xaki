@@ -15,6 +15,14 @@
     <environment exclude="Development">
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="false" />
     </environment>
+    <style>
+        @@media (min-width: 1145px) {
+            body.pushable {
+                background-color: white !important;
+                background-image: linear-gradient(to right, #1b1c1d, #1b1c1d 250px, white 250px, white) !important;
+            }
+        }
+    </style>
 </head>
 <body id="admin">
 
@@ -41,16 +49,8 @@
                 </nav>
             </div>
             <div class="article">
-                <header class="ui masthead vertical segment">
-                    <div class="ui container">
-                        <div class="introduction">
-                            <div class="ui header">
-                                <div class="ui breadcrumb">
-                                    @ViewData["Title"]
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <header class="ui vertical segment">
+                    <h1 class="ui large header">@ViewData["Title"]</h1>
                 </header>
                 <main class="main ui intro container">
                     @RenderBody()

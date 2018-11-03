@@ -1,3 +1,7 @@
+body {
+    font-size: 16px;
+}
+
 body.pushable > .pusher {
     display: flex;
     flex-direction: column;
@@ -13,10 +17,28 @@ body.pushable > .pusher {
     }
 }
 
-@media only screen and (max-width: 1272px) {
-    .full.height > .toc {
-        width: 200px;
+header.ui.vertical.segment {
+    display: flex;
+    padding: 2rem;
+
+    h1 {
+        align-self: center;
     }
+
+    @media (min-width: 1145px) {
+        min-height: 62px;
+        padding: 0 2rem;
+
+        h1 {
+            margin: 0 !important;
+        }
+    }
+}
+
+main.ui.container {
+    width: auto !important;
+    max-width: 960px !important;
+    margin: 2rem !important;
 }
 
 @media only screen and (min-width: 1145px) {
@@ -28,10 +50,6 @@ body.pushable > .pusher {
 @media only screen and (max-width: 1144px) {
     .full.height > .toc {
         display: none;
-    }
-
-    .masthead.segment {
-        padding-top: 5em;
     }
 
     .masthead > .container,
@@ -47,10 +65,6 @@ body.pushable > .pusher {
         max-width: none !important;
     }
 }
-
-/*******************************
-             Global
-*******************************/
 
 /*--------------
      Sidebar
@@ -113,12 +127,7 @@ body.pushable > .pusher {
 *******************************/
 
 #admin > .pusher > .full.height {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-flex-direction: row;
-    -ms-flex-direction: row;
     flex-direction: row;
 }
 
@@ -132,9 +141,6 @@ body.pushable > .pusher {
     z-index: 1;
     background-color: #1b1c1d;
     width: 250px;
-    -webkit-box-flex: 0;
-    -webkit-flex: 0 0 auto;
-    -ms-flex: 0 0 auto;
     flex: 0 0 auto;
 }
 
@@ -149,23 +155,6 @@ body.pushable > .pusher {
 }
 
 #admin .article {
-    -webkit-box-flex: 1;
-    -webkit-flex: 1 1 auto;
-    -ms-flex: 1 1 auto;
     flex: 1 1 auto;
     min-width: 0px;
-}
-
-/*******************************
-          Responsive
-*******************************/
-
-/* Defaults */
-#admin .masthead > .container,
-#admin .main.container,
-#admin .fixed.menu > .container {
-    margin-left: 3em !important;
-    margin-right: 3em !important;
-    width: auto !important;
-    max-width: 960px !important;
 }
