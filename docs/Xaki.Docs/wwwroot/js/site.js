@@ -10,6 +10,7 @@
     $(() => {
         const $menu = $("#sidebar");
         $menu.sidebar({
+            debug: true,
             dimPage: true,
             transition: "overlay",
             mobileTransition: "uncover"
