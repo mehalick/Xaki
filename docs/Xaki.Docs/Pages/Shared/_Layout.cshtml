@@ -9,6 +9,10 @@
     <link rel="manifest" href="/manifest.json">
     <link rel="shortcut icon" href="https://xaki.azureedge.net/assets/favicon-636762577492363000.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" integrity="sha256-9mbkOfVho3ZPXfM7W8sV2SndrGDuh7wuyLjtsWeTI1Q=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/themes/prism.min.css" integrity="sha256-N1K43s+8twRa+tzzoF3V8EgssdDiZ6kd9r8Rfgg8kZU=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/plugins/line-numbers/prism-line-numbers.min.css" integrity="sha256-Afz2ZJtXw+OuaPX10lZHY7fN1+FuTE/KdCs+j7WZTGc=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/themes/prism-okaidia.min.css" integrity="sha256-+8ReLFz1xaTiP3T0xcJVWrHneeFwCnJUJwvcM0L+Ufw=" crossorigin="anonymous" />
+
     <environment include="Development">
         <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     </environment>
@@ -17,7 +21,7 @@
     </environment>
     <style>
         @@media (min-width: 1145px) {
-            body.pushable {
+            body, body.pushable {
                 background-color: white !important;
                 background-image: linear-gradient(to right, #1b1c1d, #1b1c1d 250px, white 250px, white) !important;
             }
@@ -60,7 +64,11 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js" integrity="sha256-t8GepnyPmw9t+foMh3mKNvcorqNHamSKtKRxxpUEgFI=" crossorigin="anonymous"></script>    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js" integrity="sha256-t8GepnyPmw9t+foMh3mKNvcorqNHamSKtKRxxpUEgFI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/prism.min.js" integrity="sha256-jc6y1s/Y+F+78EgCT/lI2lyU7ys+PFYrRSJ6q8/R8+o=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/plugins/line-numbers/prism-line-numbers.js" integrity="sha256-Iqd4m4d2q0jp2soWB0guIxt6LXCyqSQ2RkD5G/Pnd0g=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/plugins/normalize-whitespace/prism-normalize-whitespace.min.js" integrity="sha256-31Ef0tfMJHz4mcBYno6PKR2Iz5qPHPJLxIzej2AGl6c=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-csharp.min.js" integrity="sha256-v1Nxmv1+jRfdNuwdLgHXmAzZwADayhxn95rA7sJAg0c=" crossorigin="anonymous"></script>
 
     <environment include="Development">
         <script src="~/js/site.js" asp-append-version="true"></script>

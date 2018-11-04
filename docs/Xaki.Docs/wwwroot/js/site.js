@@ -16,5 +16,12 @@
             mobileTransition: "uncover"
         });
         $menu.sidebar("attach events", ".launch.button, .view-ui, .launch.item");
+
+        const links = document.querySelectorAll(".ui.menu a.item");
+        for (let i = 0; i < links.length; i++) {
+            if (links[i].pathname === window.location.pathname) {
+                links[i].classList.add("active");
+            }
+        }
     });
 })(jQuery);

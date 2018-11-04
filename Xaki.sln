@@ -21,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{B0D568E3-7852-4717-BC8B-CE70253109F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xaki.Docs", "docs\Xaki.Docs\Xaki.Docs.csproj", "{668203ED-8BDD-466B-89C7-62D515F1D53B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xaki.Docs", "docs\Xaki.Docs\Xaki.Docs.csproj", "{668203ED-8BDD-466B-89C7-62D515F1D53B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

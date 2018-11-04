@@ -1,5 +1,5 @@
-var cacheName = "201811032059";
-var filesToCache = [
+const cacheName = "201811041910";
+const filesToCache = [
     "/",
     "https://xaki.azureedge.net/assets/favicon-636762577492363000.ico",
     "https://xaki.azureedge.net/assets/logo-text-only--white-636762353196739215.svg",
@@ -11,11 +11,20 @@ var filesToCache = [
     "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/reset.min.css",
     "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/grid.min.css",
     "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css",
+    "https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/themes/prism.min.css",
+    "https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/plugins/line-numbers/prism-line-numbers.min.css",
+    "https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/themes/prism-okaidia.min.css",
     "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/prism.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/plugins/line-numbers/prism-line-numbers.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/plugins/normalize-whitespace/prism-normalize-whitespace.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-csharp.min.js",
     "/css/site.min.css",
     "/js/site.min.js",
-    "/docs"
+    "/docs/getting-started",
+    "/docs/aspnet-core",
+    "/docs/aspnet-mvc"
 ];
 
 self.addEventListener("install", (e) => {

@@ -2,14 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <UserSecretsId>8b6d93f8-144d-4a8f-b3c0-94b241534a76</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="bundleconfig.json" />
     <Content Remove="compilerconfig.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="compilerconfig.json" />
   </ItemGroup>
 
   <ItemGroup>

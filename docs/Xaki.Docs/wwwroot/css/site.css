@@ -46,9 +46,7 @@ main.ui.container {
     width: 100% !important;
     max-width: none !important; } }
 
-/*--------------
-     Sidebar
----------------*/
+/* Sidebar */
 #admin .ui.sidebar.menu .item {
   will-change: transform; }
 
@@ -76,21 +74,6 @@ main.ui.container {
 #sidebar .menu .active.item {
   color: #FFF; }
 
-/*--------------
-   Fixed Menu
----------------*/
-#admin .main.menu .title.item b {
-  margin-right: 0.5em; }
-
-#admin .fixed.main.menu .launch.item {
-  display: block; }
-
-#admin .fixed.main.menu .search .icon {
-  opacity: 0.9; }
-
-/*******************************
-         Sidebar Layout
-*******************************/
 #admin > .pusher > .full.height {
   display: flex;
   flex-direction: row; }
@@ -98,7 +81,6 @@ main.ui.container {
 #admin:not(.site) > .pusher > .full.height {
   background-color: #FFFFFF; }
 
-/* page layout */
 #admin .full.height > .toc {
   position: relative;
   z-index: 1;
@@ -115,6 +97,26 @@ main.ui.container {
   overflow: hidden;
   will-change: transform; }
 
+.ui.vertical.menu .menu .item {
+  background: 0 0;
+  padding: .5em 1.33333333em;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.5); }
+
 #admin .article {
   flex: 1 1 auto;
   min-width: 0px; }
+
+/* Menu */
+#admin .main.menu .title.item b {
+  margin-right: 0.5em; }
+
+#admin .fixed.main.menu .launch.item {
+  display: block; }
+
+#admin .fixed.main.menu .search .icon {
+  opacity: 0.9; }
+
+/* Prism */
+pre[class*=language-] {
+  background: #1b1c1d; }
