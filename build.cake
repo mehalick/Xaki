@@ -69,8 +69,7 @@ Task("Test")
                 project.FullPath,
                 new DotNetCoreTestSettings()
                 {
-                    Configuration = configuration,
-                    NoBuild = true
+                    Configuration = configuration
                 });
         }
     });
