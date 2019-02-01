@@ -134,7 +134,7 @@ namespace Xaki
                 return null;
             }
 
-            var depthChain = new List<ILocalizable>(32);
+            var depthChain = new List<object>(32);
 
             LocalizeItem(item, SupportedLanguages.Contains(languageCode) ? languageCode : SupportedLanguages.First(), depthChain, depth);
 
@@ -161,12 +161,11 @@ namespace Xaki
             return items.Select(item => Localize(item, languageCode, depth));
         }
 
-        private void LocalizeItem<T>(in T item, in string languageCode, List<ILocalizable> depthChain, in LocalizationDepth depth = LocalizationDepth.Shallow)
-            where T : class, ILocalizable
+        private void LocalizeItem(in object item, in string languageCode, in List<object> depthChain, in LocalizationDepth depth = LocalizationDepth.Shallow)
         {
-            foreach (var property in GetProperties(item))
+            foreach (var property in _propertyCache.GetOrAdd(item.GetType(), t => t.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty)))
             {
-                if (property.IsDefined(typeof(LocalizedAttribute)))
+                if (property.IsDefined(typeof(LocalizedAttribute), true))
                 {
                     TryLocalizeProperty(item, property, languageCode);
                 }
@@ -177,38 +176,22 @@ namespace Xaki
             }
         }
 
-        private static IEnumerable<PropertyInfo> GetProperties<T>(T item)
-            where T : class, ILocalizable
-        {
-            var type = item.GetType();
-
-            // unwrap EF dynamic proxy class if necessary
-            if (type.Namespace == "System.Data.Entity.DynamicProxies")
-            {
-                type = type.BaseType ?? throw new NullReferenceException($"Cannot determine base type for {type}.");
-            }
-
-            return _propertyCache.GetOrAdd(type, _ => type.GetTypeInfo().DeclaredProperties);
-        }
-
-        private void TryLocalizeChildren<T>(T item, PropertyInfo property, string languageCode, List<ILocalizable> depthChain, LocalizationDepth depth)
-            where T : class, ILocalizable
+        private void TryLocalizeChildren(in object item, in PropertyInfo property, in string languageCode, in List<object> depthChain, in LocalizationDepth depth)
         {
             if (typeof(ILocalizable).IsAssignableFrom(property.PropertyType))
             {
-                TryLocalizeProperty(item, property.GetValue(item, null) as ILocalizable, languageCode, depthChain, depth);
+                TryLocalizeProperty(item, property.GetValue(item, null), languageCode, depthChain, depth);
             }
             else if (typeof(IEnumerable<ILocalizable>).IsAssignableFrom(property.PropertyType))
             {
-                foreach (var member in (IEnumerable<ILocalizable>)property.GetValue(item, null))
+                foreach (var member in (IEnumerable<object>)property.GetValue(item, null))
                 {
                     TryLocalizeProperty(item, member, languageCode, depthChain, depth);
                 }
             }
         }
 
-        private void TryLocalizeProperty<T>(T item, PropertyInfo propertyInfo, string languageCode)
-            where T : class, ILocalizable
+        private void TryLocalizeProperty(in object item, in PropertyInfo propertyInfo, in string languageCode)
         {
             var propertyValue = propertyInfo.GetValue(item)?.ToString();
 
@@ -226,8 +209,7 @@ namespace Xaki
             propertyInfo.SetValue(item, contentForLanguage, null);
         }
 
-        private void TryLocalizeProperty<T>(T @base, T member, string languageCode, List<ILocalizable> depthChain, LocalizationDepth depth = LocalizationDepth.Shallow)
-             where T : class, ILocalizable
+        private void TryLocalizeProperty(in object @base, in object member, in string languageCode, in List<object> depthChain, LocalizationDepth depth = LocalizationDepth.Shallow)
         {
             if (SkipItemLocalization(@base, member))
             {
@@ -249,8 +231,7 @@ namespace Xaki
             LocalizeItem(member, languageCode, depthChain, depth);
         }
 
-        private static bool SkipItemLocalization<T>(T @base, T member)
-            where T : class, ILocalizable
+        private static bool SkipItemLocalization(in object @base, in object member)
         {
             if (@base is null || member is null)
             {
@@ -260,8 +241,7 @@ namespace Xaki
             return ReferenceEquals(@base, member);
         }
 
-        private static bool TryAddToDepthChain<T>(T item, ICollection<ILocalizable> depthChain)
-            where T : class, ILocalizable
+        private static bool TryAddToDepthChain(object item, in List<object> depthChain)
         {
             if (item is null)
             {
@@ -278,9 +258,9 @@ namespace Xaki
             return true;
         }
 
-        private string GetContentForLanguage(IDictionary<string, string> localizedContents, string languageCode)
+        private string GetContentForLanguage(in IDictionary<string, string> localizedContents, in string languageCode)
         {
-            if (!localizedContents.Keys.Any())
+            if (localizedContents.Count == 0)
             {
                 throw new ArgumentException("Cannot localize property, no localized property values exist.", nameof(localizedContents));
             }
@@ -293,7 +273,7 @@ namespace Xaki
             return GetContentForFirstLanguage(localizedContents);
         }
 
-        private string GetContentForFirstLanguage(IDictionary<string, string> localizedContents)
+        private string GetContentForFirstLanguage(in IDictionary<string, string> localizedContents)
         {
             return localizedContents.TryGetValue(SupportedLanguages.First(), out var content) ? content : localizedContents.First().Value;
         }

@@ -65,15 +65,12 @@ Task("Test")
     {
         foreach(var project in GetFiles("./tests/**/*Tests.csproj"))
         {
-            var outputFilePath = MakeAbsolute(artifactsDirectory.Path).CombineWithFilePath(project.GetFilenameWithoutExtension());
-            
-            DotNetCoreTool(
-                project,
-                "xunit",
-                new ProcessArgumentBuilder()
-                    .AppendSwitch("-configuration", configuration)
-                    .AppendSwitchQuoted("-xml", outputFilePath.AppendExtension(".xml").ToString())
-                    .AppendSwitchQuoted("-html", outputFilePath.AppendExtension(".html").ToString()));
+            DotNetCoreTest(
+                project.FullPath,
+                new DotNetCoreTestSettings()
+                {
+                    Configuration = configuration
+                });
         }
     });
 
