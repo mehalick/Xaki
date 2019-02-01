@@ -69,7 +69,7 @@ Task("Test")
             
             DotNetCoreTool(
                 project,
-                "xunit",
+                "test",
                 new ProcessArgumentBuilder()
                     .AppendSwitch("-configuration", configuration)
                     .AppendSwitchQuoted("-xml", outputFilePath.AppendExtension(".xml").ToString())
