@@ -52,21 +52,19 @@ public async Task<IActionResult> Index()
 
 For ASP.NET Core projects you'll add the **Xaki** and **Xaki.AspNetCore** NuGet packages to your project. While these packages are beta you'll install from MyGet:
 
+##### Package Manager
+
 ```powershell
-dotnet add package Xaki.AspNetCore --version 0.0.1-* --source https://www.myget.org/F/xaki/api/v3/index.json
+Install-Package Xaki.AspNetCore
+```
+
+##### .NET CLI
+
+```powershell
+dotnet add package Xaki.AspNetCore
 ```
 
 You may also want to add the NuGet feed above to your nuget.config file at the root of your solution:
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<configuration>
-  <packageSources>
-    <add key="MyGet" value="https://www.myget.org/F/xaki/api/v3/index.json" />
-    <add key="NuGet" value="https://api.nuget.org/v3/index.json" />
-  </packageSources>
-</configuration>
-```
 
 #### 2. Add Xaki to Startup
 
@@ -75,23 +73,21 @@ Xaki follows the usual pattern to add and configure services in an ASP.NET Core 
 ```csharp
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddXaki(new XakiOptions
-    {
-        RequiredLanguages = new List<string> { "en", "zh", "ar", "es", "hi" },
-        OptionalLanguages = new List<string> { "pt", "ru", "ja", "de", "el" }
-    });
-
-    services.AddMvc().AddXakiMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
     // ...
+
+    services.AddMvc().AddXaki(new XakiOptions
+    {
+        RequiredLanguages = new[] { "en", "zh", "ar", "es", "hi" },
+        OptionalLanguages = new[] { "pt", "ru", "ja", "de", "el" }
+    });
 }
 
 public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 {
-    var options = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
-    app.UseRequestLocalization(options.Value);
-
     // ...
+
+    app.UseXaki(); // must precede UseMvc()
+    app.UseMvc();
 }
 ```
 
@@ -189,7 +185,7 @@ The editor automatically lists the individual language textboxes in the order th
 
 #### Model Binding
 
-The **Xaki.AspNetCore** library includes `LocalizableModelBinder` which is automatically registered via `services.AddMvc().AddXakiMvc()`. 
+The **Xaki.AspNetCore** library includes `LocalizableModelBinder` which is automatically registered via `services.AddMvc().AddXaki()`. 
 
 This allows the localization tag helper to correctly model bind to `ILocalized` entities and view models in your actions:
 

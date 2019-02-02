@@ -1,0 +1,274 @@
+﻿@page
+@model IndexModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Xaki | Simplified Multi-language POCO Localization for .NET Core</title>
+    <meta name="description" content="Xaki is a .NET Standard library for adding multi-language support to POCO classes. It includes a lightweight service for persisting and retrieving data to and from databases using any ORM. Xaki includes first-class support for ASP.NET Core, ASP.NET MVC, and all version of Entity Framework.">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="shortcut icon" href="https://xaki.azureedge.net/assets/favicon-636762577492363000.ico">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/reset.min.css" integrity="sha256-YPwiKuHVDvjv0uwXyusnOfomzuB6gWUuk1gcVYSsEfc=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/components/grid.min.css" integrity="sha256-5IgY2t07GpHlSASMb+MHMxPLwH0SZ7wL1q/Dft7rkA0=" crossorigin="anonymous">
+    <style>
+        html {
+            font-size: 62.5%;
+        }
+
+        body {
+            background: #eef1f5;
+            font-family: 'Lato', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
+            font-size: 1.4rem;
+            line-height: 1.5;
+            color: #333333;
+        }
+
+        header {
+            padding: 24px;
+            background-image: linear-gradient(to bottom right, #03dac5, #3700b3);
+        }
+
+        footer {
+            margin: 16px 16px 48px 16px;
+            text-align: center;
+        }
+
+        footer a {
+            color: #333333;
+            text-decoration: none;
+        }
+
+        #logo {
+            text-align: center;
+        }
+
+        #lead {
+            margin: 32px 0;
+            font-size: 2.8rem;
+            font-weight: 500;
+            color: white;
+            text-align: center;
+        }
+
+        #buttons {
+            margin: 24px 0 96px 0;
+            text-align: center;
+        }
+
+        #buttons a {
+            display: inline-block;
+            min-width: 212px;
+            margin: 12px;
+            padding: 6px 12px;
+            background: #eef1f5;
+            border-radius: 4px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.1);
+            color: #333333;
+            text-decoration: none;
+            font-size: 1.6rem;
+            font-weight: bold;
+            transition: opacity 250ms ease-in-out;
+        }
+
+        #buttons a:hover {
+            opacity: 0.75;
+        }
+
+        #intro {
+            max-width: 800px;
+            margin: -72px auto 16px auto;
+            padding: 16px;
+            background: white;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.1);
+        }
+
+        @@media (min-width: 800px) {
+            #intro {
+                border-radius: 4px;
+            }
+        }
+
+        #intro #screenshot {
+            width: 100%;
+            max-width: 768px;
+            margin-top: 16px;
+            opacity: 1;
+        }
+
+        #intro #screenshot.hidden {
+            opacity: 0;
+        }
+
+        #intro .feature {
+            padding: 12px;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        #intro .feature:after {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            content: '';
+            height: 5px;
+            background-image: linear-gradient(to right, #03dac5, #3700b3);
+            opacity: 0;
+        }
+
+        #intro .feature h2 {
+            margin: 0 0 6px 0;
+            font-size: 1.8rem;
+        }
+
+        #intro .feature h2 br {
+            display: none;
+        }
+
+        @@media (min-width: 768px) {
+            #intro .feature h2 br {
+                display: block;
+            }
+        }
+
+        #intro .feature p {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        #intro .feature.selected {
+            background: #eef1f5;
+        }
+
+        #intro .feature.selected:after {
+            opacity: 1;
+        }
+
+        #intro.transitions #screenshot,
+        #intro.transitions .feature,
+        #intro.transitions .feature:after {
+            transition: all 500ms ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div id="logo"><img src="https://xaki.azureedge.net/assets/logo-text-only--white-636762353196739215.svg" alt="Xaki" height="88" /></div>
+        <h1 id="lead">Simplified Multi-language POCO Localization for .NET Core</h1>
+        <div id="buttons">
+            <a asp-page="Docs/GettingStarted">Get Started</a>
+            <a href="https://github.com/mehalick/Xaki">View on GitHub</a>
+        </div>
+        <a href="https://github.com/mehalick/Xaki"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+    </header>
+    <main>
+        <section>
+            <div id="intro" class="transitions">
+                <div class="ui stackable four column padded grid">
+                    <div class="feature column selected" data-index="0">
+                        <h2>Easy<br /> Setup</h2>
+                        <p>Decorate new or existing class properties with a single localization attribute.</p>
+                    </div>
+                    <div class="feature column" data-index="1">
+                        <h2>Automatic<br /> Localization</h2>
+                        <p>Leverage ASP.NET Core's existing localization to display language-specific data.</p>
+                    </div>
+                    <div class="feature column" data-index="2">
+                        <h2>Tag Helper<br /> Editors</h2>
+                        <p>Use built-in tag helpers to quickly add multi-language editors to forms.</p>
+                    </div>
+                    <div class="feature column" data-index="3">
+                        <h2>Database<br /> Friendly</h2>
+                        <p>Store content as simple and readable JSON for easy search, query, and export.</p>
+                    </div>
+                </div>
+                <img id="screenshot" src="https://xaki.azureedge.net/assets/screenshot-01-636763134429881325.png" alt="screenshot" />
+            </div>
+        </section>
+    </main>
+    <footer><small>&copy; @DateTime.Today.Year <a href="https://andy.mehalick.com/">Andy Mehalick</a></small></footer>
+    <script>
+
+        const page = {
+            elements: {
+                intro: document.getElementById("intro"),
+                features: Array.from(document.getElementsByClassName("feature")),
+                screenshot: document.getElementById("screenshot")
+            },
+            images: [
+                "https://xaki.azureedge.net/assets/screenshot-01-636763134429881325.png",
+                "https://xaki.azureedge.net/assets/screenshot-02-636763134444368750.png",
+                "https://xaki.azureedge.net/assets/screenshot-03-636763134448780250.png",
+                "https://xaki.azureedge.net/assets/screenshot-04-636763134451195384.png"
+            ]
+        };
+
+        page.unsetActive = () => {
+            page.elements.features.forEach(item => {
+                item.classList.remove("selected");
+            });
+            page.elements.screenshot.classList.add("hidden");
+        };
+
+        page.setActive = (index) => {
+            page.elements.screenshot.src = page.images[index];
+            page.elements.screenshot.classList.remove("hidden");
+            page.elements.features[index].classList.add("selected");
+        }
+
+        page.initServiceWorker = () => {
+            if ("serviceWorker" in navigator) {
+                navigator.serviceWorker
+                    .register("/service-worker.js")
+                    .then(function () { console.log("[Service Worker] Registered"); });
+            }
+        }
+
+        page.bindEvents = () => {
+            page.elements.features.forEach(item => {
+                item.addEventListener("click", (e) => {
+                    clearInterval(page.interval);
+                    page.elements.intro.classList.remove("transitions");
+                    page.unsetActive();
+                    page.setActive(e.currentTarget.dataset.index);
+                });
+            });
+        }
+
+        page.preloadImages = () => {
+            page.images.forEach(url => {
+                const image = new Image();
+                image.src = url;
+            });
+        }
+
+        page.runSlideshow = () => {
+            let index = 1;
+            return setInterval(function () {
+                page.unsetActive();
+                setTimeout(() => {
+                    page.setActive(index);
+                    index++;
+                    if (index === 4) {
+                        index = 0;
+                    }
+                }, 500);
+            }, 5000);
+        };
+
+        page.initServiceWorker();
+        page.bindEvents();
+        page.preloadImages();
+
+        page.interval = page.runSlideshow();
+
+    </script>
+</body>
+</html>

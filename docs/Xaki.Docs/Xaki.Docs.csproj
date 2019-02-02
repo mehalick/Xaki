@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <UserSecretsId>8b6d93f8-144d-4a8f-b3c0-94b241534a76</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="bundleconfig.json" />
+    <Content Remove="compilerconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+    <PackageReference Include="NWebsec.AspNetCore.Middleware" Version="2.0.0" />
+    <PackageReference Include="Westwind.AspNetCore.Markdown" Version="3.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\docs\AspNetCore.md" />
+    <None Include="wwwroot\docs\GettingStarted.md" />
+  </ItemGroup>
+
+</Project>

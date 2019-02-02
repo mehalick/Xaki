@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -26,8 +25,8 @@ namespace Xaki.Sample
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddXaki(new XakiOptions
                 {
-                    RequiredLanguages = new List<string> { "en", "zh", "ar", "es", "hi" },
-                    OptionalLanguages = new List<string> { "pt", "ru", "ja", "de", "el" }
+                    RequiredLanguages = new[] { "en", "zh", "ar", "es", "hi" },
+                    OptionalLanguages = new[] { "pt", "ru", "ja", "de", "el" }
                 });
         }
 
