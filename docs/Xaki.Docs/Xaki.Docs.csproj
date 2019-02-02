@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\docs\AspNetCore.md" />
     <None Include="wwwroot\docs\GettingStarted.md" />
   </ItemGroup>
 
