@@ -21,3 +21,23 @@
         }
     </code>
 </pre>
+
+<h2>Setup</h2>
+
+<p>Xaki can be added to any .NET Core, .NET Standard, or .NET Full Framework project by installing the lightweight <a href="https://www.nuget.org/packages/Xaki/">Xaki package from Nuget</a>:</p>
+
+<pre>
+    <code class="language-powershell">Install-Package Xaki</code>
+</pre>
+
+<p>Or:</p>
+
+<pre>
+    <code class="language-powershell">dotnet add package Xaki</code>
+</pre>
+
+<p>If using ASP.NET Core you can install alternatively install the <a href="https://www.nuget.org/packages/Xaki.AspNetCore/">Xaki.AspNetCore</a> package directly.</p>
+
+<p>You can then add unobtrusive multi-language support to any POCO or ORM class by implementing <code class="language-csharp">ILocalizable</code> and decorating attributes with <code class="language-csharp">LocalizedAttribute</code> as shown in the example above.</p>
+
+<p><a asp-page="AspNetCore" class="ui right floated button">Next <i class="right chevron icon"></i></a></p>

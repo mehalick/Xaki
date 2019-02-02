@@ -3,5 +3,177 @@
     ViewData["Title"] = "ASP.NET Core";
 }
 
-<p>(coming soon)</p>
+<p>Xaki includes first-class support ASP.NET Core with a simple setup process, automatic localization for users, tag helpers for admin pages, and built-in model binding and validation.</p>
 
+<h2>Setup</h2>
+
+<h3>1. Add NuGet Packages</h3>
+
+<p>Xaki can be added to any ASP.NET Core project by adding the <a href="https://www.nuget.org/packages/Xaki.AspNetCore/">Xaki.AspNetCore package from Nuget</a>:</p>
+
+<pre>
+<code class="language-powershell">Install-Package Xaki.AspNetCore</code>
+</pre>
+
+<p>Or:</p>
+
+<pre>
+<code class="language-powershell">dotnet add package Xaki.AspNetCore</code>
+</pre>
+
+<h3>2. Add Xaki to Startup</h3>
+
+<p>Xaki follows the usual pattern to add and configure services in an ASP.NET Core host, to add Xaki and request localization update <strong>Startup.cs</strong> to include:</p>
+
+<pre>
+<code class="language-csharp">
+        public void ConfigureServices(IServiceCollection services)
+        {
+            // ...
+
+            services.AddMvc().AddXaki(new XakiOptions
+            {
+                RequiredLanguages = new[] { "en", "zh", "ar", "es", "hi" },
+                OptionalLanguages = new[] { "pt", "ru", "ja", "de", "el" }
+            });
+        }
+
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            // ...
+
+            app.UseXaki(); // must precede UseMvc()
+            app.UseMvc();
+        }
+    </code>
+</pre>
+
+<p>You can add any combination of required and optional languages, required languages automatically connect to ASP.NET Core's client and server-side validation.</p>
+
+<p>For a sample ASP.NET Core app see <a href="https://github.com/mehalick/Xaki/tree/master/samples/Xaki.Sample">https://github.com/mehalick/Xaki/tree/master/samples/Xaki.Sample</a>.</p>
+
+<h3>3. Create Localized Entity</h3>
+
+Any Entity Framework POCO can be localizable by implementing `ILocalizable` with one or more properties decorated with `LocalizedAttribute`:
+
+<pre>
+<code class="language-csharp">
+        public class Planet : ILocalizable
+        {
+            public int PlanetId { get; set; }
+
+            [Localized]
+            public string Name { get; set; }
+        }
+    </code>
+</pre>
+
+<h3>4. Add Localization to Controllers</h3>
+
+<p>Similar to ASP.NET Core's `IStringLocalizer` and `IHtmlLocalizer` you can localize objects and collections with `IObjectLocalizer`, simply add it to any controller:</p>
+
+<pre>
+<code class="language-csharp">
+        [Route("planets")]
+        public class PlanetsController : Controller
+        {
+            private readonly DataContext _context;
+            private readonly IObjectLocalizer _localizer;
+
+            public PlanetsController(DataContext context, IObjectLocalizer localizer)
+            {
+                _context = context;
+                _localizer = localizer;
+            }
+        }
+    </code>
+</pre>
+
+<p>You can now fetch entities and send the localized versions to your views:</p>
+
+<pre>
+    <code class="language-csharp">
+        public async Task<IActionResult> Index()
+        {
+            var planets = await _context.Planets.ToListAsync();
+
+            planets = _localizer.Localize<Planet>(planets).ToList();
+
+            return View(planets);
+        }
+    </code>
+</pre>
+
+<h4>How does IObjectLocalizer resolve the current language?</h4>
+
+<p>
+    `IObjectLocalizer` uses ASP.NET Core's `RequestLocalizationMiddleware` to resolve the current language and culture using:
+</p>
+
+<ol>
+    <li>Querystrings</li>
+    <li>Cookies</li>
+    <li>Accept-Language Header</li>
+</ol>
+
+<p>For more information see <a href="https://andrewlock.net/adding-localisation-to-an-asp-net-core-application/">https://andrewlock.net/adding-localisation-to-an-asp-net-core-application/</a>.</p>
+
+<p>If you'd like to customize how `IObjectLocalizer` resolves languages you can create your own resolver by implementing `Xaki.AspNetCore.LanguageResolvers.ILanguageResolver`.</p>
+
+<h3>5. Editing Localized Entities</h3>
+
+<p>The <strong>Xaki.AspNetCore</strong> library includes a tag helper and model binder to make edit views and actions extremely simple.</p>
+
+<h4>Tag Helper</h4>
+
+<p>To convert any input into a rich localization editor simply replace `<input for="Name" />` with `<input localized-for="Name" />`:</p>
+
+<pre>
+    <code class="language-html">
+        <form asp-action="Edit">
+
+            <input asp-for="PlanetId" type="hidden" />
+
+            <div class="form-group">
+                <label>Name</label>
+                <input localized-for="Name" />
+            </div>
+
+            <button type="submit" class="btn btn-dark">Submit</button>
+
+        </form>
+    </code>
+</pre>
+
+<p>You'll automatically get a rich localization editor:</p>
+
+<p><img src="https://xaki.azureedge.net/assets/2018-09-11_10-26-05-636722475947053940.png" alt="editor"/></p>
+
+<p>The editor automatically lists the individual language textboxes in the order they are specified in `Startup.cs` and client-side validation is included:</p>
+
+<p><img src="https://xaki.azureedge.net/assets/2018-09-11_10-28-42-636722477515160922.png" alt="validation"/></p>
+
+<h4>Model Binding</h4>
+
+<p>The **Xaki.AspNetCore** library includes `LocalizableModelBinder` which is automatically registered via `services.AddMvc().AddXakiMvc()`.</p>
+
+<p>
+    This allows the localization tag helper to correctly model bind to `ILocalized` entities and view models in your actions:
+
+<pre>
+    <code class="language-html">
+        [HttpPost("{planetId:int}")]
+        public async Task<IActionResult>Edit(Planet planet)
+        {
+            _context.Entry(planet).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+    </code>
+</pre>
+
+<p>Here your localized properties are automatically bound:</p>
+
+<p><img src="https://xaki.azureedge.net/assets/2018-09-11_10-34-56-636722481804812672.png" alt="model binding" /></p>

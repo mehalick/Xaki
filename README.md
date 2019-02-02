@@ -55,13 +55,13 @@ For ASP.NET Core projects you'll add the **Xaki** and **Xaki.AspNetCore** NuGet 
 ##### Package Manager
 
 ```powershell
-Install-Package Xaki
+Install-Package Xaki.AspNetCore
 ```
 
 ##### .NET CLI
 
 ```powershell
-dotnet add package Xaki
+dotnet add package Xaki.AspNetCore
 ```
 
 You may also want to add the NuGet feed above to your nuget.config file at the root of your solution:
@@ -77,8 +77,8 @@ public void ConfigureServices(IServiceCollection services)
 
     services.AddMvc().AddXaki(new XakiOptions
     {
-        RequiredLanguages = new List<string> { "en", "zh", "ar", "es", "hi" },
-        OptionalLanguages = new List<string> { "pt", "ru", "ja", "de", "el" }
+        RequiredLanguages = new[] { "en", "zh", "ar", "es", "hi" },
+        OptionalLanguages = new[] { "pt", "ru", "ja", "de", "el" }
     });
 }
 
