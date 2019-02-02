@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Engines;
 using BenchmarkDotNet.Running;
 using Xaki.Benchmarks.Models;
 
@@ -18,6 +19,7 @@ namespace Xaki.Benchmarks
     [MemoryDiagnoser]
     public class Benchmarks
     {
+        private readonly Consumer _consumer = new Consumer();
         private readonly IObjectLocalizer _localizer;
         private readonly IEnumerable<Planet> _planets;
 
@@ -33,21 +35,21 @@ namespace Xaki.Benchmarks
         }
 
         [Benchmark]
-        public IEnumerable<Planet> Shallow()
+        public void Shallow()
         {
-            return _localizer.Localize(_planets, "en", LocalizationDepth.Shallow);
+            _localizer.Localize(_planets, "en", LocalizationDepth.Shallow).Consume(_consumer);
         }
 
         [Benchmark]
-        public IEnumerable<Planet> OneLevel()
+        public void OneLevel()
         {
-            return _localizer.Localize(_planets, "en", LocalizationDepth.OneLevel);
+            _localizer.Localize(_planets, "en", LocalizationDepth.OneLevel).Consume(_consumer);
         }
 
         [Benchmark]
-        public IEnumerable<Planet> Deep()
+        public void Deep()
         {
-            return _localizer.Localize(_planets, "en", LocalizationDepth.Deep);
+            _localizer.Localize(_planets, "en", LocalizationDepth.Deep).Consume(_consumer);
         }
 
         /// <summary>
