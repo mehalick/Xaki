@@ -4,159 +4,170 @@ body {
     font-size: 16px;
 }
 
-body.pushable > .pusher {
-    display: flex;
-    flex-direction: column;
-    margin-top: 40.5px;
+#xaki {
+    &.pushable > .pusher {
+        display: flex;
+        flex-direction: column;
+        margin-top: 40.5px;
 
-    @media (min-width: 1145px) {
-        margin-top: 0;
-    }
+        @media (min-width: 1145px) {
+            margin-top: 0;
+        }
 
-    > .full.height {
-        min-height: 100%;
-        flex: 1 0 auto;
-    }
-}
+        > .full.height {
+            display: flex;
+            min-height: 100%;
+            flex: 1 0 auto;
 
-header.ui.vertical.segment {
-    display: flex;
-    padding: 2rem;
+            > .toc {
+                position: relative;
+                z-index: 1;
+                background-color: $black;
+                width: 250px;
+                flex: 0 0 auto;
+            }
 
-    h1 {
-        align-self: center;
-    }
-
-    @media (min-width: 1145px) {
-        min-height: 62px;
-        padding: 0 2rem;
-
-        h1 {
-            margin: 0 !important;
+            > .toc .ui.menu {
+                border-radius: 0;
+                border-width: 0 1px 0 0;
+                box-shadow: none;
+                margin: 0;
+                width: inherit;
+                overflow: hidden;
+                will-change: transform;
+            }
         }
     }
-}
 
-main.ui.container {
-    width: auto !important;
-    max-width: 960px !important;
-    margin: 2rem !important;
-}
+    header.ui.vertical.segment {
+        display: flex;
+        padding: 2rem;
 
-@media only screen and (min-width: 1145px) {
-    .fixed.main.menu {
-        display: none;
-    }
-}
+        h1 {
+            align-self: center;
+        }
 
-@media only screen and (max-width: 1144px) {
-    .full.height > .toc {
-        display: none;
-    }
+        @media (min-width: 1145px) {
+            min-height: 62px;
+            padding: 0 2rem;
 
-    .masthead > .container,
-    .main.container,
-    .fixed.menu > .container {
-        margin-left: 2em !important;
+            h1 {
+                margin: 0 !important;
+            }
+        }
     }
 
-    .fixed.menu > .container {
-        margin-left: 0em !important;
-        margin-right: 0em !important;
-        width: 100% !important;
-        max-width: none !important;
+    main.ui.container {
+        width: auto !important;
+        max-width: 960px !important;
+        margin: 2rem !important;
     }
-}
 
-/* Sidebar */
+    @media only screen and (min-width: 1145px) {
+        .fixed.main.menu {
+            display: none;
+        }
+    }
 
-#xaki .ui.sidebar.menu .item {
-    will-change: transform;
-}
+    @media only screen and (max-width: 1144px) {
+        .full.height > .toc {
+            display: none;
+        }
 
-#xaki .sidebar.menu .logo.image,
-#xaki .sticky.menu .logo.image {
-    width: 35px;
-    margin-right: 1em;
-}
+        .masthead > .container,
+        .main.container,
+        .fixed.menu > .container {
+            margin-left: 2em !important;
+        }
 
-#sidebar {
-    > * {
+        .fixed.menu > .container {
+            margin-left: 0em !important;
+            margin-right: 0em !important;
+            width: 100% !important;
+            max-width: none !important;
+        }
+    }
+    /* Sidebar */
+    .ui.sidebar.menu .item {
         will-change: transform;
     }
 
-    > :last-child {
-        padding-bottom: 2em;
+    .sidebar.menu .logo.image,
+    .sticky.menu .logo.image {
+        width: 35px;
+        margin-right: 1em;
     }
 
-    .inverted.header {
-        font-size: 1em;
-        font-weight: normal;
-        color: rgba(255, 255, 255, 0.8);
-        margin-bottom: 0.5em;
+    #sidebar {
+        > * {
+            will-change: transform;
+        }
+
+        > :last-child {
+            padding-bottom: 2em;
+        }
+
+        .inverted.header {
+            font-size: 1em;
+            font-weight: normal;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0.5em;
+        }
+
+        a.inverted.header.active,
+        a.inverted.header:hover {
+            color: rgba(255, 255, 255, 1);
+        }
+
+        .menu .active.item {
+            color: #FFF;
+        }
     }
 
-    a.inverted.header.active,
-    a.inverted.header:hover {
-        color: rgba(255, 255, 255, 1);
+    .ui.vertical.menu .menu .item {
+        background: 0 0;
+        padding: .5em 1.33333333em;
+        font-size: 16px;
+    }
+    /* Menu */
+    .main.menu .title.item b {
+        margin-right: 0.5em;
     }
 
-    .menu .active.item {
-        color: #FFF;
+    .fixed.main.menu .launch.item {
+        display: block;
+    }
+
+    .fixed.main.menu .search .icon {
+        opacity: 0.9;
+    }
+    /* Page */
+    .page {
+        min-width: 0px;
+        width: 100%;
     }
 }
 
-#xaki > .pusher > .full.height {
-    display: flex;
-    flex-direction: row;
+/* Tags */
+
+footer {
+    margin: 6rem 2rem;
+    text-align: center;
+
+    a {
+        color: #333333;
+        text-decoration: none;
+    }
 }
 
-#xaki:not(.site) > .pusher > .full.height {
-    background-color: #FFFFFF;
+h2, h3, h4, p, pre[class*=language-] {
+    margin-bottom: 2.2rem;
 }
 
-#xaki .full.height > .toc {
-    position: relative;
-    z-index: 1;
-    background-color: $black;
-    width: 250px;
-    flex: 0 0 auto;
-}
-
-#xaki .full.height > .toc .ui.menu {
-    border-radius: 0;
-    border-width: 0 1px 0 0;
-    box-shadow: none;
-    margin: 0;
-    width: inherit;
-    overflow: hidden;
-    will-change: transform;
-}
-
-.ui.vertical.menu .menu .item {
-    background: 0 0;
-    padding: .5em 1.33333333em;
-    font-size: 16px;
-    color: rgba(0,0,0,.5);
-}
-
-#xaki .article {
-    flex: 1 1 auto;
-    min-width: 0px;
-}
-
-/* Menu */
-
-#xaki .main.menu .title.item b {
-    margin-right: 0.5em;
-}
-
-#xaki .fixed.main.menu .launch.item {
+img {
     display: block;
-}
-
-#xaki .fixed.main.menu .search .icon {
-    opacity: 0.9;
+    max-width: 100%;
+    height: auto;
 }
 
 /* Prism */
@@ -165,10 +176,15 @@ pre[class*=language-] {
     background: $black;
 }
 
-pre[class*=language-] {
-    margin: 0 0 1em 0;
+:not(pre) > code {
+    background-color: rgba(27,31,35,.05);
+    border-radius: 3px;
+    font-size: 85%;
+    margin: 0;
+    padding: .2em .4em;
 }
 
-:not(pre) > code[class*=language-] {
-    padding: .1em .5em;
+.language-csharp .token.operator {
+    color: white;
+    background: transparent;
 }

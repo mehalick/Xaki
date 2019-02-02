@@ -6,7 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Xaki | @ViewData["Title"]</title>
     <meta name="description" content="Xaki is a .NET Standard library for adding multi-language support to POCO classes. It includes a lightweight service for persisting and retrieving data to and from databases using any ORM. Xaki includes first-class support for ASP.NET Core, ASP.NET MVC, and all version of Entity Framework.">
-    <link rel="manifest" href="/manifest.json">
     <link rel="shortcut icon" href="https://xaki.azureedge.net/assets/favicon-636762577492363000.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" integrity="sha256-9mbkOfVho3ZPXfM7W8sV2SndrGDuh7wuyLjtsWeTI1Q=" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/themes/prism.min.css" integrity="sha256-N1K43s+8twRa+tzzoF3V8EgssdDiZ6kd9r8Rfgg8kZU=" crossorigin="anonymous" />
@@ -17,6 +16,7 @@
         <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     </environment>
     <environment exclude="Development">
+        <link rel="manifest" href="/manifest.json">
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="false" />
     </environment>
     <style>
@@ -52,13 +52,14 @@
                     <partial name="_Layout_NavLinks" />
                 </nav>
             </div>
-            <div class="article">
+            <div class="page">
                 <header class="ui vertical segment">
                     <h1 class="ui large header">@ViewData["Title"]</h1>
                 </header>
                 <main class="main ui intro container">
                     @RenderBody()
                 </main>
+                <footer><small>&copy; @DateTime.Today.Year <a href="https://andy.mehalick.com/">Andy Mehalick</a></small></footer>
             </div>
         </div>
     </div>
@@ -68,8 +69,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/prism.min.js" integrity="sha256-jc6y1s/Y+F+78EgCT/lI2lyU7ys+PFYrRSJ6q8/R8+o=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/plugins/line-numbers/prism-line-numbers.js" integrity="sha256-Iqd4m4d2q0jp2soWB0guIxt6LXCyqSQ2RkD5G/Pnd0g=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/plugins/normalize-whitespace/prism-normalize-whitespace.min.js" integrity="sha256-31Ef0tfMJHz4mcBYno6PKR2Iz5qPHPJLxIzej2AGl6c=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/plugins/unescaped-markup/prism-unescaped-markup.min.js" integrity="sha256-ROtsncSnXWnef6Q56omxAFhVq9YJrS8UlmZbyRqISuQ=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-csharp.min.js" integrity="sha256-v1Nxmv1+jRfdNuwdLgHXmAzZwADayhxn95rA7sJAg0c=" crossorigin="anonymous"></script>
-
+    
     <environment include="Development">
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>

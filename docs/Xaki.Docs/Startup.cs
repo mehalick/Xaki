@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Westwind.AspNetCore.Markdown;
 
 namespace Xaki.Docs
 {
@@ -17,6 +18,7 @@ namespace Xaki.Docs
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMarkdown();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -47,6 +49,7 @@ namespace Xaki.Docs
                 .StyleSources(s => s.Self().UnsafeInline().CustomSources("https://cdnjs.cloudflare.com", "https://fonts.googleapis.com")));
 
             app.UseStaticFiles();
+            app.UseMarkdown();
             app.UseMvc();
         }
     }

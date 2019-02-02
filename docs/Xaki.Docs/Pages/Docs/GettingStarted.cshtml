@@ -3,41 +3,8 @@
     ViewData["Title"] = "Getting Started";
 }
 
-<p>Xaki is a .NET library for adding multi-language support to POCO classes. It includes a lightweight service for persisting and retrieving data to and from databases using any ORM.</p>
+<markdown filename="docs/GettingStarted.md"></markdown>
 
-<p>Xaki works well with all versions of Entity Framework and includes ASP.NET Core support for automatic localization to language codes provided by routes, querystrings, cookies, and HTTP headers.</p>
-
-<pre class="line-numbers">
-    <code class="language-csharp">
-        public class Planet : ILocalizable
-        {
-            public int PlanetId { get; set; }
-
-            [Localized, Required]
-            public string Name { get; set; }
-
-            [Localized, DataType(DataType.Html)]
-            public string Description { get; set; }
-        }
-    </code>
-</pre>
-
-<h2>Setup</h2>
-
-<p>Xaki can be added to any .NET Core, .NET Standard, or .NET Full Framework project by installing the lightweight <a href="https://www.nuget.org/packages/Xaki/">Xaki package from Nuget</a>:</p>
-
-<pre>
-    <code class="language-powershell">Install-Package Xaki</code>
-</pre>
-
-<p>Or:</p>
-
-<pre>
-    <code class="language-powershell">dotnet add package Xaki</code>
-</pre>
-
-<p>If using ASP.NET Core you can install alternatively install the <a href="https://www.nuget.org/packages/Xaki.AspNetCore/">Xaki.AspNetCore</a> package directly.</p>
-
-<p>You can then add unobtrusive multi-language support to any POCO or ORM class by implementing <code class="language-csharp">ILocalizable</code> and decorating attributes with <code class="language-csharp">LocalizedAttribute</code> as shown in the example above.</p>
-
-<p><a asp-page="AspNetCore" class="ui right floated button">Next <i class="right chevron icon"></i></a></p>
+<div class="ui clearing segment">
+<a asp-page="AspNetCore" class="ui right floated button">Next <i class="right chevron icon"></i></a>
+</div>

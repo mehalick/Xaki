@@ -185,7 +185,7 @@ The editor automatically lists the individual language textboxes in the order th
 
 #### Model Binding
 
-The **Xaki.AspNetCore** library includes `LocalizableModelBinder` which is automatically registered via `services.AddMvc().AddXakiMvc()`. 
+The **Xaki.AspNetCore** library includes `LocalizableModelBinder` which is automatically registered via `services.AddMvc().AddXaki()`. 
 
 This allows the localization tag helper to correctly model bind to `ILocalized` entities and view models in your actions:
 

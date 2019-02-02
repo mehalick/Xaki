@@ -1,128 +1,126 @@
 ﻿body {
   font-size: 16px; }
 
-body.pushable > .pusher {
-  display: flex;
-  flex-direction: column;
-  margin-top: 40.5px; }
-  @media (min-width: 1145px) {
-    body.pushable > .pusher {
-      margin-top: 0; } }
-  body.pushable > .pusher > .full.height {
-    min-height: 100%;
-    flex: 1 0 auto; }
+#xaki {
+  /* Sidebar */
+  /* Menu */
+  /* Page */ }
+  #xaki.pushable > .pusher {
+    display: flex;
+    flex-direction: column;
+    margin-top: 40.5px; }
+    @media (min-width: 1145px) {
+      #xaki.pushable > .pusher {
+        margin-top: 0; } }
+    #xaki.pushable > .pusher > .full.height {
+      display: flex;
+      min-height: 100%;
+      flex: 1 0 auto; }
+      #xaki.pushable > .pusher > .full.height > .toc {
+        position: relative;
+        z-index: 1;
+        background-color: #1b1c1d;
+        width: 250px;
+        flex: 0 0 auto; }
+      #xaki.pushable > .pusher > .full.height > .toc .ui.menu {
+        border-radius: 0;
+        border-width: 0 1px 0 0;
+        box-shadow: none;
+        margin: 0;
+        width: inherit;
+        overflow: hidden;
+        will-change: transform; }
+  #xaki header.ui.vertical.segment {
+    display: flex;
+    padding: 2rem; }
+    #xaki header.ui.vertical.segment h1 {
+      align-self: center; }
+    @media (min-width: 1145px) {
+      #xaki header.ui.vertical.segment {
+        min-height: 62px;
+        padding: 0 2rem; }
+        #xaki header.ui.vertical.segment h1 {
+          margin: 0 !important; } }
+  #xaki main.ui.container {
+    width: auto !important;
+    max-width: 960px !important;
+    margin: 2rem !important; }
+  @media only screen and (min-width: 1145px) {
+    #xaki .fixed.main.menu {
+      display: none; } }
+  @media only screen and (max-width: 1144px) {
+    #xaki .full.height > .toc {
+      display: none; }
+    #xaki .masthead > .container,
+    #xaki .main.container,
+    #xaki .fixed.menu > .container {
+      margin-left: 2em !important; }
+    #xaki .fixed.menu > .container {
+      margin-left: 0em !important;
+      margin-right: 0em !important;
+      width: 100% !important;
+      max-width: none !important; } }
+  #xaki .ui.sidebar.menu .item {
+    will-change: transform; }
+  #xaki .sidebar.menu .logo.image,
+  #xaki .sticky.menu .logo.image {
+    width: 35px;
+    margin-right: 1em; }
+  #xaki #sidebar > * {
+    will-change: transform; }
+  #xaki #sidebar > :last-child {
+    padding-bottom: 2em; }
+  #xaki #sidebar .inverted.header {
+    font-size: 1em;
+    font-weight: normal;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 0.5em; }
+  #xaki #sidebar a.inverted.header.active,
+  #xaki #sidebar a.inverted.header:hover {
+    color: white; }
+  #xaki #sidebar .menu .active.item {
+    color: #FFF; }
+  #xaki .ui.vertical.menu .menu .item {
+    background: 0 0;
+    padding: .5em 1.33333333em;
+    font-size: 16px; }
+  #xaki .main.menu .title.item b {
+    margin-right: 0.5em; }
+  #xaki .fixed.main.menu .launch.item {
+    display: block; }
+  #xaki .fixed.main.menu .search .icon {
+    opacity: 0.9; }
+  #xaki .page {
+    min-width: 0px;
+    width: 100%; }
 
-header.ui.vertical.segment {
-  display: flex;
-  padding: 2rem; }
-  header.ui.vertical.segment h1 {
-    align-self: center; }
-  @media (min-width: 1145px) {
-    header.ui.vertical.segment {
-      min-height: 62px;
-      padding: 0 2rem; }
-      header.ui.vertical.segment h1 {
-        margin: 0 !important; } }
+/* Tags */
+footer {
+  margin: 6rem 2rem;
+  text-align: center; }
+  footer a {
+    color: #333333;
+    text-decoration: none; }
 
-main.ui.container {
-  width: auto !important;
-  max-width: 960px !important;
-  margin: 2rem !important; }
+h2, h3, h4, p, pre[class*=language-] {
+  margin-bottom: 2.2rem; }
 
-@media only screen and (min-width: 1145px) {
-  .fixed.main.menu {
-    display: none; } }
-
-@media only screen and (max-width: 1144px) {
-  .full.height > .toc {
-    display: none; }
-  .masthead > .container,
-  .main.container,
-  .fixed.menu > .container {
-    margin-left: 2em !important; }
-  .fixed.menu > .container {
-    margin-left: 0em !important;
-    margin-right: 0em !important;
-    width: 100% !important;
-    max-width: none !important; } }
-
-/* Sidebar */
-#xaki .ui.sidebar.menu .item {
-  will-change: transform; }
-
-#xaki .sidebar.menu .logo.image,
-#xaki .sticky.menu .logo.image {
-  width: 35px;
-  margin-right: 1em; }
-
-#sidebar > * {
-  will-change: transform; }
-
-#sidebar > :last-child {
-  padding-bottom: 2em; }
-
-#sidebar .inverted.header {
-  font-size: 1em;
-  font-weight: normal;
-  color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 0.5em; }
-
-#sidebar a.inverted.header.active,
-#sidebar a.inverted.header:hover {
-  color: white; }
-
-#sidebar .menu .active.item {
-  color: #FFF; }
-
-#xaki > .pusher > .full.height {
-  display: flex;
-  flex-direction: row; }
-
-#xaki:not(.site) > .pusher > .full.height {
-  background-color: #FFFFFF; }
-
-#xaki .full.height > .toc {
-  position: relative;
-  z-index: 1;
-  background-color: #1b1c1d;
-  width: 250px;
-  flex: 0 0 auto; }
-
-#xaki .full.height > .toc .ui.menu {
-  border-radius: 0;
-  border-width: 0 1px 0 0;
-  box-shadow: none;
-  margin: 0;
-  width: inherit;
-  overflow: hidden;
-  will-change: transform; }
-
-.ui.vertical.menu .menu .item {
-  background: 0 0;
-  padding: .5em 1.33333333em;
-  font-size: 16px;
-  color: rgba(0, 0, 0, 0.5); }
-
-#xaki .article {
-  flex: 1 1 auto;
-  min-width: 0px; }
-
-/* Menu */
-#xaki .main.menu .title.item b {
-  margin-right: 0.5em; }
-
-#xaki .fixed.main.menu .launch.item {
-  display: block; }
-
-#xaki .fixed.main.menu .search .icon {
-  opacity: 0.9; }
+img {
+  display: block;
+  max-width: 100%;
+  height: auto; }
 
 /* Prism */
 pre[class*=language-] {
   background: #1b1c1d; }
 
-pre[class*=language-] {
-  margin: 0 0 1em 0; }
+:not(pre) > code {
+  background-color: rgba(27, 31, 35, 0.05);
+  border-radius: 3px;
+  font-size: 85%;
+  margin: 0;
+  padding: .2em .4em; }
 
-:not(pre) > code[class*=language-] {
-  padding: .1em .5em; }
+.language-csharp .token.operator {
+  color: white;
+  background: transparent; }

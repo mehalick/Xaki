@@ -1,4 +1,4 @@
-const cacheName = "201811041910";
+const cacheName = "201902020934";
 const filesToCache = [
     "/",
     "https://xaki.azureedge.net/assets/favicon-636762577492363000.ico",
@@ -20,6 +20,7 @@ const filesToCache = [
     "https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/plugins/line-numbers/prism-line-numbers.js",
     "https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/plugins/normalize-whitespace/prism-normalize-whitespace.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/components/prism-csharp.min.js",
+    "https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin",
     "/css/site.min.css",
     "/js/site.min.js",
     "/docs/getting-started",
