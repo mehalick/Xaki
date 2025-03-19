@@ -1,4 +1,4 @@
-﻿<h1><img src="https://cdn.xaki.io/assets/logo-text-636723199289149229.svg" width="512" height="190" alt="Xaki"></h1>
+<h1><img src="https://cdn.xaki.io/assets/logo-text-636723199289149229.svg" width="512" height="190" alt="Xaki"></h1>
 
 [![appveyor](https://img.shields.io/appveyor/ci/mehalick/xaki/master.svg?label=windows)](https://ci.appveyor.com/project/mehalick/xaki)
 [![azure devops](https://img.shields.io/azure-devops/build/mehalick/ac9e6a14-b763-4434-8b15-a9c0defdf0da/1.svg?label=windows/linux/mac)](https://travis-ci.org/mehalick/Xaki)
