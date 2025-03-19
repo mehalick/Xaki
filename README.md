@@ -1,4 +1,4 @@
-﻿<h1><img src="https://xaki.azureedge.net/assets/logo-text-636723199289149229.svg" width="512" height="190" alt="Xaki"></h1>
+﻿<h1><img src="https://cdn.xaki.io/assets/logo-text-636723199289149229.svg" width="512" height="190" alt="Xaki"></h1>
 
 [![appveyor](https://img.shields.io/appveyor/ci/mehalick/xaki/master.svg?label=windows)](https://ci.appveyor.com/project/mehalick/xaki)
 [![azure devops](https://img.shields.io/azure-devops/build/mehalick/ac9e6a14-b763-4434-8b15-a9c0defdf0da/1.svg?label=windows/linux/mac)](https://travis-ci.org/mehalick/Xaki)
@@ -177,11 +177,11 @@ To convert any input into a rich localization editor simply replace `<input for=
 
 You'll automatically get a rich localization editor:
 
-![editor](https://xaki.azureedge.net/assets/2018-09-11_10-26-05-636722475947053940.png)
+![editor](https://cdn.xaki.io/assets/2018-09-11_10-26-05-636722475947053940.png)
 
 The editor automatically lists the individual language textboxes in the order they are specified in `Startup.cs` and client-side validation is included:
 
-![validation](https://xaki.azureedge.net/assets/2018-09-11_10-28-42-636722477515160922.png)
+![validation](https://cdn.xaki.io/assets/2018-09-11_10-28-42-636722477515160922.png)
 
 #### Model Binding
 
@@ -203,4 +203,4 @@ public async Task<IActionResult> Edit(Planet planet)
 
 Here your localized properties are automatically bound:
 
-![model binding](https://xaki.azureedge.net/assets/2018-09-11_10-34-56-636722481804812672.png)
+![model binding](https://cdn.xaki.io/assets/2018-09-11_10-34-56-636722481804812672.png)

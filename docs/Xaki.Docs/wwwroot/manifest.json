@@ -3,12 +3,12 @@
   "short_name": "Xaki",
   "icons": [
     {
-      "src": "https://xaki.azureedge.net/assets/android-chrome-192x192-636764991239163780.png",
+      "src": "https://cdn.xaki.io/assets/android-chrome-192x192-636764991239163780.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "https://xaki.azureedge.net/assets/android-chrome-256x256-636764991251203802.png",
+      "src": "https://cdn.xaki.io/assets/android-chrome-256x256-636764991251203802.png",
       "sizes": "256x256",
       "type": "image/png"
     }

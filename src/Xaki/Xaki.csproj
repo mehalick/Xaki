@@ -7,7 +7,7 @@
     <Company>Andy Mehalick</Company>
     <Copyright>Copyright © Andy Mehalick</Copyright>
     <Description>Simplified multi-language POCO localization for .NET Core</Description>   
-    <PackageIconUrl>https://xaki.azureedge.net/assets/logo-icon-128x128-636723723011536470.png</PackageIconUrl>
+    <PackageIconUrl>https://cdn.xaki.io/assets/logo-icon-128x128-636723723011536470.png</PackageIconUrl>
     <PackageLicenseUrl>https://github.com/mehalick/Xaki/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/mehalick/Xaki</PackageProjectUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
